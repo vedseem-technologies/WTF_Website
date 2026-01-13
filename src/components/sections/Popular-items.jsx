@@ -125,7 +125,7 @@ function PopularItems() {
           {/* Title */}
           <div className="text-center mb-8">
             <p className="text-black text-xl md:text-2xl mb-2">We are more than</p>
-            <h3 className="text-red-800 text-3xl md:text-5xl font-bold">Miltiple Services.</h3>
+            <h3 className="text-red-800 text-3xl md:text-5xl font-bold">Multiple Services</h3>
           </div>
 
           {/* Services Container */}
