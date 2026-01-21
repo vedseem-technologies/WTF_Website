@@ -2,15 +2,24 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCatering } from "../../context/CateringContext";
+import { useRouter } from "next/navigation";
 
 function CateringPage() {
-  const [selectedOccasion, setSelectedOccasion] = useState(null);
-  const [selectedService, setSelectedService] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const {
+    selectedOccasion,
+    setSelectedOccasion,
+    selectedService,
+    setSelectedService,
+    selectedCategory,
+    setSelectedCategory,
+  } = useCatering();
+  
   const [hoveredOccasion, setHoveredOccasion] = useState(null);
   const [hoveredService, setHoveredService] = useState(null);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
+  const router = useRouter();
 
   const occasions = [
     { id: 1, name: "Birthday", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop" },
@@ -26,7 +35,17 @@ function CateringPage() {
     { id: 1, name: "Full Service", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=400&fit=crop" },
     { id: 2, name: "Buffet", image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=400&fit=crop" },
     { id: 3, name: "Plated", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=400&fit=crop" },
-    { id: 4, name: "Cocktail", image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=400&h=400&fit=crop" },
+    {
+      id: 4,
+      name: "Cocktail Menu",
+      slug: "cocktail-menu",
+      price: "₹759",
+      image: "/block-1.png",
+      type: "nonveg",
+      servingSize: "8+",
+      occasions: [1,2,3,4,5,6,7],
+      categories: [1,2,3],
+    },
     { id: 5, name: "BBQ", image: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=400&fit=crop" },
     { id: 6, name: "Dessert", image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=400&fit=crop" },
     { id: 7, name: "Beverages", image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&h=400&fit=crop" },
@@ -47,6 +66,44 @@ function CateringPage() {
     { id: 4, name: "Basic", image: "/block-4.png", stat: "10K+", label: "Happy Foodies" },
   ];
 
+  // Catering menu items with occasion and category associations
+  const cateringMenuItems = [
+    {
+      id: 1,
+      name: "Cocktail Menu",
+      slug: "cocktail-menu",
+      price: "₹759",
+      image: "/block-1.png",
+      type: "nonveg",
+      servingSize: "8+",
+      occasions: [1,2,3,4,5,6,7],
+      categories: [1,2,3],
+    },
+    {
+      id: 2,
+      name: "Indian DeGustibus",
+      slug: "indian-degustibus",
+      price: "₹689",
+      image: "/block-3.png",
+      type: "veg",
+      servingSize: "8+",
+      occasions: [1,2,4,6],
+      categories: [1,2,3],
+    },
+    {
+      id: 11,
+      name: "Wedding Feast",
+      slug: "wedding-feast",
+      price: "₹899",
+      image: "/block-3.png",
+      type: "nonveg",
+      servingSize: "10+",
+      occasions: [2],
+      categories: [2,3],
+    },
+  ];
+
+
   const banners = [
     "/corousel-1.png",
     "/corousel-2.png",
@@ -61,6 +118,13 @@ function CateringPage() {
 
     return () => clearInterval(interval);
   }, [banners.length]);
+
+  // Filter menu items based on selected occasion and category
+  const filteredMenuItems = cateringMenuItems.filter((item) => {
+    const matchesOccasion = !selectedOccasion || item.occasions.includes(selectedOccasion);
+    const matchesCategory = !selectedCategory || item.categories.includes(selectedCategory);
+    return matchesOccasion && matchesCategory;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white">
@@ -163,7 +227,7 @@ function CateringPage() {
               {occasions.map((occasion) => (
                 <motion.button
                   key={occasion.id}
-                  onClick={() => setSelectedOccasion(occasion.id)}
+                  onClick={() => setSelectedOccasion(selectedOccasion === occasion.id ? null : occasion.id)}
                   onMouseEnter={() => setHoveredOccasion(occasion.id)}
                   onMouseLeave={() => setHoveredOccasion(null)}
                   initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -262,7 +326,7 @@ function CateringPage() {
             {services.map((service) => (
               <motion.button
                 key={service.id}
-                onClick={() => setSelectedService(service.id)}
+                onClick={() => setSelectedService(selectedService === service.id ? null : service.id)}
                 onMouseEnter={() => setHoveredService(service.id)}
                 onMouseLeave={() => setHoveredService(null)}
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -405,7 +469,10 @@ function CateringPage() {
               {categories.map((category) => (
                 <motion.button
                   key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
+                  onClick={() => {
+                    console.log(category);
+                    router.push(`/services/catering/${category.slug}`);
+                  }}                  
                   onMouseEnter={() => setHoveredCategory(category.id)}
                   onMouseLeave={() => setHoveredCategory(null)}
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -476,6 +543,140 @@ function CateringPage() {
               ))}
             </div>
           </div>
+
+          {/* Filtered Menu Items Cards Section */}
+          {(selectedOccasion || selectedCategory) && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="mb-16"
+            >
+              <motion.h3 
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+                className="text-xl md:text-2xl font-bold text-red-800 mb-8 flex items-center gap-4"
+              >
+                <motion.span 
+                  initial={{ width: 0 }}
+                  whileInView={{ width: 40 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
+                ></motion.span>
+                <span className="tracking-tight">
+                  {selectedOccasion && selectedCategory
+                    ? `${occasions.find((o) => o.id === selectedOccasion)?.name} - ${categories.find((c) => c.id === selectedCategory)?.name}`
+                    : selectedOccasion
+                    ? `${occasions.find((o) => o.id === selectedOccasion)?.name} Packages`
+                    : `${categories.find((c) => c.id === selectedCategory)?.name} Packages`}
+                </span>
+              </motion.h3>
+
+              {/* Responsive Card Grid */}
+              {filteredMenuItems.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6 px-4 md:px-6">
+                  {filteredMenuItems.map((item, index) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ 
+                        duration: 0.5, 
+                        delay: index * 0.05,
+                        type: "spring",
+                        stiffness: 100
+                      }}
+                      whileHover={{ y: -8, scale: 1.02 }}
+                      className="group cursor-pointer"
+                      onClick={() => {
+                        console.log(item);
+                        router.push(`/services/catering/${item.slug}`);
+                      }}
+                    >
+                      {/* Card Container */}
+                      <div className="relative bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+                        {/* Image Section */}
+                        <div className="relative w-full h-48 md:h-56 lg:h-64 overflow-hidden">
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                            unoptimized
+                          />
+                          
+                          {/* Premium Options Banner */}
+                          <div className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 to-orange-500 px-3 py-1 rounded-md shadow-lg">
+                            <span className="text-white text-xs md:text-sm font-bold uppercase tracking-wide">
+                              Premium Options
+                            </span>
+                          </div>
+
+                          {/* Veg/Non-Veg Indicator */}
+                          <div
+                            className={`absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center shadow-lg ${
+                              item.type === "veg"
+                                ? "bg-green-600"
+                                : "bg-red-600"
+                            }`}
+                          >
+                            <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 border-white ${
+                              item.type === "veg"
+                                ? "bg-green-600"
+                                : "bg-red-600"
+                            }`}></div>
+                          </div>
+
+                          {/* Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
+                        </div>
+
+                        {/* Content Section */}
+                        <div className="p-4 md:p-5 bg-gray-800">
+                          {/* Title */}
+                          <h4 className="text-white font-bold text-base md:text-lg mb-3 group-hover:text-red-400 transition-colors">
+                            {item.name}
+                          </h4>
+
+                          {/* Serving Size and Price */}
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-2">
+                              <span className="text-gray-400 text-sm md:text-base font-medium">
+                                {item.servingSize}
+                              </span>
+                            </div>
+                            <span className="text-white font-bold text-lg md:text-xl">
+                              {item.price}
+                            </span>
+                          </div>
+
+                          {/* Customize Button */}
+                          <button className="w-full py-2.5 md:py-3 px-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-lg font-semibold text-sm md:text-base transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-500/30">
+                            Customize
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-16 px-4"
+                >
+                  <div className="text-6xl mb-4">🍽️</div>
+                  <p className="text-gray-600 text-xl mb-2 font-semibold">No packages found</p>
+                  <p className="text-gray-500 text-sm md:text-base">
+                    Try selecting a different occasion or category
+                  </p>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
 
           {/* Packages Grid - Scrollable */}
           <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-10 pt-6 px-6 md:px-8 snap-x snap-mandatory scroll-smooth">

@@ -1,0 +1,370 @@
+"use client";
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { notFound } from "next/navigation";
+
+// Menu items data with occasion associations and package details
+const cateringMenuItems = [
+  {
+    id: 1,
+    name: "Cocktail Menu",
+    slug: "cocktail-menu",
+    price: "₹759",
+    image: "/block-1.png",
+    type: "nonveg",
+    servingSize: "8+",
+    occasions: [1, 2, 3, 4, 5, 6, 7], // All occasions
+    items: [
+      { name: "Bhuttayan De Kebab", image: "/block-1.png", category: "Starters" },
+      { name: "Paneer Chilgoza", image: "/block-3.png", category: "Starters" },
+      { name: "Hara mutter ki tikki", image: "/block-1.png", category: "Starters" },
+      { name: "Lasooni Khumb Peshawari", image: "/block-3.png", category: "Starters" },
+      { name: "Tawa Veg Masala", image: "/block-1.png", category: "Mains" },
+      { name: "Dal Moradabadi", image: "/block-3.png", category: "Mains" },
+    ],
+  },
+  {
+    id: 2,
+    name: "Indian DeGustibus",
+    slug: "indian-degustibus",
+    price: "₹689",
+    image: "/block-3.png",
+    type: "veg",
+    servingSize: "8+",
+    occasions: [1, 2, 4, 6], // Birthday, Wedding, Anniversary, Festival
+    items: [
+      { name: "Bhuttayan De Kebab", image: "/block-1.png", category: "Starters" },
+      { name: "Paneer Chilgoza", image: "/block-3.png", category: "Starters" },
+      { name: "Hara mutter ki tikki", image: "/block-1.png", category: "Starters" },
+      { name: "Lasooni Khumb Peshawari", image: "/block-3.png", category: "Starters" },
+      { name: "Tawa Veg Masala", image: "/block-1.png", category: "Mains" },
+      { name: "Dal Moradabadi", image: "/block-3.png", category: "Mains" },
+    ],
+  },
+  {
+    id: 3,
+    name: "Wedding Feast",
+    slug: "wedding-feast",
+    price: "₹899",
+    image: "/block-3.png",
+    type: "nonveg",
+    servingSize: "10+",
+    occasions: [2], // Wedding only
+    items: [
+      { name: "Chicken Tikka", image: "/block-1.png", category: "Starters" },
+      { name: "Fish Amritsari", image: "/block-3.png", category: "Starters" },
+      { name: "Mutton Seekh Kebab", image: "/block-1.png", category: "Starters" },
+      { name: "Butter Chicken", image: "/block-3.png", category: "Mains" },
+      { name: "Mutton Rogan Josh", image: "/block-1.png", category: "Mains" },
+      { name: "Biryani", image: "/block-3.png", category: "Mains" },
+    ],
+  },
+];
+
+const occasions = [
+  { id: 1, name: "Birthday", slug: "birthday" },
+  { id: 2, name: "Wedding", slug: "wedding" },
+  { id: 3, name: "Corporate", slug: "corporate" },
+  { id: 4, name: "Anniversary", slug: "anniversary" },
+  { id: 5, name: "Graduation", slug: "graduation" },
+  { id: 6, name: "Festival", slug: "festival" },
+  { id: 7, name: "Other", slug: "other" },
+];
+
+export default function OccasionPage({ params }) {
+  const { slug } = React.use(params);
+  const [selectedItem, setSelectedItem] = React.useState(null);
+
+  // Find the occasion
+  const occasion = occasions.find((o) => o.slug === slug);
+  
+  if (!occasion) {
+    notFound();
+  }
+
+  // Filter menu items for this occasion
+  const filteredItems = cateringMenuItems.filter((item) =>
+    item.occasions?.includes(occasion.id)
+  );
+
+  // Group items by category for modal
+  const groupItemsByCategory = (items) => {
+    const grouped = {};
+    items?.forEach((item) => {
+      if (!grouped[item.category]) {
+        grouped[item.category] = [];
+      }
+      grouped[item.category].push(item);
+    });
+    return grouped;
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fafafa] relative overflow-hidden">
+      {/* Mesh Gradient Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-[5%] -left-[5%] w-[60%] h-[60%] rounded-full bg-red-100/70 blur-[120px]" />
+        <div className="absolute top-[10%] left-[25%] w-[40%] h-[40%] rounded-full bg-rose-50/60 blur-[100px]" />
+        <div className="absolute top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-red-50/80 blur-[100px]" />
+        <div className="absolute -bottom-[15%] left-[10%] w-[70%] h-[70%] rounded-full bg-red-100/40 blur-[150px]" />
+        <div className="absolute bottom-[20%] right-[5%] w-[40%] h-[40%] rounded-full bg-rose-100/30 blur-[120px]" />
+      </div>
+
+      <div className="relative z-10">
+        {/* Navigation - Top Left */}
+        <div className="absolute top-8 left-4 md:left-8">
+          <Link
+            href="/services/catering"
+            className="group flex items-center gap-2 text-gray-400 hover:text-red-600 transition-all duration-300"
+          >
+            <div className="w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center group-hover:bg-red-50 group-hover:scale-110 transition-all font-bold">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </div>
+            <span className="font-bold text-[10px] md:text-sm tracking-widest uppercase">Back</span>
+          </Link>
+        </div>
+
+        {/* Header - Centered */}
+        <section className="pt-24 pb-12">
+          <div className="max-w-7xl mx-auto px-4 md:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center flex flex-col items-center"
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="inline-block px-4 py-1.5 mb-4 rounded-full bg-red-50 border border-red-100"
+              >
+                <span className="text-red-600 text-xs md:text-sm font-bold uppercase tracking-[0.2em]">
+                  {occasion.name} Catering
+                </span>
+              </motion.div>
+              
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="text-5xl md:text-7xl font-bold text-gray-900 mb-4 tracking-tight"
+                style={{ fontFamily: "var(--font-playfair), serif" }}
+              >
+                {occasion.name} <span className="text-red-700">Packages</span>
+              </motion.h1>
+              
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "100px" }}
+                transition={{ duration: 1, delay: 0.5 }}
+                className="h-1.5 bg-red-600 rounded-full md:mx-0 mx-auto"
+              />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Menu Items Grid */}
+        <section className="pb-24 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            {filteredItems.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {filteredItems.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    whileHover={{ y: -12 }}
+                    className="group"
+                  >
+                    <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] group-hover:shadow-[0_30px_60px_rgba(220,38,38,0.15)] transition-all duration-500">
+                      {/* Background Image */}
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                        unoptimized
+                      />
+
+                      {/* Top Badges */}
+                      <div className="absolute top-4 left-4 z-20">
+                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-white/20">
+                          <span className="text-red-600 text-[10px] font-black uppercase tracking-wider">Premium</span>
+                        </div>
+                      </div>
+
+                      <div className="absolute top-4 right-4 z-20">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md shadow-lg border-2 ${
+                          item.type === "veg" ? "bg-green-50/90 border-green-500" : "bg-red-50/90 border-red-500"
+                        }`}>
+                          <div className={`w-3 h-3 rounded-full ${
+                            item.type === "veg" ? "bg-green-600" : "bg-red-600"
+                          }`} />
+                        </div>
+                      </div>
+
+                      {/* Gradient Overlays */}
+                      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+                      <div className="absolute inset-0 bg-red-900/0 group-hover:bg-red-900/10 transition-colors duration-500 z-10" />
+
+                      {/* Content Overlay */}
+                      <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 pb-8">
+                        <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                          <div className="flex items-center gap-2 mb-2 text-white/70 text-xs font-bold uppercase tracking-widest">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            {item.servingSize} People
+                          </div>
+                          
+                          <h4 className="text-white font-bold text-2xl mb-1 leading-tight group-hover:text-red-200 transition-colors">
+                            {item.name}
+                          </h4>
+                          
+                          <div className="flex items-center justify-between mt-4">
+                            <div className="text-white">
+                              <span className="text-xs text-white/60 block uppercase font-bold tracking-tighter">Starting from</span>
+                              <span className="text-2xl font-black">{item.price}</span>
+                            </div>
+                            
+                            <motion.button
+                              whileTap={{ scale: 0.95 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedItem(item);
+                              }}
+                              className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-2xl shadow-lg shadow-red-900/40 transition-all duration-300"
+                            >
+                              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                              </svg>
+                            </motion.button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center py-20"
+              >
+                <div className="text-8xl mb-6 opacity-20">🍽️</div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">No packages currently available</h3>
+                <p className="text-gray-500 max-w-md mx-auto">
+                  We're currently curating the best {occasion.name} packages for you. Check back soon!
+                </p>
+                <Link href="/services/catering" className="inline-block mt-8 text-red-600 font-bold border-b-2 border-red-600 pb-1">
+                  View other services
+                </Link>
+              </motion.div>
+            )}
+          </div>
+        </section>
+      </div>
+
+      {/* Enhanced Customize Modal */}
+      <AnimatePresence>
+        {selectedItem && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-gray-900/80 backdrop-blur-xl z-[100] flex items-center justify-center p-4 md:p-6"
+            onClick={() => setSelectedItem(null)}
+          >
+            <motion.div
+              initial={{ y: 100, opacity: 0, scale: 0.95 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={{ y: 100, opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-[2rem] shadow-[0_50px_100px_rgba(0,0,0,0.3)] max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="p-8 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-50">
+                <div>
+                  <h2 className="text-3xl font-black text-gray-900 leading-tight mb-1">{selectedItem.name}</h2>
+                  <div className="flex items-center gap-4 text-gray-500 font-bold text-xs uppercase tracking-widest">
+                    <span className="flex items-center gap-1.5">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                      {selectedItem.servingSize} People
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <span className="text-red-600">Starting from</span>
+                      <span className="text-gray-900">{selectedItem.price}</span>
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedItem(null)}
+                  className="w-12 h-12 flex items-center justify-center rounded-2xl bg-gray-50 hover:bg-red-50 hover:text-red-600 transition-all duration-300"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Modal Content - Items Only */}
+              <div className="flex-1 overflow-y-auto p-8 pt-4 scroll-smooth">
+                {Object.entries(groupItemsByCategory(selectedItem.items)).map(([category, items], catIdx) => (
+                  <div key={category} className="mb-10 last:mb-0">
+                    <div className="flex items-center gap-4 mb-6 sticky top-0 bg-white/80 backdrop-blur-sm py-2 z-10">
+                      <span className="text-gray-200 text-3xl font-black">0{catIdx + 1}</span>
+                      <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">{category}</h3>
+                      <div className="h-px bg-gray-100 flex-1" />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 gap-3">
+                      {items.map((foodItem, idx) => (
+                        <motion.div
+                          key={idx}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: catIdx * 0.1 + idx * 0.05 }}
+                          className="flex items-center gap-4 p-3 rounded-2xl bg-[#f8f9fa] hover:bg-white hover:shadow-xl hover:shadow-gray-200/40 transition-all duration-300 group/item"
+                        >
+                          <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 shadow-sm border border-gray-100">
+                            <Image src={foodItem.image} alt={foodItem.name} fill className="object-cover group-hover/item:scale-110 transition-transform duration-500" unoptimized />
+                          </div>
+                          <div className="flex-1">
+                            <span className="text-gray-800 font-bold text-base block mb-0.5">{foodItem.name}</span>
+                            <div className="flex items-center gap-1.5">
+                              <div className={`w-1.5 h-1.5 rounded-full ${selectedItem.type === "veg" ? "bg-green-500" : "bg-red-500"}`} />
+                              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{selectedItem.type}</span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-8 border-t border-gray-100 bg-gray-50/50">
+                <button className="w-full bg-red-600 hover:bg-red-700 text-white py-5 px-10 rounded-[1.5rem] font-black text-lg tracking-tight transition-all duration-300 shadow-xl shadow-red-200 flex items-center justify-center gap-3 group">
+                  <span>Customize & Check Price</span>
+                  <svg className="w-5 h-5 transform group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
