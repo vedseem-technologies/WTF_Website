@@ -58,26 +58,32 @@ const services = [
 export default function ServicesCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [slotSize, setSlotSize] = useState(350);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Auto slide every 3 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setActiveIndex((prev) => prev + 1);
-    }, 3000);
-
+    }, 2000);
+  
     const handleResize = () => {
-      if (window.innerWidth < 640) setSlotSize(160);
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+  
+      if (mobile) setSlotSize(160);
       else if (window.innerWidth < 1024) setSlotSize(250);
       else setSlotSize(350);
     };
-
+  
     handleResize();
     window.addEventListener("resize", handleResize);
+  
     return () => {
       clearInterval(timer);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
 
   const n = services.length;
 
@@ -127,7 +133,7 @@ export default function ServicesCarousel() {
             if (isVisible) {
               // Scale and opacity based on distance
               scale = 1 - Math.abs(d) * 0.25; // 0:1, 1:0.75, 2:0.5
-              opacity = 1 - Math.abs(d) * (window.innerWidth < 640 ? 0.4 : 0.3);
+              opacity = 1 - Math.abs(d) * (isMobile ? 0.4 : 0.3);
               zIndex = 30 - Math.abs(d) * 10;
             } else {
               // Position off-screen items
@@ -148,7 +154,7 @@ export default function ServicesCarousel() {
                   zIndex,
                 }}
                 transition={{
-                  duration: 0.7,
+                  duration: 1.5,
                   ease: [0.32, 0.72, 0, 1],
                 }}
                 className="absolute w-[240px] md:w-[300px] h-[350px] md:h-[420px] cursor-pointer group"
@@ -209,7 +215,7 @@ export default function ServicesCarousel() {
                       key={activeIndex}
                       initial={{ width: 0 }}
                       animate={{ width: "100%" }}
-                      transition={{ duration: 3, ease: "linear" }}
+                      transition={{ duration: 2, ease: "linear" }}
                       className="h-full bg-gradient-to-r from-red-600 to-orange-500"
                     />
                   </div>

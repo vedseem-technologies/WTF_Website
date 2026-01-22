@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+git restore --staged tatus 2>$null
+git rm --cached tatus 2>$null
