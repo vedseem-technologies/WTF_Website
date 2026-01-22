@@ -59,8 +59,8 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
     <div className="min-h-screen bg-white pb-24 pt-12 overflow-hidden relative font-sans">
       
       {/* Fixed Progress Bar Section */}
-      <div className="max-w-3xl mx-auto px-24 mb-8">
-        <div className="relative flex items-center justify-between mb-12">
+      <div className="max-w-3xl mx-auto px-6 md:px-24 md:mb-8">
+        <div className="relative flex items-center justify-between mb-8 md:mb-12">
           {/* Base line */}
           <div className="absolute inset-x-0 top-1/2 h-[2px] bg-red-100 -translate-y-3" />
         
@@ -114,7 +114,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
       </div>
 
       {/* Main Content Area with Sliding Animation */}
-      <div className="relative max-w-3xl mx-auto px-24 min-h-[400px]">
+      <div className="relative max-w-3xl mx-auto px-6 md:px-24 min-h-[400px]">
         <AnimatePresence mode="wait">
           {!showPriceBreakup && !showPayment ? (
             <motion.div
@@ -395,7 +395,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
 
       {/* Sticky Footer */}
       <div className="fixed bottom-0 inset-x-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 p-6 z-[120]">
-        <div className="max-w-3xl mx-auto flex items-center justify-between gap-4 px-28">
+        <div className="max-w-3xl mx-auto flex items-center justify-between gap-4 md:px-28">
           <button
             onClick={() => {
               if (showPayment) {

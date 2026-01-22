@@ -5,37 +5,71 @@ import Image from 'next/image'
 
 function PopularItems() {
   const items = ['Biriyani', 'Kabab', 'Pizza', 'Burger', 'Biriyani', 'Kabab', 'Pizza', 'Burger', 'Biriyani', 'Kabab', 'Pizza', 'Burger']
-  const itemsPerSlide = 4
-  const totalSlides = Math.ceil(items.length / itemsPerSlide)
+  const [itemsPerSlide, setItemsPerSlide] = useState(4)
+  const [slideDuration, setSlideDuration] = useState(5000)
   const [currentSlide, setCurrentSlide] = useState(0)
   const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth
+      if (width < 640) {
+        setItemsPerSlide(2)
+        setSlideDuration(3000) // 3 seconds for mobile
+      } else if (width < 768) {
+        setItemsPerSlide(3)
+        setSlideDuration(4000) // 4 seconds for small tablets
+      } else if (width < 1024) {
+        setItemsPerSlide(3)
+        setSlideDuration(5000)
+      } else {
+        setItemsPerSlide(4)
+        setSlideDuration(5000)
+      }
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const totalSlides = Math.ceil(items.length / itemsPerSlide)
+
+  useEffect(() => {
+    if (currentSlide >= totalSlides) {
+      setCurrentSlide(0)
+    }
+  }, [totalSlides, currentSlide])
 
   useEffect(() => {
     // Reset progress when slide changes
     setProgress(0)
     
     // Progress bar animation
+    const intervalTime = 100
+    const increment = 100 / (slideDuration / intervalTime)
+    
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           return 0
         }
-        return prev + 2 // Increment by 2% every 100ms (5 seconds total)
+        return prev + increment
       })
-    }, 100)
+    }, intervalTime)
 
-    // Auto-slide every 5 seconds
+    // Auto-slide 
     const slideInterval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % totalSlides)
-    }, 5000)
+    }, slideDuration)
 
     return () => {
       clearInterval(progressInterval)
       clearInterval(slideInterval)
     }
-  }, [currentSlide, totalSlides])
+  }, [currentSlide, totalSlides, slideDuration])
 
-  // Get current 4 items to display
+  // Get current items to display
   const currentItems = items.slice(
     currentSlide * itemsPerSlide,
     currentSlide * itemsPerSlide + itemsPerSlide
@@ -50,55 +84,52 @@ function PopularItems() {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6">
+      <div className="relative z-10 flex flex-col items-center justify-center py-24 md:min-h-screen md:px-6 px-2">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-8">
           Most Popular Items
         </h2>
 
         {/* Main Red Container */}
         <div
-          className="w-full max-w-6xl rounded-3xl px-10 py-14 overflow-hidden"
+          className="w-full max-w-6xl rounded-3xl lg:px-10 md:px-6 px-2 lg:py-14 md:py-10 py-6 overflow-hidden"
           style={{
             background:
               'radial-gradient(circle at center, #7a2a24 0%, #5a1612 55%, #4a0f0c 100%)',
           }}
         >
-          {/* Items - Only show 4 at a time */}
-          <div className="grid grid-cols-4 gap-10 py-8 relative overflow-hidden">
-            {[0, 1, 2, 3].map((colIdx) => {
-              const title = currentItems[colIdx]
+          {/* Items - Responsive grid */}
+          <div className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 md:gap-10 py-8 relative overflow-hidden`}>
+            {currentItems.map((title, colIdx) => {
               return (
-                <div key={`col-${colIdx}`} className="relative" style={{ minHeight: '250px' }}>
+                <div key={`col-${colIdx}`} className="relative h-64">
                   <AnimatePresence mode="wait">
-                    {title && (
-                      <motion.div
-                        key={`${currentSlide}-${title}-${colIdx}`}
-                        initial={{ x: '100%', opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: '-100%', opacity: 0 }}
-                        transition={{
-                          type: 'spring',
-                          stiffness: 300,
-                          damping: 30,
-                          duration: 1,
-                          delay: colIdx * 0.05
-                        }}
-                        className="flex flex-col items-center absolute inset-0"
-                      >
-                        {/* SINGLE SHAPE */}
-                        <div className="relative w-36 flex flex-col items-center">
-                          {/* Circle - Absolutely positioned to overlap */}
-                          <div className="absolute -top-6 w-48 h-48 rounded-full bg-gray-300 border-[6px] border-gray-400 z-10" />
+                    <motion.div
+                      key={`${currentSlide}-${title}-${colIdx}`}
+                      initial={{ x: '100%', opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      exit={{ x: '-100%', opacity: 0 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 30,
+                        duration: 1,
+                        delay: colIdx * 0.05
+                      }}
+                      className="flex flex-col items-center absolute inset-0"
+                    >
+                      {/* SINGLE SHAPE */}
+                      <div className="relative md:w-40 w-36 flex flex-col items-center">
+                        {/* Circle - Absolutely positioned to overlap */}
+                        <div className="absolute -top-6 md:w-48 md:h-48 w-44 h-44 rounded-full bg-gray-300 border-[6px] border-gray-400 z-10" />
 
-                          {/* Rectangle - Positioned below with padding for overlap */}
-                          <div className="mt-24 bg-gray-200 rounded-2xl px-22 pt-32 pb-6 flex flex-col items-center w-full">
-                            <p className="text-red-800 font-semibold text-sm">
-                              {title}
-                            </p>
-                          </div>
+                        {/* Rectangle - Positioned below with padding for overlap */}
+                        <div className="mt-24 bg-gray-200 rounded-2xl px-4 pt-32 pb-6 flex flex-col items-center w-full">
+                          <p className="text-red-800 font-semibold text-sm">
+                            {title}
+                          </p>
                         </div>
-                      </motion.div>
-                    )}
+                      </div>
+                    </motion.div>
                   </AnimatePresence>
                 </div>
               )

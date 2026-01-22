@@ -183,7 +183,7 @@ function CateringPage() {
         </div>
 
         {/* Banner Carousel - Minimal UI with Auto-Rotate & Swipe Gestures */}
-        <div className="w-full mb-16 overflow-hidden relative z-10 px-4 md:px-6 lg:px-8">
+        <div className="w-full pb-4 md:mb-16 overflow-hidden relative z-10 px-4 md:px-6 lg:px-8">
           <div className="relative w-full h-80 md:h-96 lg:h-[500px] rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing">
             <AnimatePresence mode="wait">
               <motion.div
@@ -243,7 +243,7 @@ function CateringPage() {
           
           {/* Scrollable Occasions Row */}
           <div className="relative">
-            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-4 md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
               {occasions.map((occasion) => (
                 <div key={occasion.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                   <motion.button
@@ -331,7 +331,7 @@ function CateringPage() {
           </motion.h2>
           
           {/* Scrollable Services Row */}
-          <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+          <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-4 md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
             {services.map((service) => (
               <div key={service.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                 <motion.button
@@ -398,14 +398,14 @@ function CateringPage() {
       </section>
 
       {/* SELECT & CUSTOMIZED Package Section */}
-      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 py-6 px-4 md:px-8">
+      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 py-4 md:py-6 px-4 md:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-            className="text-center mb-16"
+            className="text-center mb-8 md:mb-16"
           >
             <motion.p 
               initial={{ opacity: 0, letterSpacing: "0.5em" }}
@@ -463,7 +463,7 @@ function CateringPage() {
             </motion.h3>
             
             {/* Scrollable Categories Row */}
-            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
               {categories.map((category) => (
                 <div key={category.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                   <motion.button

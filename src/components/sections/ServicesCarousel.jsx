@@ -1,278 +1,229 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
-function ServicesCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const intervalRef = useRef(null);
+const services = [
+  { 
+    id: 1, 
+    title: "Franchise Model", 
+    image: "/block-1.png", 
+    color: "from-blue-500/20 to-blue-900/40",
+    description: "Expand your business with our proven franchise systems."
+  },
+  { 
+    id: 2, 
+    title: "Catering", 
+    image: "/block-2.png", 
+    color: "from-red-500/20 to-red-900/40",
+    description: "Exquisite culinary experiences for your special events."
+  },
+  { 
+    id: 3, 
+    title: "Food Delivery", 
+    image: "/block-3.png", 
+    color: "from-yellow-500/20 to-yellow-900/40",
+    description: "Fast and reliable delivery to your doorstep."
+  },
+  { 
+    id: 4, 
+    title: "Fine Dining", 
+    image: "/block-4.png", 
+    color: "from-green-500/20 to-green-900/40",
+    description: "Immersive atmosphere and gourmet cuisine."
+  },
+  { 
+    id: 5, 
+    title: "Event Planning", 
+    image: "/block-1.png", 
+    color: "from-purple-500/20 to-purple-900/40",
+    description: "Seamless coordination for unforgettable gatherings."
+  },
+  { 
+    id: 6, 
+    title: "Cloud Kitchen", 
+    image: "/block-2.png", 
+    color: "from-orange-500/20 to-orange-900/40",
+    description: "Efficient delivery-only kitchen solutions."
+  },
+  { 
+    id: 7, 
+    title: "Bulk Orders", 
+    image: "/block-3.png", 
+    color: "from-pink-500/20 to-pink-900/40",
+    description: "Customized large-scale catering and orders."
+  },
+];
 
-  const services = [
-    {
-      id: 1,
-      name: "Franchise Model",
-      description: "Partner with us and start your own WTF outlet",
-      icon: "🏪",
-      color: "from-red-900 via-red-800 to-red-900",
-    },
-    {
-      id: 2,
-      name: "Catering Services",
-      description: "Premium catering for events and occasions",
-      icon: "🍽️",
-      color: "from-orange-900 via-orange-800 to-orange-900",
-    },
-    {
-      id: 3,
-      name: "Food Delivery",
-      description: "Delicious food delivered to your doorstep",
-      icon: "🚚",
-      color: "from-blue-900 via-blue-800 to-blue-900",
-    },
-    {
-      id: 4,
-      name: "Dining",
-      description: "Experience the best in-house dining",
-      icon: "🍴",
-      color: "from-purple-900 via-purple-800 to-purple-900",
-    },
-  ];
+export default function ServicesCarousel() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [slotSize, setSlotSize] = useState(350);
 
-  // Auto-slide every 3 seconds with progress bar
+  // Auto slide every 3 seconds
   useEffect(() => {
-    // Reset progress when slide changes
-    setProgress(0);
-
-    // Progress bar animation
-    const progressInterval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          return 0;
-        }
-        return prev + (100 / 30); // 30 updates over 3 seconds (100ms each)
-      });
-    }, 100);
-
-    // Auto-slide timer
-    intervalRef.current = setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % services.length);
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => prev + 1);
     }, 3000);
 
-    return () => {
-      clearInterval(progressInterval);
-      if (intervalRef.current) {
-        clearTimeout(intervalRef.current);
-      }
+    const handleResize = () => {
+      if (window.innerWidth < 640) setSlotSize(160);
+      else if (window.innerWidth < 1024) setSlotSize(250);
+      else setSlotSize(350);
     };
-  }, [currentIndex, services.length]);
 
-  const goToSlide = (index) => {
-    setCurrentIndex(index);
-    setProgress(0);
-  };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + services.length) % services.length);
-    setProgress(0);
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % services.length);
-    setProgress(0);
-  };
+  const n = services.length;
 
   return (
-    <div className="w-full bg-gradient-to-b from-gray-950 via-black to-gray-950 py-20 px-4">
-      {/* Section Title */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-16"
-      >
-        <motion.h2
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-yellow-400 text-lg md:text-xl font-semibold mb-3 mt-12 tracking-wider uppercase"
-        >
-          What We Offer
-        </motion.h2>
-        <h1
-          className="text-white text-4xl md:text-6xl font-bold mb-4"
-          style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-        >
-          Our <span className="text-red-500">Services</span>
-        </h1>
-        <div className="w-24 h-1 bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-auto" />
-      </motion.div>
+    <section className="w-full py-16 md:py-24 bg-[#050505] overflow-hidden relative">
+      {/* Ambient background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full pointer-events-none overflow-hidden">
+        <div className="absolute top-[10%] left-[20%] w-[30%] h-[30%] bg-red-600/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[10%] right-[20%] w-[30%] h-[30%] bg-blue-600/10 blur-[120px] rounded-full" />
+      </div>
 
-      {/* Carousel Container */}
-      <div className="relative max-w-5xl mx-auto">
-        {/* Main Carousel */}
-        <div className="relative h-80 md:h-96 overflow-hidden rounded-3xl shadow-2xl">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, scale: 0.9, x: 100 }}
-              animate={{ opacity: 1, scale: 1, x: 0 }}
-              exit={{ opacity: 0, scale: 0.9, x: -100 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-              className={`absolute inset-0 bg-gradient-to-br ${services[currentIndex].color} rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center text-center relative`}
-            >
-              {/* Progress Bar */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-black/20 rounded-t-3xl overflow-hidden">
-                <motion.div
-                  className="h-full bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-400 shadow-lg"
-                  initial={{ width: "0%" }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 0.1, ease: "linear" }}
-                />
-              </div>
-
-              {/* Service Icon with Animation */}
-              <motion.div
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="text-7xl md:text-9xl mb-6 filter drop-shadow-2xl"
-              >
-                {services[currentIndex].icon}
-              </motion.div>
-
-              {/* Service Name */}
-              <motion.h3
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-white text-3xl md:text-5xl font-bold mb-4 drop-shadow-lg"
-                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-              >
-                {services[currentIndex].name}
-              </motion.h3>
-
-              {/* Service Description */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="text-gray-100 text-lg md:text-xl max-w-lg leading-relaxed"
-              >
-                {services[currentIndex].description}
-              </motion.p>
-
-              {/* Decorative Border */}
-              <div className="absolute inset-3 border-2 border-yellow-400/40 rounded-2xl pointer-events-none" />
-              <div className="absolute inset-4 border border-white/10 rounded-xl pointer-events-none" />
-            </motion.div>
-          </AnimatePresence>
+      <div className="max-w-7xl mx-auto px-4 mt-10 md:mt-8 relative z-10">
+        <div className="text-center mb-12 md:mb-10">
+          <motion.span 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-red-500 font-bold tracking-widest uppercase text-xs md:sm mb-4 block"
+          >
+            Premium Solutions
+          </motion.span>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-2xl md:text-5xl font-black text-white mb-2 md:mb-6 tracking-tighter"
+          >
+            OUR MULTIPLE <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">SERVICES</span>
+          </motion.h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-red-600 to-transparent mx-auto rounded-full" />
         </div>
 
-        {/* Enhanced Navigation Arrows */}
-        <motion.button
-          onClick={goToPrevious}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="absolute left-4 md:-left-16 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 rounded-full flex items-center justify-center transition-all duration-300 z-10"
-        >
-          <svg
-            className="w-6 h-6 md:w-7 md:h-7 text-black"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={3}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </motion.button>
+        {/* Carousel Container */}
+        <div className="relative h-[400px] md:h-[450px] w-full flex items-center justify-center">
+          {services.map((service, index) => {
+            // Calculate distance d from activeIndex (normalized to [-n/2, n/2])
+            let d = (index - (activeIndex % n));
+            if (d > n / 2) d -= n;
+            if (d < -n / 2) d += n;
 
-        <motion.button
-          onClick={goToNext}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="absolute right-4 md:-right-16 top-1/2 -translate-y-1/2 w-12 h-12 md:w-14 md:h-14 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-300 hover:to-yellow-400 rounded-full flex items-center justify-center transition-all duration-300 z-10"
-        >
-          <svg
-            className="w-6 h-6 md:w-7 md:h-7 text-black"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={3}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </motion.button>
+            const isVisible = Math.abs(d) <= 2;
+            
+            // Animation values based on position d
+            let x = d * slotSize;
+            let scale = 1;
+            let opacity = 1;
+            let zIndex = 0;
 
-        {/* Enhanced Dot Indicators with Progress */}
-        <div className="flex justify-center gap-3 mt-8">
-          {services.map((_, index) => (
+            if (isVisible) {
+              // Scale and opacity based on distance
+              scale = 1 - Math.abs(d) * 0.25; // 0:1, 1:0.75, 2:0.5
+              opacity = 1 - Math.abs(d) * (window.innerWidth < 640 ? 0.4 : 0.3);
+              zIndex = 30 - Math.abs(d) * 10;
+            } else {
+              // Position off-screen items
+              x = d > 0 ? slotSize * 3 : -slotSize * 3;
+              scale = 0.3;
+              opacity = 0;
+              zIndex = 0;
+            }
+
+            return (
+              <motion.div
+                key={service.id}
+                initial={false}
+                animate={{
+                  x,
+                  scale,
+                  opacity,
+                  zIndex,
+                }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.32, 0.72, 0, 1],
+                }}
+                className="absolute w-[240px] md:w-[300px] h-[350px] md:h-[420px] cursor-pointer group"
+              >
+                <div className={`w-full h-full rounded-[2rem] md:rounded-[2.5rem] overflow-hidden border border-white/10 bg-gradient-to-br ${service.color} backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col transition-colors duration-300 hover:border-red-500/30`}>
+                  {/* Image Container */}
+                  <div className="relative h-[60%] md:h-[65%] w-full p-3 md:p-4">
+                    <div className="relative w-full h-full rounded-[1.5rem] md:rounded-[2rem] overflow-hidden border border-white/5">
+                      <Image
+                        src={service.image}
+                        alt={service.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        unoptimized
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    </div>
+                  </div>
+
+                  {/* Text Content */}
+                  <div className="px-6 md:px-8 pb-6 md:pb-8 flex flex-col justify-end flex-grow">
+                    <h3 className="text-xl md:text-2xl font-black text-white mb-2 tracking-tight uppercase">
+                      {service.title}
+                    </h3>
+                    <p className="text-white/50 text-[10px] md:text-xs font-medium leading-relaxed line-clamp-2 transform transition-all duration-500 group-hover:text-white/80">
+                      {service.description}
+                    </p>
+                    <motion.div 
+                      className="w-8 h-1 bg-red-600 mt-4 rounded-full"
+                      whileHover={{ width: 40 }}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+      
+      {/* Integrated Progress Navigation */}
+      <div className="flex justify-center items-center gap-3 mt-8 relative z-20">
+        {services.map((_, i) => {
+          const isActive = (activeIndex % n) === i;
+          return (
             <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className="relative group"
+              key={i}
+              onClick={() => setActiveIndex(i)}
+              className="flex items-center transition-all duration-500 group"
             >
-              <div
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentIndex
-                    ? "bg-yellow-400 scale-125 shadow-lg shadow-yellow-400/50"
-                    : "bg-gray-600 hover:bg-gray-400"
-                }`}
-              />
-              {index === currentIndex && (
-                <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-yellow-400"
-                  initial={{ scale: 1, opacity: 0.5 }}
-                  animate={{ scale: 1.5, opacity: 0 }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                />
+              {isActive ? (
+                <div className="flex items-center gap-1.5">
+                  {/* Left Dot */}
+                  {/* <div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.8)]" /> */}
+                  
+                  {/* Progress Bar in between */}
+                  <div className="w-16 h-1 bg-white/10 rounded-full overflow-hidden relative">
+                    <motion.div
+                      key={activeIndex}
+                      initial={{ width: 0 }}
+                      animate={{ width: "100%" }}
+                      transition={{ duration: 3, ease: "linear" }}
+                      className="h-full bg-gradient-to-r from-red-600 to-orange-500"
+                    />
+                  </div>
+                  
+                  {/* Right Dot */}
+                  {/* <div className="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.8)]" /> */}
+                </div>
+              ) : (
+                <div className="w-2 h-2 rounded-full bg-white/20 group-hover:bg-white/40 transition-all duration-300" />
               )}
             </button>
-          ))}
-        </div>
+          );
+        })}
       </div>
-
-      {/* Enhanced Service Cards Preview */}
-      <div className="max-w-5xl mx-auto mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
-        {services.map((service, index) => (
-          <motion.button
-            key={service.id}
-            onClick={() => goToSlide(index)}
-            whileHover={{ scale: 1.05, y: -5 }}
-            whileTap={{ scale: 0.95 }}
-            className={`p-6 rounded-2xl transition-all duration-300 relative overflow-hidden ${
-              index === currentIndex
-                ? "bg-gradient-to-br from-red-800 to-red-900 border-2 border-yellow-400 shadow-xl shadow-yellow-400/30"
-                : "bg-gray-800/60 border-2 border-transparent hover:border-gray-600 hover:bg-gray-800/80"
-            }`}
-          >
-            {/* Background gradient effect */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 transition-opacity duration-300 ${
-              index === currentIndex ? "opacity-20" : "group-hover:opacity-10"
-            }`} />
-            
-            <div className="relative z-10">
-              <div className="text-4xl mb-3 filter drop-shadow-lg">
-                {service.icon}
-              </div>
-              <p className={`text-sm md:text-base font-semibold ${
-                index === currentIndex ? "text-yellow-300" : "text-white"
-              }`}>
-                {service.name}
-              </p>
-            </div>
-          </motion.button>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }
-
-export default ServicesCarousel;

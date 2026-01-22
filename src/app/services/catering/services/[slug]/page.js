@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { notFound } from "next/navigation";
 import CateringSummaryView from "@/components/sections/CateringSummaryView";
+import CustomCalendar from "@/components/ui/CustomCalendar";
+import CustomTimePicker from "@/components/ui/CustomTimePicker";
 
 // Menu items data with service associations and package details
 const cateringMenuItems = [
@@ -84,6 +86,8 @@ export default function ServicePage({ params }) {
     vegGuests: "10",
   });
   const [guestDropdownOpen, setGuestDropdownOpen] = React.useState(false);
+  const [calendarOpen, setCalendarOpen] = React.useState(false);
+  const [timePickerOpen, setTimePickerOpen] = React.useState(false);
   const [showSummary, setShowSummary] = React.useState(false);
 
   // Find the service
@@ -171,7 +175,7 @@ export default function ServicePage({ params }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-5xl md:text-7xl font-bold text-gray-900 mb-4 tracking-tight"
+                className="text-3xl md:text-5xl font-bold text-gray-900 mb-2 md:mb-4 tracking-tight"
                 style={{ fontFamily: "var(--font-playfair), serif" }}
               >
                 {service.name} <span className="text-red-700">Packages</span>
@@ -181,17 +185,17 @@ export default function ServicePage({ params }) {
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: "100px" }}
                 transition={{ duration: 1, delay: 0.5 }}
-                className="h-1.5 bg-red-600 rounded-full md:mx-0 mx-auto"
+                className="h-0.5 md:h-1.5 bg-red-600 rounded-full md:mx-0 mx-auto"
               />
             </motion.div>
           </div>
         </section>
 
         {/* Menu Items Grid */}
-        <section className="pb-24 px-4 md:px-8">
+        <section className="pb-24 px-2 md:px-8">
           <div className="max-w-7xl mx-auto">
             {filteredItems.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-8">
                 {filteredItems.map((item, index) => (
                   <motion.div
                     key={item.id}
@@ -201,7 +205,7 @@ export default function ServicePage({ params }) {
                     whileHover={{ y: -12 }}
                     className="group"
                   >
-                    <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] group-hover:shadow-[0_30px_60px_rgba(220,38,38,0.15)] transition-all duration-500">
+                    <div className="relative aspect-[3/5] md:aspect-[4/5] rounded-[0.8rem] md:rounded-[1.2rem] lg:rounded-[1.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.1)] group-hover:shadow-[0_30px_60px_rgba(220,38,38,0.15)] transition-all duration-500">
                       {/* Background Image */}
                       <Image
                         src={item.image}
@@ -212,13 +216,13 @@ export default function ServicePage({ params }) {
                       />
 
                       {/* Top Badges */}
-                      <div className="absolute top-4 left-4 z-20">
-                        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-white/20">
+                      <div className="absolute md:top-4 top-2 left-2 md:left-4 z-20">
+                        <div className="bg-white/90 backdrop-blur-md md:px-3 px-2 md:py-1.5 py-1 rounded-full shadow-lg border border-white/20">
                           <span className="text-red-600 text-[10px] font-black uppercase tracking-wider">Premium</span>
                         </div>
                       </div>
 
-                      <div className="absolute top-4 right-4 z-20">
+                      <div className="absolute md:top-4 top-2 right-2 md:right-4 z-20">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md shadow-lg border-2 ${
                           item.type === "veg" ? "bg-green-50/90 border-green-500" : "bg-red-50/90 border-red-500"
                         }`}>
@@ -233,23 +237,23 @@ export default function ServicePage({ params }) {
                       <div className="absolute inset-0 bg-red-900/0 group-hover:bg-red-900/10 transition-colors duration-500 z-10" />
 
                       {/* Content Overlay */}
-                      <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 pb-8">
+                      <div className="absolute inset-0 z-20 flex flex-col justify-end md:p-6 p-4 pb-8">
                         <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                          <div className="flex items-center gap-2 mb-2 text-white/70 text-xs font-bold uppercase tracking-widest">
+                          <div className="flex items-center gap-2 mb-1 md:mb-2 text-white/70 text-xs font-bold uppercase tracking-widest">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                             {item.servingSize} People
                           </div>
                           
-                          <h4 className="text-white font-bold text-2xl mb-1 leading-tight group-hover:text-red-200 transition-colors">
+                          <h4 className="text-white md:font-bold font-semibold text-lg md:text-2xl mb-1 leading-tight group-hover:text-red-200 transition-colors">
                             {item.name}
                           </h4>
                           
-                          <div className="flex items-center justify-between mt-4">
+                          <div className="flex items-center justify-between md:mt-4 mt-2">
                             <div className="text-white">
                               <span className="text-xs text-white/60 block uppercase font-bold tracking-tighter">Starting from</span>
-                              <span className="text-2xl font-black">{item.price}</span>
+                              <span className="md:text-2xl text-lg font-semibold md:font-black">{item.price}</span>
                             </div>
                             
                             <motion.button
@@ -258,7 +262,7 @@ export default function ServicePage({ params }) {
                                 e.stopPropagation();
                                 setSelectedItem(item);
                               }}
-                              className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-2xl shadow-lg shadow-red-900/40 transition-all duration-300"
+                              className="bg-red-600 hover:bg-red-700 text-white md:p-3 p-2 rounded-2xl shadow-lg shadow-red-900/40 transition-all duration-300"
                             >
                               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -305,14 +309,14 @@ export default function ServicePage({ params }) {
               initial={{ y: 100, opacity: 0, scale: 0.95 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 100, opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-[2rem] shadow-[0_50px_100px_rgba(0,0,0,0.3)] max-w-xl w-full max-h-[85vh] overflow-hidden flex flex-col relative"
+              className="bg-white rounded-[2rem] shadow-[0_50px_100px_rgba(0,0,0,0.3)] md:px-24 max-w-xl w-full max-h-[85vh] overflow-hidden flex flex-col relative"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
-              <div className="p-8 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-50">
+              <div className="p-6 md:p-8 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-50">
                 <div>
-                  <h2 className="text-3xl font-black text-gray-900 leading-tight mb-1">{selectedItem.name}</h2>
-                  <div className="flex items-center gap-4 text-gray-500 font-bold text-xs uppercase tracking-widest">
+                  <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-gray-900 leading-tight mb-1">{selectedItem.name}</h2>
+                  <div className="flex items-center gap-2 md:gap-4 text-gray-500 font-bold text-xs uppercase tracking-widest">
                     <span className="flex items-center gap-1.5">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -327,7 +331,7 @@ export default function ServicePage({ params }) {
                 </div>
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className="w-12 h-12 flex items-center justify-center rounded-2xl bg-gray-50 text-gray-900 hover:bg-red-50 hover:text-red-600 transition-all duration-300"
+                  className="md:w-12 w-10 md:h-12 h-10 flex items-center justify-center rounded-2xl bg-gray-50 text-gray-900 hover:bg-red-50 hover:text-red-600 transition-all duration-300"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
@@ -336,12 +340,12 @@ export default function ServicePage({ params }) {
               </div>
 
               {/* Modal Content - Items Only */}
-              <div className="flex-1 overflow-y-auto p-8 pt-4 scroll-smooth">
+              <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-4 scroll-smooth">
                 {Object.entries(groupItemsByCategory(selectedItem.items)).map(([category, items], catIdx) => (
                   <div key={category} className="mb-10 last:mb-0">
-                    <div className="flex items-center gap-4 mb-6 sticky top-0 bg-white/80 backdrop-blur-sm py-2 z-10">
-                      <span className="text-gray-200 text-3xl font-black">0{catIdx + 1}</span>
-                      <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">{category}</h3>
+                    <div className="flex items-center gap-2 md:gap-4 mb-6 sticky top-0 bg-white/80 backdrop-blur-sm py-2 z-10">
+                      <span className="text-gray-200 text-2xl md:text-3xl font-black">0{catIdx + 1}</span>
+                      <h3 className="text-md md:text-lg font-black text-gray-900 uppercase tracking-tighter">{category}</h3>
                       <div className="h-px bg-gray-100 flex-1" />
                     </div>
                     
@@ -372,10 +376,10 @@ export default function ServicePage({ params }) {
               </div>
 
               {/* Modal Footer */}
-              <div className="p-8 border-t border-gray-100 bg-gray-50/50">
+              <div className="p-4 md:p-8 border-t border-gray-100 bg-gray-50/50">
                 <button 
                   onClick={() => setIsBookingModalOpen(true)}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white py-5 px-10 rounded-[1.5rem] font-semibold text-lg tracking-tight transition-all duration-300 shadow-xl shadow-red-200 flex items-center justify-center gap-3 group"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white md:py-5 py-3 md:px-10 px-5 rounded-[0.7rem] md:rounded-[1.5rem] font-semibold text-lg tracking-tight transition-all duration-300 shadow-xl shadow-red-200 flex items-center justify-center gap-3 group"
                 >
                   <span>Customize & Check Price</span>
                   <svg className="w-5 h-5 transform group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -442,34 +446,62 @@ export default function ServicePage({ params }) {
       
                 {/* Date & Time */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div>
+                  <div className="relative">
                     <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">
                       Event Date
                     </label>
-                    <input
-                      type="text"
-                      placeholder="DD / MM / YYYY"
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 font-medium text-slate-800 placeholder:text-slate-300 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition"
-                      value={bookingDetails.date}
-                      onChange={(e) =>
-                        setBookingDetails({ ...bookingDetails, date: e.target.value })
-                      }
-                    />
+                    <button
+                      onClick={() => setCalendarOpen(!calendarOpen)}
+                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left font-medium text-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition flex items-center justify-between"
+                    >
+                      <span className={bookingDetails.date ? "text-slate-800" : "text-slate-300"}>
+                        {bookingDetails.date || "DD / MM / YYYY"}
+                      </span>
+                      <svg className="h-5 w-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+
+                    <AnimatePresence>
+                      {calendarOpen && (
+                        <div className="absolute top-full left-0 z-[120]">
+                          <CustomCalendar
+                            selectedDate={bookingDetails.date}
+                            onSelect={(date) => setBookingDetails({ ...bookingDetails, date })}
+                            onClose={() => setCalendarOpen(false)}
+                          />
+                        </div>
+                      )}
+                    </AnimatePresence>
                   </div>
       
-                  <div>
+                  <div className="relative">
                     <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">
                       Event Time
                     </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 7:00 PM"
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 font-medium text-slate-800 placeholder:text-slate-300 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition"
-                      value={bookingDetails.time}
-                      onChange={(e) =>
-                        setBookingDetails({ ...bookingDetails, time: e.target.value })
-                      }
-                    />
+                    <button
+                      onClick={() => setTimePickerOpen(!timePickerOpen)}
+                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left font-medium text-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition flex items-center justify-between"
+                    >
+                      <span className={bookingDetails.time ? "text-slate-800" : "text-slate-300"}>
+                        {bookingDetails.time || "e.g. 7:00 PM"}
+                      </span>
+                      <svg className="h-5 w-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+
+                    <AnimatePresence>
+                      {timePickerOpen && (
+                        <div className="absolute top-full left-0 z-[120]">
+                          <CustomTimePicker
+                            selectedTime={bookingDetails.time}
+                            onSelect={(time) => setBookingDetails({ ...bookingDetails, time })}
+                            onClose={() => setTimePickerOpen(false)}
+                          />
+                        </div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
       
@@ -515,7 +547,7 @@ export default function ServicePage({ params }) {
                          transition={{ duration: 0.25, ease: "easeOut" }}
                          className="absolute z-20 mt-3 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
                        >
-                         <div className="max-h-64 overflow-y-auto py-2">
+                         <div className="md:max-h-56 max-h-48 overflow-y-auto py-2">
                            {[10, 20, 30, 40, 50, 75, 100].map((num) => (
                              <button
                                key={num}

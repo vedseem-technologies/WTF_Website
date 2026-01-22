@@ -13,34 +13,49 @@ function Carousel() {
   ]
 
   return (
-    <div className="w-full bg-black py-8 overflow-hidden">
-      <div className="flex animate-scroll">
-        {/* First set of images */}
+    <div className="w-full bg-black py-16 overflow-hidden">
+      <div className="flex animate-scroll items-center">
+        {/* First set */}
         {images.map((src, index) => (
-          <div key={`first-${index}`} className="shrink-0 mx-4">
+          <div
+            key={`first-${index}`}
+            className="shrink-0 mx-2 md:mx-4"
+          >
             <div className="rounded-lg overflow-hidden">
               <Image
                 src={src}
                 alt={`carousel-${index + 1}`}
                 width={300}
                 height={200}
-                className="object-cover block"
                 unoptimized
+                className="
+                  object-cover block
+                  w-[180px] h-[180px]
+                  md:w-[300px] md:h-[300px]
+                "
               />
             </div>
           </div>
         ))}
-        {/* Duplicate set for seamless loop */}
+
+        {/* Duplicate set */}
         {images.map((src, index) => (
-          <div key={`second-${index}`} className="shrink-0 mx-4">
+          <div
+            key={`second-${index}`}
+            className="shrink-0 mx-2 md:mx-4"
+          >
             <div className="border-4 border-red-500 rounded-lg overflow-hidden">
               <Image
                 src={src}
                 alt={`carousel-${index + 1}`}
                 width={300}
                 height={200}
-                className="object-cover block"
                 unoptimized
+                className="
+                  object-cover block
+                  w-[180px] h-[180px]
+                  md:w-[300px] md:h-[300px]
+                "
               />
             </div>
           </div>

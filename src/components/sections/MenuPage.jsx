@@ -3,7 +3,6 @@
 import React from "react";
 import Image from "next/image";
 
-
 const accentMap = {
   yellow: {
     text: "text-yellow-400",
@@ -59,15 +58,12 @@ const menuSections = [
 ];
 
 
-/* ============================
-   COMPONENT
-=============================== */
 export default function MenuPage() {
   return (
     <div className="w-full min-h-screen bg-[#0f0f0f]">
 
-      {/* ================= HERO SECTION ================= */}
-      <div className="relative w-full h-[420px]">
+      {/* HERO */}
+      <div className="relative w-full h-[280px] md:h-[420px]">
         <Image
           src="/corousel-1.png"
           alt="Food Banner"
@@ -76,73 +72,87 @@ export default function MenuPage() {
           className="object-cover"
         />
         <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-          <h1 className="text-yellow-400 text-4xl md:text-6xl font-bold">
+          <h1 className="text-yellow-400 text-3xl md:text-6xl font-bold">
             Our Food Items
           </h1>
         </div>
       </div>
 
-      {/* ================= MENU SECTIONS ================= */}
-      <section className="px-4 md:px-10 py-14 w-[96%] mx-auto">
+      {/* MENU SECTIONS */}
+      <section className="px-3 sm:px-4 md:px-10 py-10 md:py-14 w-full md:w-[96%] mx-auto">
 
         {menuSections.map((section, index) => (
-          <div key={index} className="mb-16 bg-gray-800/20 backdrop-blur-sm py-8 px-14 rounded-2xl border-1 border-white/50">
-
+          <div
+            key={index}
+            className="
+              mb-12 md:mb-16
+              bg-gray-800/20 backdrop-blur-sm
+              py-6 md:py-8
+              px-4 sm:px-6 md:px-14
+              rounded-2xl
+              border border-white/50
+            "
+          >
             {/* Section Header */}
-            <div className="flex justify-between items-center mb-6">
-              <div className="mb-6">
-                <h2 className="text-white text-lg md:text-2xl font-semibold">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+              <div>
+                <h2 className="text-white text-base sm:text-lg md:text-2xl font-semibold">
                   <span className={accentMap[section.accentColor].text}>
                     {section.title}
                   </span>
                 </h2>
-              
-                {/* Underline */}
+
                 <div
-                  className={`mt-2 h-[3px] w-24 rounded-full ${accentMap[section.accentColor].underline}`}
+                  className={`mt-2 h-[3px] w-20 md:w-24 rounded-full ${accentMap[section.accentColor].underline}`}
                 />
               </div>
-              
-              <button className="text-white bg-red-500 py-1 px-4 rounded-full text-lg">View All</button>
+
+              <button className="self-start sm:self-auto text-white bg-red-500 py-1 px-4 rounded-full text-sm md:text-lg">
+                View All
+              </button>
             </div>
+
             {/* Horizontal Scroll */}
-            <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-4">
+            <div className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide pb-4">
 
               {section.items.map((item) => (
                 <div
                   key={item.id}
-                  className={`relative min-w-[18rem] max-w-[18rem] h-[22rem]
-                  rounded-2xl overflow-hidden group cursor-pointer shadow-xl
-                  border-1 ${accentMap[section.accentColor].border}`}
+                  className={`
+                    relative
+                    min-w-[14rem] h-[18rem]
+                    sm:min-w-[16rem] sm:h-[20rem]
+                    md:min-w-[18rem] md:h-[22rem]
+                    rounded-2xl overflow-hidden
+                    group cursor-pointer shadow-xl
+                    border ${accentMap[section.accentColor].border}
+                  `}
                 >
-                  {/* Background Image */}
+                  {/* Image */}
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-              
-                  {/* Dark Overlay */}
+
+                  {/* Overlays */}
                   <div className="absolute inset-0 bg-black/30" />
-              
-                  {/* Bottom Gradient for Text */}
-                  <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black via-black/70 to-transparent" />
-              
-                  {/* Content OVER Image */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
-                    <h3 className="text-white font-semibold text-xl leading-tight">
+                  <div className="absolute bottom-0 left-0 right-0 h-32 md:h-40 bg-gradient-to-t from-black via-black/70 to-transparent" />
+
+                  {/* Content */}
+                  <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 z-10">
+                    <h3 className="text-white font-semibold text-base md:text-xl leading-tight">
                       {item.name}
                     </h3>
-            
-                    <div className="flex items-center justify-between mt-3">
-                      <span className="text-white font-bold text-lg">
+
+                    <div className="flex items-center justify-between mt-2 md:mt-3">
+                      <span className="text-white font-bold text-base md:text-lg">
                         {item.price}
                       </span>
-              
-                    <p className="text-yellow-400 text-lg mt-1">
-                      ⭐ {item.rating}
-                    </p>
+                      <p className="text-yellow-400 text-base md:text-lg">
+                        ⭐ {item.rating}
+                      </p>
                     </div>
                   </div>
                 </div>
