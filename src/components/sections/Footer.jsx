@@ -175,8 +175,8 @@ function Footer() {
           </div>
 
           {/* Social Links - Compact Centered */}
-          <div className="mb-2">
-            <h3 className="text-red-800 text-xl font-bold mb-2 text-center uppercase tracking-tight">Follow Us</h3>
+          <div className="mb-">
+            <h3 className="text-red-800 text-xl font-bold mb- text-center uppercase tracking-tight">Follow Us</h3>
             <div className="flex justify-center gap-4">
               {/* Instagram */}
               <Link 
@@ -212,7 +212,7 @@ function Footer() {
         </div>
 
         {/* Copyright Section - Centered at bottom */}
-        <div className="border-t border-gray-300 mt-8 pt-6 pb-4">
+        <div className="border-t border-gray-300 mt-4 pt-4 pb-4">
           <p className="text-center text-gray-600 text-xl md:text-2xl">
             © 2026 WTF. All rights reserved.
           </p>
