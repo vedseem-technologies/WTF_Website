@@ -77,7 +77,7 @@ function PopularItems() {
           className="text-center mb-6 md:mb-6"
         >
           <span className="text-white font-bold tracking-[0.3rem] uppercase text-md md:mb-4 block">Chef's Top Picks</span>
-          <h2 className="text-4xl md:text-8xl font-black text-white tracking- uppercase italic">
+          <h2 className="text-4xl md:text-8xl font-black text-white tracking- uppercase">
             Most <span className="text-yellow-400">Popular</span> Items
           </h2>
           <div className="w-full h-0.5 md:h-1 bg-yellow-400 mx-auto -mt-2 md:-mt-4 rounded-full" />
@@ -152,7 +152,7 @@ function PopularItems() {
           className="w-full grid md:grid-cols-2 gap-4 md:gap-8 items-center bg-gray-500/10 md:bg-white/5 backdrop-blur-xl rounded-[3rem] p-6 md:p-6 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
         >
           <div className="flex flex-col text-center md:text-left md:px-8">
-            <h3 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter italic mb-6"
+            <h3 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter mb-6"
                 style={{
                     lineHeight: "0.7"
                 }}
