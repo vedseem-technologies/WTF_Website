@@ -105,17 +105,14 @@ function Banner() {
                                     alt={step.title} 
                                     width={24} 
                                     height={24} 
-                                    className="transition-all duration-500"
-                                    style={{
-                                        filter: 'brightness(0) saturate(100%) invert(13%) sepia(94%) saturate(5436%) hue-rotate(352deg) brightness(83%) contrast(105%)'
-                                    }}
+                                    className="transition-all duration-500 [filter:brightness(0)_saturate(100%)_invert(13%)_sepia(94%)_saturate(5436%)_hue-rotate(352deg)_brightness(83%)_contrast(105%)] group-hover:[filter:brightness(0)_invert(1)]"
                                 />
                             ) : (
                                 step.icon
                             )}
                         </div>
                         
-                        <span className="text-4xl font-black text-zinc-500 group-hover:text-red-200 absolute top-8 right-8 transition-colors">
+                        <span className="text-4xl font-black text-zinc-500 group-hover:text-red-500 absolute top-8 right-8 transition-colors">
                             {step.id}
                         </span>
 
