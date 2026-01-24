@@ -127,7 +127,7 @@ function CateringPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white font-dongle">
       {/* Header Section */}
       <section className="relative bg-white pt-24 pb-8 overflow-hidden">
         {/* Subtle background decoration */}
@@ -154,8 +154,8 @@ function CateringPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl md:text-6xl py-2 font-bold bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-12"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              className="text-4xl md:text-6xl py-2 dongle-regular bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-12"
+              // style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Best Catering Services
             </motion.h1>
@@ -218,7 +218,7 @@ function CateringPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
             ></motion.span>
-            <span className="tracking-tight">Choose Your Occasion</span>
+            <span className="tracking-tight text-3xl md:text-5xl">Choose Your Occasion</span>
           </motion.h2>
           
           {/* Scrollable Occasions Row */}
@@ -281,7 +281,7 @@ function CateringPage() {
                     className="absolute bottom-0 left-0 right-0 z-10"
                   >
                     <div className="bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 md:p-5 lg:p-6">
-                      <span className="text-white font-extrabold text-lg md:text-xl lg:text-2xl text-center block tracking-wide uppercase drop-shadow-2xl">
+                      <span className="text-white font-semibold text-3xl md:text-4xl lg:text-5xl text-center block tracking-tight uppercase drop-shadow-2xl">
                         {occasion.name}
                       </span>
                     </div>
@@ -318,7 +318,7 @@ function CateringPage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
             ></motion.span>
-            <span className="tracking-tight">Choose Your Services</span>
+            <span className="tracking-tight text-3xl md:text-5xl">Choose Your Services</span>
           </motion.h2>
           
           {/* Scrollable Services Row */}
@@ -380,7 +380,7 @@ function CateringPage() {
                   className="absolute bottom-0 left-0 right-0 z-10"
                 >
                   <div className="bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 md:p-5 lg:p-6">
-                    <span className="text-white font-extrabold text-lg md:text-xl lg:text-2xl text-center block tracking-wide uppercase drop-shadow-2xl">
+                    <span className="text-white font-semibold text-3xl md:text-4xl lg:text-5xl text-center block tracking-tight uppercase drop-shadow-2xl">
                       {service.name}
                     </span>
                   </div>
@@ -431,7 +431,7 @@ function CateringPage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.4, type: "spring" }}
-                className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-red-700 via-red-800 to-red-700 bg-clip-text text-transparent"
+                className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-red-700 via-red-800 to-red-700 bg-clip-text text-transparent"
               >
                 Package
               </motion.h2>
@@ -461,7 +461,7 @@ function CateringPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
               ></motion.span>
-              <span className="tracking-tight">Categories</span>
+              <span className="tracking-tight text-4xl md:text-5xl">Categories</span>
             </motion.h3>
             
             {/* Scrollable Categories Row */}
@@ -526,7 +526,7 @@ function CateringPage() {
                     className="absolute bottom-0 left-0 right-0 z-10"
                   >
                     <div className="bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 md:p-5 lg:p-6">
-                      <span className="text-white font-extrabold text-lg md:text-xl lg:text-2xl text-center block tracking-wide uppercase drop-shadow-2xl">
+                      <span className="text-white font-semibold text-3xl md:text-4xl lg:text-5xl text-center block tracking-tight uppercase drop-shadow-2xl">
                         {category.name}
                       </span>
                     </div>
@@ -723,10 +723,10 @@ function CateringPage() {
                         transition={{ duration: 0.6, delay: pkg.id * 0.1 + 0.2 }}
                         className="text-center"
                       >
-                        <h3 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white mb-2 drop-shadow-2xl tracking-tight">
+                        <h3 className="text-6xl md:text-7xl lg:text-8xl font-extrabold text-white mb-2 drop-shadow-2xl tracking-tight">
                           {pkg.stat}
                         </h3>
-                        <p className="text-white text-base md:text-lg lg:text-xl font-semibold drop-shadow-lg">
+                        <p className="text-white text-xl md:text-2xl lg:text-3xl font-semibold drop-shadow-lg">
                           {pkg.label}
                         </p>
                       </motion.div>
@@ -746,7 +746,7 @@ function CateringPage() {
                     className="bg-gradient-to-r from-red-700 to-red-800 h-16 md:h-20 lg:h-24 flex items-center justify-center relative overflow-hidden group-hover:from-red-600 group-hover:to-red-700 transition-all duration-300"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <span className="text-white font-extrabold text-lg md:text-xl lg:text-2xl tracking-wide relative z-10 drop-shadow-lg uppercase">
+                    <span className="text-white font-extrabold text-2xl md:text-3xl lg:text-4xl tracking-wide relative z-10 drop-shadow-lg uppercase">
                       {pkg.name}
                     </span>
                   </motion.div>

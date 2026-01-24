@@ -175,7 +175,7 @@ export default function OccasionPage({ params }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-3xl md:text-5xl font-bold text-gray-900 mb-2 md:mb-4 tracking-tight"
+                className="text-4xl md:text-6xl font-bold text-gray-900 mb-2 md:mb-4 tracking-tight"
                 style={{ fontFamily: "var(--font-playfair), serif" }}
               >
                 {occasion.name} <span className="text-red-700">Packages</span>
@@ -246,14 +246,14 @@ export default function OccasionPage({ params }) {
                             {item.servingSize} People
                           </div>
                           
-                          <h4 className="text-white font-semibold md:font-bold md:text-2xl text-lg mb-1 leading-tight group-hover:text-red-200 transition-colors">
+                          <h4 className="text-white font-semibold md:font-bold md:text-3xl text-xl mb-1 leading-tight group-hover:text-red-200 transition-colors">
                             {item.name}
                           </h4>
                           
                           <div className="flex items-center justify-between md:mt-4 mt-2">
                             <div className="text-white">
-                              <span className="text-xs text-white/60 block uppercase font-bold tracking-tighter">Starting from</span>
-                              <span className="md:text-2xl text-lg font-semibold md:font-black">{item.price}</span>
+                              <span className="text-sm text-white/60 block uppercase font-bold tracking-tighter">Starting from</span>
+                              <span className="md:text-3xl text-xl font-semibold md:font-black">{item.price}</span>
                             </div>
                             
                             <motion.button
@@ -302,21 +302,21 @@ export default function OccasionPage({ params }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-gray-900/80 backdrop-blur-xl md:px-24 z-[100] flex items-center justify-center p-4 md:p-6"
+            className="fixed inset-0 bg-gray-900/80 backdrop-blur-xl z-[100] flex items-center justify-center p-4 md:p-6 font-dongle"
             onClick={() => setSelectedItem(null)}
           >
             <motion.div
               initial={{ y: 100, opacity: 0, scale: 0.95 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={{ y: 100, opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-[2rem] shadow-[0_50px_100px_rgba(0,0,0,0.3)] md:max-w-xl w-full max-h-[85vh] overflow-hidden flex flex-col relative"
+              className="bg-white rounded-[2rem] shadow-[0_50px_100px_rgba(0,0,0,0.3)] max-w-xl w-full max-h-[85vh] overflow-hidden flex flex-col relative"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header */}
               <div className="p-6 md:p-8 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-50">
                 <div>
-                  <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-gray-900 leading-tight mb-1">{selectedItem.name}</h2>
-                  <div className="flex items-center gap-2 md:gap-4 text-gray-500 font-bold text-xs uppercase tracking-widest">
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-1">{selectedItem.name}</h2>
+                  <div className="flex items-center gap-2 md:gap-4 text-gray-500 font-bold text-2xl uppercase tracking-widest">
                     <span className="flex items-center gap-1.5">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -345,7 +345,7 @@ export default function OccasionPage({ params }) {
                   <div key={category} className="mb-10 last:mb-0">
                     <div className="flex items-center gap-2 md:gap-4 mb-6 bg-white/80 backdrop-blur-sm py-2 z-10">
                       <span className="text-gray-200 text-2xl md:text-3xl font-black">0{catIdx + 1}</span>
-                      <h3 className="text-md md:text-lg font-black text-gray-900 uppercase tracking-tighter">{category}</h3>
+                      <h3 className="text-3xl md:text-4xl font-black text-gray-900 uppercase tracking-tighter">{category}</h3>
                       <div className="h-px bg-gray-100 flex-1" />
                     </div>
                     
@@ -362,10 +362,10 @@ export default function OccasionPage({ params }) {
                             <Image src={foodItem.image} alt={foodItem.name} fill className="object-cover group-hover/item:scale-110 transition-transform duration-500" unoptimized />
                           </div>
                           <div className="flex-1">
-                            <span className="text-gray-800 font-bold text-base block mb-0.5">{foodItem.name}</span>
+                            <span className="text-gray-800 font-bold text-3xl block mb-0.5">{foodItem.name}</span>
                             <div className="flex items-center gap-1.5">
                               <div className={`w-1.5 h-1.5 rounded-full ${selectedItem.type === "veg" ? "bg-green-500" : "bg-red-500"}`} />
-                              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{selectedItem.type}</span>
+                              <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">{selectedItem.type}</span>
                             </div>
                           </div>
                         </motion.div>
@@ -379,7 +379,7 @@ export default function OccasionPage({ params }) {
               <div className="p-4 md:p-8 border-t border-gray-100 bg-gray-50/50">
                 <button 
                   onClick={() => setIsBookingModalOpen(true)}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white md:py-5 py-3 px-5 md:px-10 rounded-[0.7rem] md:rounded-[1.5rem] font-semibold text-lg tracking-tight transition-all duration-300 shadow-xl shadow-red-200 flex items-center justify-center gap-3 group"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white md:py-4 py-3 px-5 md:px-10 rounded-[0.7rem] md:rounded-[1.5rem] font-bold text-3xl tracking-tight transition-all duration-300 shadow-xl shadow-red-200 flex items-center justify-center gap-3 group"
                 >
                   <span>Customize & Check Price</span>
                   <svg className="w-5 h-5 transform group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -399,7 +399,7 @@ export default function OccasionPage({ params }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4"
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4 font-dongle"
             onClick={() => {
               setIsBookingModalOpen(false);
               setSelectedItem(null);
@@ -424,10 +424,10 @@ export default function OccasionPage({ params }) {
                   </svg>
                 </button>
       
-                <h2 className="text-xl font-extrabold text-slate-900">
+                <h2 className="text-4xl font-extrabold text-slate-900">
                   Booking Details
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-2xl text-slate-500">
                   Get exact pricing & service availability
                 </p>
               </div>
@@ -436,10 +436,10 @@ export default function OccasionPage({ params }) {
               <div className="space-y-6 px-8 py-6">
                 {/* Service */}
                 <div>
-                  <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  <label className="mb-1 block text-2xl font-semibold uppercase tracking-wide text-slate-400">
                     Selected Service
                   </label>
-                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-semibold text-slate-800">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-bold text-3xl text-slate-800">
                     {occasion.name}
                   </div>
                 </div>
@@ -447,12 +447,12 @@ export default function OccasionPage({ params }) {
                 {/* Date & Time */}
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="relative">
-                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <label className="mb-1 block text-lg font-semibold uppercase tracking-wide text-slate-400">
                       Event Date
                     </label>
                     <button
                       onClick={() => setCalendarOpen(!calendarOpen)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left font-medium text-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition flex items-center justify-between"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left font-bold text-xl text-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition flex items-center justify-between"
                     >
                       <span className={bookingDetails.date ? "text-slate-800" : "text-slate-300"}>
                         {bookingDetails.date || "DD / MM / YYYY"}
@@ -476,12 +476,12 @@ export default function OccasionPage({ params }) {
                   </div>
       
                   <div className="relative">
-                    <label className="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    <label className="mb-1 block text-lg font-semibold uppercase tracking-wide text-slate-400">
                       Event Time
                     </label>
                     <button
                       onClick={() => setTimePickerOpen(!timePickerOpen)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left font-medium text-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition flex items-center justify-between"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left font-bold text-xl text-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition flex items-center justify-between"
                     >
                       <span className={bookingDetails.time ? "text-slate-800" : "text-slate-300"}>
                         {bookingDetails.time || "e.g. 7:00 PM"}
@@ -518,10 +518,10 @@ export default function OccasionPage({ params }) {
                       className="flex w-full items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-left transition hover:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-200"
                     >
                       <div>
-                        <p className="text-sm font-medium text-emerald-600">
+                        <p className="text-2xl font-bold text-emerald-600">
                           Selected Guests
                         </p>
-                        <p className="text-lg text-emerald-900">
+                        <p className="text-3xl font-black text-emerald-900">
                           {bookingDetails.vegGuests} People
                         </p>
                       </div>
@@ -587,7 +587,7 @@ export default function OccasionPage({ params }) {
                 {/* CTA */}
                 <button
                   onClick={() => setShowSummary(true)}
-                  className="mt-4 flex w-full items-center justify-center rounded-2xl bg-red-600 px-6 py-4 text-lg font-semibold text-white shadow-lg shadow-red-200 transition hover:bg-red-700 active:scale-[0.98]"
+                  className="mt-4 flex w-full items-center justify-center rounded-2xl bg-red-600 px-6 py-4 text-3xl font-bold text-white shadow-lg shadow-red-200 transition hover:bg-red-700 active:scale-[0.98]"
                 >
                   Customize & Check Price
                 </button>

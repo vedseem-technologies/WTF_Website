@@ -139,7 +139,23 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 flex items-center justify-center p-6 relative">
+      {/* Back Button */}
+      <button 
+        onClick={() => router.push('/')}
+        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl text-gray-600 font-bold hover:bg-white hover:shadow-lg transition-all active:scale-95 group"
+      >
+        <svg 
+          className="w-5 h-5 group-hover:-translate-x-1 transition-transform" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span>Back to Home</span>
+      </button>
+
       <Toast
         message={toast.message}
         type={toast.type}
@@ -165,7 +181,7 @@ export default function SignupPage() {
             <form onSubmit={handleSignup} className="space-y-5">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-black text-gray-500 uppercase mb-2">
+                  <label className="block text-xl md:text-md text-gray-500 uppercase mb-2">
                     First Name *
                   </label>
                   <input
@@ -173,13 +189,13 @@ export default function SignupPage() {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none font-bold"
-                    placeholder="John"
+                    className="w-full px-4 py-3 text-gray-500 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
+                    placeholder="Enter your first name"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-black text-gray-500 uppercase mb-2">
+                  <label className="block text-xl md:text-md text-gray-500 uppercase mb-2">
                     Last Name
                   </label>
                   <input
@@ -187,14 +203,14 @@ export default function SignupPage() {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none font-bold"
-                    placeholder="Doe"
+                    className="w-full px-4 py-3 text-gray-500 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
+                    placeholder="Enter your last name"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-black text-gray-500 uppercase mb-2">
+                <label className="block text-xl md:text-md text-gray-500 uppercase mb-2">
                   Email Address *
                 </label>
                 <input
@@ -202,14 +218,14 @@ export default function SignupPage() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none font-bold"
-                  placeholder="john@example.com"
+                  className="w-full px-4 py-3 text-gray-500 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
+                  placeholder="Enter your email"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-black text-gray-500 uppercase mb-2">
+                <label className="block text-xl md:text-md text-gray-500 uppercase mb-2">
                   Password *
                 </label>
                 <input
@@ -217,14 +233,14 @@ export default function SignupPage() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none font-bold"
+                  className="w-full px-4 py-3 text-gray-500 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
                   placeholder="••••••••"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-black text-gray-500 uppercase mb-2">
+                <label className="block text-xl md:text-md text-gray-500 uppercase mb-2">
                   Confirm Password *
                 </label>
                 <input
@@ -232,7 +248,7 @@ export default function SignupPage() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none font-bold"
+                  className="w-full px-4 py-3 text-gray-500 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
                   placeholder="••••••••"
                   required
                 />
@@ -241,7 +257,7 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-lg rounded-xl shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40 hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white text-md rounded-xl shadow-lg shadow-red-500/30 hover:shadow-xl hover:shadow-red-500/40 hover:-translate-y-0.5 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creating Account...' : 'Sign Up'}
               </button>
@@ -263,7 +279,7 @@ export default function SignupPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-black text-gray-500 uppercase mb-2 text-center">
+                <label className="block text-gray-500 uppercase mb-2 text-center">
                   Enter OTP
                 </label>
                 <input

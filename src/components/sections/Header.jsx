@@ -84,7 +84,8 @@ function Header() {
 
             {/* Desktop Buttons */}
             <div className="flex items-center gap-6">
-              <button
+              <Link href="/partner">
+                <button
                 className="
                   relative text-3xl font-semibold
                   bg-gradient-to-r from-yellow-400 to-red-500
@@ -106,6 +107,7 @@ function Header() {
               >
                 Be a Partner ?
               </button>
+              </Link>
               <Link href="/login">
               <button className="bg-white text-black px-8 py-2 rounded-full text-xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
               </Link>
@@ -133,12 +135,12 @@ function Header() {
               animate={{ y: 0 }}
               exit={{ y: "-100%" }}
               transition={{ type: "tween", duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              className="fixed top-0 left-0 right-0 w-full bg-zinc-950/95 backdrop-blur-3xl z-[70] flex flex-col overflow-hidden border-b border-white/5"
+              className="fixed top-0 left-0 right-0 w-full bg-zinc-950/95 backdrop-blur-3xl z-[70] flex flex-col overflow-hidden border-b border-white/5 md:h-fit md:rounded-b-[4rem] md:shadow-[0_50px_100px_rgba(0,0,0,0.8)]"
             >
               <div className="max-w-7xl mx-auto w-full flex flex-col">
                 {/* Header inside Drawer */}
-                <div className="px-6 md:px-12 py-4 md:py-8 flex items-center justify-between border-b border-white/5">
-                  <Image src="/Logo.png" alt="logo" width={60} height={35} className="w-auto h-7 md:h-12" />
+                <div className="px-6 md:px-12 py-2 flex items-center justify-between border-b border-white/5">
+                  <Image src="/Logo.png" alt="logo" width={60} height={35} className="w-auto h-10 md:h-12" />
                   <button
                     className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full text-white/50 hover:text-white transition-all active:scale-95"
                     onClick={() => setIsOpen(false)}
@@ -150,7 +152,7 @@ function Header() {
                 </div>
 
                 {/* Minimal Navigation List */}
-                <div className="flex flex-col px-6 md:px-12 py-6 md:py-12">
+                <div className="flex flex-col px-6 md:px-12 py-6 md:py-8">
                   {navItems.map((item, index) => {
                     const isActive = pathname === item.href;
                     return (
@@ -165,7 +167,7 @@ function Header() {
                           onClick={() => setIsOpen(false)}
                           className="flex items-center justify-between py-2 md:py-4 border-b border-white/[0.03] group"
                         >
-                          <span className={`text-3xl md:text-5xl dongle-regular tracking-tight transition-colors ${
+                          <span className={`text-3xl md:text-4xl dongle-regular tracking-tight transition-colors ${
                              isActive ? "text-red-600" : "text-white/60 group-hover:text-white"
                           }`}>
                             {item.label}
@@ -180,13 +182,13 @@ function Header() {
                 </div>
 
                 {/* Primary Actions Footer */}
-                <div className="p-6 md:p-12 pt-2 pb-4 md:pb-8 grid grid-cols-2 gap-4 md:gap-8">
-                  <button className="bg-white text-black py-2 md:py-4 rounded-xl text-2xl md:text-4xl dongle-regular uppercase tracking-[0.1em] active:scale-95 transition-all">
+                <div className="p-6 md:px-12 md:pt-4 md:pb-8 pt-2 pb-4 md:gap-8 grid grid-cols-2 gap-4">
+                  <Link className="bg-white text-black py-2 md:py-3 rounded-xl text-2xl md:text-3xl text-center dongle-regular uppercase tracking-[0.1em] active:scale-95 transition-all" href="/login">
                     Login
-                  </button>
-                  <button className="bg-gradient-to-r from-yellow-400 to-red-500 text-white py-2 md:py-4 rounded-xl text-2xl md:text-4xl dongle-regular uppercase tracking-[0.1em] border border-white/5 active:scale-95 transition-all">
+                  </Link>
+                  <Link className="bg-gradient-to-r from-yellow-400 to-red-500 text-center text-white py-2 md:py-3 rounded-xl text-2xl md:text-3xl dongle-regular uppercase tracking-[0.1em] border border-white/5 active:scale-95 transition-all" href="/partner">
                     Partner
-                  </button>
+                  </Link>
                 </div>
               </div>
             </motion.div>

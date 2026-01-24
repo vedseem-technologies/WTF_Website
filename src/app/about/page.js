@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Header from "../../components/sections/Header";
+import Footer from "../../components/sections/Footer";
 
 export default function AboutPage() {
   const steps = [
@@ -42,7 +43,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-[#fafafa] overflow-hidden selection:bg-red-500 selection:text-white">
       <Header />  
       {/* Dynamic Food Hero */}
-      <section className="relative pt-32 pb-20 md:pt-36 md:pb-40 bg-zinc-950 overflow-hidden">
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-40 lg:pt-36 lg:pb-40 bg-zinc-950 overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 z-0">
           <motion.div 
@@ -63,23 +64,23 @@ export default function AboutPage() {
           />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-4 relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
           >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/20 text-red-500 font-black text-xl md:text-2xl uppercase tracking-[0.3em] mb-8">
+            <span className="inline-block px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/20 text-red-500 font-black text-xl md:text-2xl lg:text-2xl uppercase tracking-[0.3em] mb-8">
               The Evolution of Taste
             </span>
-            <h1 className="text-7xl md:text-9xl lg:text-[10rem] font-black text-white leading-none tracking-tighter mb-8 uppercase"
+            <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-black text-white leading-none tracking-tighter mb-8 uppercase"
                 style={{lineHeight: '0.7'}}
             >
               FEAST. <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500">EXPERIENCE.</span> <br />
               REPEAT.
             </h1>
-            <p className="text-zinc-400 text-3xl md:text-4xl max-w-4xl mx-auto font-medium leading-relaxed"
+            <p className="text-zinc-400 text-3xl md:text-4xl lg:text-4xl max-w-4xl mx-auto font-medium leading-relaxed px-4"
                style={{lineHeight: '0.9'}}
             >
               WTF1 isn't just a platform; it's a culinary journey designed for the modern foodie. We bridge the gap between hungry hearts and incredible flavors.
@@ -105,11 +106,11 @@ export default function AboutPage() {
       </section>
 
       {/* How it Works / The Platform */}
-      <section className="py-24 md:py-32 px-4 relative">
+      <section className="py-24 md:py-32 px-4 md:px-8 lg:px-4 relative">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <div className="max-w-xl">
-              <h2 className="text-5xl md:text-7xl font-black text-zinc-950 uppercase tracking-tighter leading-tight"
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-zinc-950 uppercase tracking-tighter leading-tight"
                   style={{lineHeight: '0.9'}}
               >
                 Seamless <span className="text-red-600 underline decoration-red-200 underline-offset-8">Experience</span> From App To Table
@@ -118,7 +119,7 @@ export default function AboutPage() {
             <p className="text-zinc-500 font-bold uppercase tracking-widest text-xl hidden md:block">Scroll to explore</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {steps.map((step, index) => (
               <motion.div
                 key={step.title}
@@ -128,7 +129,7 @@ export default function AboutPage() {
               >
                 <div className="relative z-10">
                   <div className="text-6xl mb-8 group-hover:scale-125 transition-transform duration-500 inline-block">{step.icon}</div>
-                  <h3 className="text-3xl md:text-4xl font-black text-zinc-950 mb-4 uppercase tracking-tight">{step.title}</h3>
+                  <h3 className="text-3xl md:text-3xl lg:text-4xl font-black text-zinc-950 mb-4 uppercase tracking-tight">{step.title}</h3>
                   <p className="text-zinc-500 text-2xl font-medium leading-relaxed"
                      style={{lineHeight: '0.9'}}
                   >
@@ -144,14 +145,14 @@ export default function AboutPage() {
       </section>
 
       {/* The Variety / Categories Section */}
-      <section className="py-24 bg-zinc-950 px-4">
+      <section className="py-24 bg-zinc-950 px-4 md:px-8 lg:px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase mb-4">Unmatched <span className="text-red-500">Variety</span></h2>
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter uppercase mb-4">Unmatched <span className="text-red-500">Variety</span></h2>
             <p className="text-zinc-500 font-bold uppercase tracking-[0.3em] text-xl md:text-2xl">Whatever you desire, we have it served.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {categories.map((cat, index) => (
               <motion.div
                 key={cat.name}
@@ -178,9 +179,9 @@ export default function AboutPage() {
       </section>
 
       {/* Mission Section with Statistics */}
-      <section className="py-24 md:py-40 px-4 bg-white">
+      <section className="py-24 md:py-32 lg:py-40 px-4 md:px-8 lg:px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <motion.div {...fadeIn} className="relative">
               {/* Overlapping Images Design */}
               <div className="relative w-full aspect-square max-w-md mx-auto lg:mx-0">
@@ -194,9 +195,9 @@ export default function AboutPage() {
               <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-red-600/5 blur-[100px] rounded-full" />
             </motion.div>
 
-            <motion.div {...fadeIn} className="lg:pl-10">
+            <motion.div {...fadeIn} className="lg:pl-10 text-center lg:text-left">
               <span className="text-red-600 font-black uppercase tracking-[0.4em] text-xl mb-6 block">Our Mission</span>
-              <h2 className="text-6xl md:text-8xl font-black text-zinc-950 mb-8 leading-none tracking-tighter uppercase"
+              <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-zinc-950 mb-8 leading-none tracking-tighter uppercase"
                   style={{lineHeight: '0.7'}}
               >
                 Redefining the <br />
@@ -210,18 +211,18 @@ export default function AboutPage() {
               
               <div className="grid grid-cols-2 gap-10">
                 <div>
-                  <p className="text-6xl font-black text-zinc-950 mb-1">500k+</p>
+                  <p className="text-5xl md:text-6xl font-black text-zinc-950 mb-1">500k+</p>
                   <p className="text-zinc-400 font-bold uppercase tracking-widest text-xl">Meals Delivered</p>
                 </div>
                 <div>
-                  <p className="text-6xl font-black text-zinc-950 mb-1">4.9/5</p>
+                  <p className="text-5xl md:text-6xl font-black text-zinc-950 mb-1">4.9/5</p>
                   <p className="text-zinc-400 font-bold uppercase tracking-widest text-xl">User Rating</p>
                 </div>
               </div>
 
-              <div className="mt-12 flex gap-4">
-                 <Link href="/menu" className="px-8 py-4 bg-zinc-950 text-white font-black uppercase tracking-widest text-2xl rounded-2xl hover:bg-zinc-800 transition-all">Browse Menu</Link>
-                 <Link href="/contact" className="px-8 py-4 border border-zinc-200 text-zinc-950 font-black uppercase tracking-widest text-2xl rounded-2xl hover:bg-zinc-50 transition-all">Support</Link>
+              <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                 <Link href="/menu" className="px-8 py-4 bg-zinc-950 text-white font-black uppercase tracking-widest text-2xl rounded-2xl hover:bg-zinc-800 transition-all text-center">Browse Menu</Link>
+                 <Link href="/contact" className="px-8 py-4 border border-zinc-200 text-zinc-950 font-black uppercase tracking-widest text-2xl rounded-2xl hover:bg-zinc-50 transition-all text-center">Support</Link>
               </div>
             </motion.div>
           </div>
@@ -229,11 +230,11 @@ export default function AboutPage() {
       </section>
 
       {/* Modern Newsletter / Join Us */}
-      <section className="pb-6 md:py-6 px-4">
-        <div className="max-w-5xl mx-auto rounded-[4rem] bg-zinc-950 p-12 md:p-24 relative overflow-hidden text-center">
+      <section className="pb-6 md:pb-12 lg:pb-6 px-4 md:px-8 lg:px-4">
+        <div className="max-w-5xl mx-auto rounded-[4rem] bg-zinc-950 p-12 md:p-16 lg:p-24 relative overflow-hidden text-center">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
           <div className="relative z-10">
-             <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter uppercase md:mb-8 mb-6 leading-none"
+             <h2 className="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter uppercase md:mb-8 mb-6 leading-none"
                  style={{lineHeight: '0.9'}}
              >
                Don't Just Eat. <br />
@@ -253,6 +254,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <Footer />
 
       <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {
