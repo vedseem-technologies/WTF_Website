@@ -67,7 +67,7 @@ export default function ContactPage() {
                     <div className="lg:hidden w-full h-px bg-slate-200" />
 
                     {/* Right Column: Form */}
-                    <section className="flex-1 lg:pl-20 space-y-12 animate-in fade-in slide-in-from-right-8 duration-1000 delay-400 fill-mode-both">
+                    <section className="flex-1 mx-auto lg:pl-20 space-y-12 animate-in fade-in slide-in-from-right-8 duration-1000 delay-400 fill-mode-both">
                         <h3 className="text-4xl dongle-regular text-slate-900 h-auto lg:h-[40px] flex items-center">
                             You&apos;ve got questions. We&apos;ve got answers.
                         </h3>

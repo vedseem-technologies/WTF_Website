@@ -149,10 +149,10 @@ function PopularItems() {
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
-          className="w-full grid md:grid-cols-2 gap-4 md:gap-8 items-center bg-gray-500/10 md:bg-white/5 backdrop-blur-xl rounded-[3rem] p-6 md:p-6 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+          className="w-full grid md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 items-center bg-gray-500/10 md:bg-white/5 backdrop-blur-xl rounded-[3rem] p-6 md:p-6 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
         >
           <div className="flex flex-col text-center md:text-left md:px-8">
-            <h3 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter mb-6"
+            <h3 className="text-5xl md:text-6xl lg:text-8xl font-black text-white uppercase tracking-tighter mb-6"
                 style={{
                     lineHeight: "0.7"
                 }}
@@ -243,7 +243,7 @@ function PopularItems() {
             </h3>
           </div>
 
-          <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'lg:grid-cols-4 md:gap-16'} max-w-full mx-auto`}>
+          <div className={`grid ${isMobile ? 'grid-cols-2 gap-4' : 'md:grid-cols-2 lg:grid-cols-4 md:gap-16'} max-w-full mx-auto`}>
             {[
               { 
                 label: 'Franchise Model', 
@@ -267,9 +267,9 @@ function PopularItems() {
                 initial={isMobile ? { opacity: 0, scale: 0.9 } : false}
                 whileInView={isMobile ? { opacity: 1, scale: 1 } : false}
                 transition={{ delay: index * 0.1 }}
-                className="flex flex-col items-center justify-center border-2 border-red-100 text-center transition-all duration-300 p-6 md:p-8 rounded-[1rem] md:rounded-[2.5rem] border border-red-100 bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-2xl hover:-translate-y-2"
+                className="flex flex-col items-center justify-center border-2 border-red-100 text-center transition-all duration-300 p-6 md:p-8 rounded-[1rem] md:rounded-[1.5rem] lg:rounded-[2.5rem] border border-red-100 bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-2xl hover:-translate-y-2"
               >
-                <div className="mb-4 md:mb- flex items-center justify-center md:w-14 w-10 h-10 md:h-14 relative">
+                <div className="mb-4 flex items-center justify-center md:w-14 w-10 h-10 md:h-14 relative">
                   <Image 
                     src={service.image} 
                     alt={service.label}
