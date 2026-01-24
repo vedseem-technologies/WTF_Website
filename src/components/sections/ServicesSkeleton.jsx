@@ -68,9 +68,9 @@ function ServicesSkeleton() {
       </motion.div>
 
       {/* Main Container */}
-      <div className="w-full max-w-[95%] bg-[#151515] rounded-[2rem] py-10 md:py-28 border border-white/50 shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-[95%] bg-[#151515] rounded-[2rem] py-16 md:py-28 border border-white/50 shadow-2xl relative overflow-hidden">
 
-        <div className="flex flex-col gap-16 md:gap-28 mt-8">
+        <div className="flex flex-col gap-24 md:gap-28 mt-8">
           {services.map((service, index) => (
             <motion.div
               key={service.id}
@@ -85,7 +85,7 @@ function ServicesSkeleton() {
               }}
               className={`
                 relative w-full ${service.bgColor}
-                py-6 md:py-2
+                py-6 md:py-0
                 px-4 sm:px-6 md:px-10
                 flex flex-col md:flex-row
                 items-center
@@ -96,8 +96,8 @@ function ServicesSkeleton() {
               `}
             >
               {/* IMAGE */}
-              <div className="relative w-full max-w-[220px] md:w-[220px] h-[220px] sm:h-[260px] md:h-[300px] flex-shrink-0">
-                <div className="absolute md:-top-1/4 inset-x-0 h-full rounded-2xl overflow-hidden border border-red-600 shadow-2xl">
+              <div className="relative w-full max-w-[220px] md:w-[220px] h-[270px] sm:h-[260px] md:h-[300px] flex-shrink-0">
+                <div className="absolute -top-1/5 md:-top-1/4 inset-x-0 h-full rounded-2xl overflow-hidden border border-red-600 shadow-2xl">
                   <Image
                     src={service.image}
                     alt={service.name}
@@ -111,19 +111,19 @@ function ServicesSkeleton() {
               {/* TEXT */}
               <div
                 className={`
-                  flex flex-col gap-3 md:gap-4 flex-grow
+                  flex flex-col gap-2 -mt-10 lg:mt-0 lg:gap-4 flex-grow
                   items-center md:items-${service.imagePos === "right" ? "end" : "start"}
                   text-center md:text-${service.imagePos === "right" ? "right" : "left"}
                 `}
               >
-                <h3 className="text-[#f1c40f] text-4xl sm:text-5xl md:text-6xl font-bold uppercase tracking-tight">
+                <h3 className="text-[#f1c40f] text-4xl sm:text-5xl lg:text-6xl font-bold uppercase tracking-tight">
                   {service.name}
                 </h3>
 
                 <p
                   className="
                     text-white
-                    text-2xl sm:text-3xl md:text-4xl
+                    text-2xl sm:text-3xl lg:text-4xl
                     leading-relaxed
                     opacity-90
                     max-w-2xl

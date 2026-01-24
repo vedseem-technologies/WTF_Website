@@ -34,26 +34,28 @@ function Header() {
     <>
       <div
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isVisible ? "md:translate-y-0" : "md:-translate-y-full"
+          isVisible ? "lg:translate-y-0" : "lg:-translate-y-full"
         }`}
       >
-        {/* Mobile Header: Flat, Full-width, Minimal */}
-        <div className="md:hidden w-full px-4 py-2 flex justify-between items-center">
+        {/* Mobile & Tablet Header: Flat, Full-width, Minimal */}
+        <div className="lg:hidden w-full px-4 md:px-10 py-2 md:py-2 flex justify-between items-center bg-black/5 backdrop-blur-sm">
           <Link href="/" className="transition-transform active:scale-95">
-            <Image src="/Logo.png" alt="logo" width={80} height={35} className="w-auto bg-black/10 p-1 rounded-lg border border-white/10 h-14 md:h-8" />
+            <div className="flex items-center gap-3">
+              <Image src="/Logo.png" alt="logo" width={100} height={50} className="w-auto h-12 md:h-16 bg-black/10 p-1.5 rounded-xl border border-white/10" />
+            </div>
           </Link>
 
           <button
-            className="w-10 h-10 flex flex-col items-center bg-black/20 justify-center border border-white/10 p-3 rounded-full gap-1.5"
+            className="w-10 h-10 md:w-14 md:h-14 flex flex-col items-center bg-black/20 justify-center border border-white/10 p-3 rounded-full gap-1.5 transition-all hover:bg-black/40"
             onClick={() => setIsOpen(true)}
           >
-            <span className="w-5 h-0.5 bg-white" />
-            <span className="w-5 h-0.5 bg-white" />
+            <span className="w-5 md:w-7 h-0.5 bg-white" />
+            <span className="w-5 md:w-7 h-0.5 bg-white" />
           </button>
         </div>
 
         {/* Desktop Header: Premium Floating Capsule */}
-        <div className="hidden md:block mx-auto max-w-full mt-6 px-4">
+        <div className="hidden lg:block mx-auto max-w-full mt-6 px-4">
           <div className="relative flex justify-between items-center px-8 py-3 bg-black/40 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl">
             {/* Logo */}
             <Link href="/" className="transition-transform active:scale-95">
@@ -82,7 +84,8 @@ function Header() {
 
             {/* Desktop Buttons */}
             <div className="flex items-center gap-6">
-              <button
+              <Link href="/partner">
+                <button
                 className="
                   relative text-3xl font-semibold
                   bg-gradient-to-r from-yellow-400 to-red-500
@@ -104,13 +107,16 @@ function Header() {
               >
                 Be a Partner ?
               </button>
-              <button className="bg-white text-black px-8 py-2 rounded-full text-xl font-bold active:scale-95 transition-all hover:bg-zinc-100">Login</button>
+              </Link>
+              <Link href="/login">
+              <button className="bg-white text-black px-8 py-2 rounded-full text-xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* MINIMAL MOBILE DRAWER */}
+      {/* MINIMAL MOBILE & TABLET DRAWER */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -129,24 +135,24 @@ function Header() {
               animate={{ y: 0 }}
               exit={{ y: "-100%" }}
               transition={{ type: "tween", duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-              className="fixed top-0 left-0 right-0 w-full bg-zinc-950/95 backdrop-blur-3xl z-[70] flex flex-col overflow-hidden border-b border-white/5"
+              className="fixed top-0 left-0 right-0 w-full bg-zinc-950/95 backdrop-blur-3xl z-[70] flex flex-col overflow-hidden border-b border-white/5 md:h-fit md:rounded-b-[4rem] md:shadow-[0_50px_100px_rgba(0,0,0,0.8)]"
             >
               <div className="max-w-7xl mx-auto w-full flex flex-col">
                 {/* Header inside Drawer */}
-                <div className="px-6 py-4 flex items-center justify-between border-b border-white/5">
-                  <Image src="/Logo.png" alt="logo" width={60} height={35} className="w-auto h-7" />
+                <div className="px-6 md:px-12 py-2 flex items-center justify-between border-b border-white/5">
+                  <Image src="/Logo.png" alt="logo" width={60} height={35} className="w-auto h-10 md:h-12" />
                   <button
-                    className="w-10 h-10 flex items-center justify-center rounded-full text-white/50 hover:text-white transition-all active:scale-95"
+                    className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full text-white/50 hover:text-white transition-all active:scale-95"
                     onClick={() => setIsOpen(false)}
                   >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="md:w-8 md:h-8">
                       <path d="M18 6L6 18M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
 
                 {/* Minimal Navigation List */}
-                <div className="flex flex-col px-6 py-6">
+                <div className="flex flex-col px-6 md:px-12 py-6 md:py-8">
                   {navItems.map((item, index) => {
                     const isActive = pathname === item.href;
                     return (
@@ -159,15 +165,15 @@ function Header() {
                         <Link
                           href={item.href}
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center justify-between py-2 border-b border-white/[0.03] group"
+                          className="flex items-center justify-between py-2 md:py-4 border-b border-white/[0.03] group"
                         >
-                          <span className={`text-3xl dongle-regular tracking-tight transition-colors ${
+                          <span className={`text-3xl md:text-4xl dongle-regular tracking-tight transition-colors ${
                              isActive ? "text-red-600" : "text-white/60 group-hover:text-white"
                           }`}>
                             {item.label}
                           </span>
                           {isActive && (
-                            <div className="w-1.5 h-1.5 bg-red-600 rounded-full" />
+                            <div className="w-1.5 md:w-2.5 h-1.5 md:h-2.5 bg-red-600 rounded-full" />
                           )}
                         </Link>
                       </motion.div>
@@ -176,13 +182,13 @@ function Header() {
                 </div>
 
                 {/* Primary Actions Footer */}
-                <div className="p-6 pt-2 pb-4 grid grid-cols-2 gap-4">
-                  <button className="bg-white text-black py-2 rounded-xl text-2xl dongle-regular uppercase tracking-[0.1em] active:scale-95 transition-all">
+                <div className="p-6 md:px-12 md:pt-4 md:pb-8 pt-2 pb-4 md:gap-8 grid grid-cols-2 gap-4">
+                  <Link className="bg-white text-black py-2 md:py-3 rounded-xl text-2xl md:text-3xl text-center dongle-regular uppercase tracking-[0.1em] active:scale-95 transition-all" href="/login">
                     Login
-                  </button>
-                  <button className="bg-gradient-to-r from-yellow-400 to-red-500 text-white py-2 rounded-xl text-2xl dongle-regular uppercase tracking-[0.1em] border border-white/5 active:scale-95 transition-all">
+                  </Link>
+                  <Link className="bg-gradient-to-r from-yellow-400 to-red-500 text-center text-white py-2 md:py-3 rounded-xl text-2xl md:text-3xl dongle-regular uppercase tracking-[0.1em] border border-white/5 active:scale-95 transition-all" href="/partner">
                     Partner
-                  </button>
+                  </Link>
                 </div>
               </div>
             </motion.div>

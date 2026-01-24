@@ -29,11 +29,8 @@ function Hero() {
               break-words
               uppercase
               font-normal
+              font-cheddar
             "
-            style={{ 
-              fontFamily: '"Cheddar Gothic Rough", sans-serif',
-              fontWeight: "400", 
-            }}
           >
             <span className="block text-[6rem] md:text-[6rem] lg:text-[10rem] font-normal">Where</span>
             <span className="text-[#ff0000] block text-[6rem] md:text-[6rem] lg:text-[14rem] font-normal">Food</span>

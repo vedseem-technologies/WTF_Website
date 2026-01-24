@@ -71,7 +71,9 @@ export default function BlogsPage() {
                   <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 group-hover:text-red-800 transition-colors">
                     {blog.title}
                   </h2>
-                  <p className="text-xl text-gray-700 mb-4">
+                  <p className="text-xl text-gray-700 mb-4"
+                     style={{lineHeight: '0.9'}}
+                  >
                     {blog.excerpt}
                   </p>
                   <button className="text-red-800 font-semibold text-xl hover:underline">

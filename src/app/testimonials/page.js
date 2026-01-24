@@ -115,7 +115,9 @@ export default function TestimonialsPage() {
                 </div>
                 
                 {/* Testimonial Text */}
-                <p className="text-xl text-gray-700 mb-6 italic">
+                <p className="text-xl text-gray-700 mb-6 italic"
+                   style={{lineHeight: '0.9'}}
+                >
                   "{testimonial.text}"
                 </p>
                 
@@ -123,7 +125,11 @@ export default function TestimonialsPage() {
                 <div className="border-t pt-4">
                   <div className="font-bold text-2xl text-gray-900">{testimonial.name}</div>
                   <div className="text-lg text-red-800">{testimonial.role}</div>
-                  <div className="text-lg text-gray-500 mt-1">{testimonial.date}</div>
+                  <div className="text-lg text-gray-500 mt-1"
+                  style={{lineHeight: '0.9'}}
+                  >
+                    {testimonial.date}
+                  </div>
                 </div>
               </div>
             ))}

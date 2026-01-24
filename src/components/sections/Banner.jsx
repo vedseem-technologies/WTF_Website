@@ -47,7 +47,7 @@ function Banner() {
   ]
 
   return (
-    <div className='w-full bg-white pt-8 md:pt-24 pb-16 overflow-hidden'>
+    <div className='w-full bg-white pt-8 pb-16 overflow-hidden'>
         {/* Main Banner Image - Premium Framed Look */}
         <div className="max-w-full mx-auto px-4 md:px-8 mb-16 md:mb-24">
             <motion.div 
@@ -89,7 +89,7 @@ function Banner() {
                 </p>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8'>
                 {processSteps.map((step, index) => (
                     <motion.div
                         key={step.id}

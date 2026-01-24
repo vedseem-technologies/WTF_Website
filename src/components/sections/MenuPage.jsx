@@ -93,16 +93,16 @@ export default function MenuPage() {
             className="
               mb-12 md:mb-16
               bg-gray-800/20 backdrop-blur-sm
-              py-6 md:py-8
-              px-4 sm:px-6 md:px-14
+              py-6 lg:py-8
+              px-4 sm:px-8 lg:px-14
               rounded-2xl
               border border-white/50
             "
           >
             {/* Section Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-2 lg:gap-4">
               <div>
-                <h2 className="text-white text-3xl sm:text-4xl md:text-5xl font-semibold">
+                <h2 className="text-white text-3xl sm:text-4xl lg:text-5xl font-semibold">
                   {section.phrase1}{" "}
                   <span className={accentMap[section.accentColor].text}>
                     {section.title}
@@ -111,11 +111,11 @@ export default function MenuPage() {
                 </h2>
 
                 <div
-                  className={`mt-2 h-[3px] w-20 md:w-24 rounded-full ${accentMap[section.accentColor].underline}`}
+                  className={`mt-0 lg:mt-4 h-[3px] w-20 md:w-24 rounded-full ${accentMap[section.accentColor].underline}`}
                 />
               </div>
 
-              <button className="self-start sm:self-auto text-white bg-red-500 py-1 px-6 rounded-full text-2xl md:text-3xl">
+              <button className="self-start sm:self-auto text-white bg-red-500 py-1 px-6 rounded-full text-2xl lg:text-3xl">
                 View All
               </button>
             </div>
@@ -130,7 +130,7 @@ export default function MenuPage() {
                     relative
                     min-w-[14rem] h-[18rem]
                     sm:min-w-[16rem] sm:h-[20rem]
-                    md:min-w-[18rem] md:h-[22rem]
+                    lg:min-w-[18rem] lg:h-[22rem]
                     rounded-2xl overflow-hidden
                     group cursor-pointer shadow-xl
                     border ${accentMap[section.accentColor].border}

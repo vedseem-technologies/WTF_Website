@@ -101,15 +101,15 @@ function Footer() {
           <div className="flex items-start justify-start gap-8 mb-8">
             {/* Logo */}
             <div className="flex-shrink-0">
-              <Image src="/Logo.png" alt="logo" width={100} height={42} />
+              <Image src="/Logo.png" alt="logo" width={150} height={42} />
             </div>
             
             {/* About Us */}
-            <div className="text-left">
-              <h3 className="text-red-800 text-3xl font-bold mb-1">About Us</h3>
-              <p className="text-black text-xl leading-tight max-w-[200px]"
+            <div className="text-left md:text-center my-auto mx-auto">
+              <h3 className="text-red-800 text-4xl md:text-5xl font-bold mb-1">About Us</h3>
+              <p className="text-black text-2xl md:text-3xl leading-tight max-w-[200px] md:max-w-[550px]"
                  style={{
-                   lineHeight: '0.9',
+                   lineHeight: '0.8',
                  }}
               >
                 We deliver the food where flavor comes first
@@ -119,7 +119,7 @@ function Footer() {
 
           {/* Contact Us - Compact Cards */}
           <div className="mb-4">
-            <h3 className="text-red-800 text-2xl font-bold mb-3 text-center">Contact Us</h3>
+            <h3 className="text-red-800 text-4xl font-bold mb-3 text-center">Contact Us</h3>
             <div className="grid grid-cols-1 gap-2">
               {/* Phone */}
               <div className="bg-white rounded-xl p-2 border-2 border-red-50 shadow-sm">

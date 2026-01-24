@@ -120,7 +120,9 @@ export default function SupportPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </summary>
-                    <p className="text-xl text-gray-700 mt-4 pl-4 border-l-4 border-red-800">
+                    <p className="text-xl text-gray-700 mt-4 pl-4 border-l-4 border-red-800"
+                    style={{lineHeight: '0.9'}}
+                    >
                       {faq.answer}
                     </p>
                   </details>

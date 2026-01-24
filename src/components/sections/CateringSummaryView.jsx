@@ -56,7 +56,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-24 pt-12 overflow-hidden relative font-sans">
+    <div className="min-h-screen bg-white pb-24 pt-12 overflow-hidden relative font-dongle">
       
       {/* Fixed Progress Bar Section */}
       <div className="max-w-3xl mx-auto px-6 md:px-24 md:mb-8">
@@ -124,10 +124,10 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
               exit={{ opacity: 0, x: -20 }}
               className="space-y-4"
             >
-              <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mb-3">
+              <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-2">
                 Menu Summary
               </h1>
-              <p className="text-sm text-gray-500 mb-8">
+              <p className="text-2xl text-gray-500 mb-8">
                 Review and fine-tune your catering selection
               </p>
 
@@ -136,7 +136,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                 <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-xl shadow-sm">
                   💡
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                <p className="text-2xl text-gray-600 leading-relaxed font-medium">
                   Quantities are <span className="font-bold text-gray-800">auto-calculated</span> based on your guest count. 
                 </p>
               </div>
@@ -155,8 +155,8 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                         className="w-full flex items-center justify-between px-6 py-5 text-left"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-semibold text-gray-900">{cat.label}</span>
-                          <span className="text-xs font-semibold text-red-600 bg-red-50 px-3 py-1 rounded-full">
+                          <span className="text-3xl font-bold text-gray-900">{cat.label}</span>
+                          <span className="text-lg font-semibold text-red-600 bg-red-50 px-3 py-1 rounded-full">
                             ({isLiveService ? "0" : categoryItems.length})
                           </span>
                         </div>
@@ -184,7 +184,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                               <input
                                 type="text"
                                 placeholder={`Add more ${cat.label}`}
-                                className="w-full bg-gray-50 text-gray-800 border border-gray-100 rounded-xl py-3.5 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-red-100 transition-all outline-none"
+                                className="w-full bg-gray-50 text-gray-800 border border-gray-100 rounded-xl py-3.5 pl-12 pr-4 text-2xl font-medium focus:ring-2 focus:ring-red-100 transition-all outline-none"
                               />
                             </div>
 
@@ -205,13 +205,13 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                                   <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100/50">
                                     <div className="w-12 h-12 rounded-xl bg-gray-200 shrink-0" />
                                     <div className="flex-1">
-                                      <div className="flex items-center gap-1.5 font-bold text-sm text-gray-800">
+                                      <div className="flex items-center gap-1.5 font-bold text-3xl text-gray-800">
                                         <div className={`w-1.5 h-1.5 rounded-full ${item.type === 'veg' ? 'bg-green-500' : 'bg-red-500'}`} />
                                         {item.name}
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <div className="bg-white border border-gray-100 rounded-lg px-2 py-1 text-xs font-black">20 pcs</div>
+                                      <div className="bg-white border border-gray-100 rounded-lg px-2 py-1 text-2xl font-black">20 pcs</div>
                                     </div>
                                   </div>
                                 ))}
@@ -430,7 +430,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
               Proceed to Pay
             </button>
           ) : (
-            <button className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-lg font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700 uppercase tracking-tight">
+            <button className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-3xl font-bold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700 uppercase tracking-tight">
               {paymentMethod === "cod" ? "Place Order" : "Pay Now"}
             </button>
           )}

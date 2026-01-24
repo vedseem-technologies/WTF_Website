@@ -133,7 +133,7 @@ function CateringPage() {
   });
 
   return (
-    <div className={`min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white ${showCityModal ? "overflow-hidden h-screen" : ""}`}>
+    <div className={`min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white font-dongle ${showCityModal ? "overflow-hidden h-screen" : ""}`}>
       
       <AnimatePresence>
         {showCityModal && (
@@ -166,7 +166,7 @@ function CateringPage() {
               initial={{ opacity: 0, letterSpacing: "0.5em" }}
               animate={{ opacity: 1, letterSpacing: "0.2em" }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-red-600 text-sm md:text-base mb-3 uppercase tracking-widest font-semibold"
+              className="text-red-600 text-sm md:text-xl my-3 uppercase tracking-widest font-semibold"
             >
               catering
             </motion.p>
@@ -174,8 +174,8 @@ function CateringPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-4xl md:text-6xl py-2 font-bold bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-12"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              className="text-4xl md:text-7xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-12"
+              // style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Best Catering Services
             </motion.h1>
@@ -229,7 +229,7 @@ function CateringPage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-            className="text-2xl md:text-3xl font-bold text-red-800 mb-10 flex items-center gap-4"
+            className="text-3xl md:text-5xl font-bold text-red-800 mb-10 flex items-center gap-4"
           >
             <motion.span 
               initial={{ width: 0 }}
@@ -292,7 +292,7 @@ function CateringPage() {
                           opacity: hoveredOccasion === occasion.id ? 1 : 0,
                         }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="text-white text-xl md:text-xl drop-shadow-lg"
+                        className="text-white text-2xl md:text-3xl drop-shadow-lg"
                       >
                         View Packages
                       </motion.span>
@@ -300,7 +300,7 @@ function CateringPage() {
                   </motion.button>
                   
                   {/* Label below */}
-                  <span className="text-gray-900 font-bold text-base md:text-lg tracking-tight">
+                  <span className="text-gray-900 font-semibold text-2xl md:text-4xl tracking-tight">
                     {occasion.name}
                   </span>
                 </div>
@@ -318,7 +318,7 @@ function CateringPage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-            className="text-2xl md:text-3xl font-bold text-red-800 mb-10 flex items-center gap-4"
+            className="text-3xl md:text-5xl font-bold text-red-800 mb-10 flex items-center gap-4"
           >
             <motion.span 
               initial={{ width: 0 }}
@@ -380,7 +380,7 @@ function CateringPage() {
                         opacity: hoveredService === service.id ? 1 : 0,
                       }}
                       transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="text-white text-lg md:text-xl drop-shadow-lg"
+                      className="text-white text-2xl md:text-3xl drop-shadow-lg"
                     >
                       View Packages
                     </motion.span>
@@ -388,7 +388,7 @@ function CateringPage() {
                 </motion.button>
                 
                 {/* Label below */}
-                <span className="text-gray-900 font-bold text-base md:text-lg tracking-tight">
+                <span className="text-gray-900 font-semibold text-2xl md:text-4xl tracking-tight">
                   {service.name}
                 </span>
               </div>
@@ -412,7 +412,7 @@ function CateringPage() {
               whileInView={{ opacity: 1, letterSpacing: "0.2em" }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-red-600 text-sm md:text-base mb-4 uppercase tracking-widest font-semibold"
+              className="text-red-600 text-sm md:text-xl mb-4 uppercase tracking-widest font-semibold"
             >
               SELECT & CUSTOMIZED
             </motion.p>
@@ -450,7 +450,7 @@ function CateringPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-              className="text-xl md:text-2xl font-bold text-red-800 mb-10 flex items-center gap-4"
+              className="text-2xl md:text-4xl font-bold text-red-800 mb-10 flex items-center gap-4"
             >
               <motion.span 
                 initial={{ width: 0 }}
@@ -512,7 +512,7 @@ function CateringPage() {
                           opacity: hoveredCategory === category.id ? 1 : 0,
                         }}
                         transition={{ duration: 0.4, ease: "easeOut" }}
-                        className="text-white text-lg translateY-1/6 md:text-xl drop-shadow-lg"
+                        className="text-white text-2xl md:text-3xl drop-shadow-lg"
                       >
                         View Packages
                       </motion.span>
@@ -520,7 +520,7 @@ function CateringPage() {
                   </motion.button>
                   
                   {/* Label below */}
-                  <span className="text-gray-900 font-bold text-base md:text-lg tracking-tight">
+                  <span className="text-gray-900 font-semibold text-2xl md:text-4xl tracking-tight">
                     {category.name}
                   </span>
                 </div>
@@ -541,7 +541,7 @@ function CateringPage() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-                className="text-xl md:text-2xl font-bold text-red-800 mb-8 flex items-center gap-4"
+                className="text-2xl md:text-4xl font-bold text-red-800 mb-8 flex items-center gap-4"
               >
                 <motion.span 
                   initial={{ width: 0 }}
@@ -591,7 +591,7 @@ function CateringPage() {
                         <motion.div
                           className="absolute inset-0 bg-gradient-to-t from-red-700/90 via-red-600/20 to-transparent flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         >
-                          <span className="text-white text-base drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                          <span className="text-white text-lg drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                             View Details
                           </span>
                         </motion.div>
@@ -611,21 +611,21 @@ function CateringPage() {
 
                       {/* Content Section */}
                       <div className="p-4 space-y-3">
-                        <h4 className="font-bold text-gray-900 text-lg leading-tight group-hover:text-red-600 transition-colors line-clamp-1">
+                        <h4 className="font-bold text-gray-900 text-xl leading-tight group-hover:text-red-600 transition-colors line-clamp-1">
                           {item.name}
                         </h4>
 
                         <div className="flex justify-between items-center">
                           <div className="flex flex-col">
-                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Starting from</span>
-                            <span className="text-xl font-black text-red-600 leading-none">
+                            <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Starting from</span>
+                            <span className="text-2xl font-black text-red-600 leading-none">
                               {item.price}
                             </span>
                           </div>
 
                           <div className="flex flex-col items-end">
-                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Serving</span>
-                            <span className="text-sm font-semibold text-gray-700">
+                            <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Serving</span>
+                            <span className="text-base font-semibold text-gray-700">
                               {item.servingSize} People
                             </span>
                           </div>
@@ -634,7 +634,7 @@ function CateringPage() {
                         <button
                           className="
                             mt-2 w-full py-2.5
-                            text-xs font-bold uppercase tracking-widest
+                            text-sm font-bold uppercase tracking-widest
                             rounded-xl
                             border-2 border-red-600
                             text-red-600
@@ -722,7 +722,7 @@ function CitySelectionModal({ onSelect }) {
               initial={{ y: -10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
+              className="text-5xl md:text-7xl font-bold text-gray-900 mb-4"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Select Your City
@@ -731,7 +731,7 @@ function CitySelectionModal({ onSelect }) {
               initial={{ y: -10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-gray-500 text-lg max-w-md mx-auto"
+              className="text-gray-500 text-xl max-w-md mx-auto"
             >
               To serve you better, please let us know your location for our catering services.
             </motion.p>
@@ -752,10 +752,10 @@ function CitySelectionModal({ onSelect }) {
                 <div className="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">
                   {city.icon}
                 </div>
-                <h3 className="text-lg font-bold text-gray-800 mb-1 group-hover:text-red-600 transition-colors">
+                <h3 className="text-xl font-extrabold text-gray-800 mb-1 group-hover:text-red-600 transition-colors">
                   {city.name}
                 </h3>
-                <p className="text-[10px] text-gray-400 font-medium uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {city.description}
                 </p>
                 
