@@ -202,7 +202,7 @@ function CateringPage() {
       </section>
 
       {/* Choose Your Occasion Section */}
-      <section className="relative bg-gradient-to-b from-gray-50 via-white to-white py-6 px-4 md:px-8">
+      <section className="relative bg-gradient-to-b from-gray-50 via-white to-white md:py-6 py-2 px-2 md:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.h2 
             initial={{ opacity: 0, x: -30 }}
@@ -223,7 +223,7 @@ function CateringPage() {
           
           {/* Scrollable Occasions Row */}
           <div className="relative">
-            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
               {occasions.map((occasion) => (
                 <motion.button
                   key={occasion.id}
@@ -244,7 +244,7 @@ function CateringPage() {
                   animate={selectedOccasion === occasion.id ? {
                     boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.3), 0 10px 10px -5px rgba(220, 38, 38, 0.1)"
                   } : {}}
-                  className={`relative flex-shrink-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 snap-center shadow-lg ${
+                  className={`relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 snap-center shadow-lg ${
                     selectedOccasion === occasion.id
                       ? "shadow-2xl shadow-red-300/40 ring-2 ring-red-200"
                       : "hover:shadow-2xl"
@@ -302,7 +302,7 @@ function CateringPage() {
       </section>
 
       {/* Choose Your Services Section */}
-      <section className="relative bg-white py-6 px-4 md:px-8">
+      <section className="relative bg-white md:py-6 py-2 px-2 md:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.h2 
             initial={{ opacity: 0, x: -30 }}
@@ -322,7 +322,7 @@ function CateringPage() {
           </motion.h2>
           
           {/* Scrollable Services Row */}
-          <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+          <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
             {services.map((service) => (
               <motion.button
                 key={service.id}
@@ -343,7 +343,7 @@ function CateringPage() {
                 animate={selectedService === service.id ? {
                   boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.3), 0 10px 10px -5px rgba(220, 38, 38, 0.1)"
                 } : {}}
-                className={`relative flex-shrink-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 snap-center shadow-lg ${
+                className={`relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 snap-center shadow-lg ${
                   selectedService === service.id
                     ? "shadow-2xl shadow-red-300/40 ring-2 ring-red-200"
                     : "hover:shadow-2xl"
@@ -400,7 +400,7 @@ function CateringPage() {
       </section>
 
       {/* SELECT & CUSTOMIZED Package Section */}
-      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 py-6 px-4 md:px-8">
+      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 md:py-6 py-2 px-2 md:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -465,7 +465,7 @@ function CateringPage() {
             </motion.h3>
             
             {/* Scrollable Categories Row */}
-            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
               {categories.map((category) => (
                 <motion.button
                   key={category.id}
@@ -489,7 +489,7 @@ function CateringPage() {
                   animate={selectedCategory === category.id ? {
                     boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.3), 0 10px 10px -5px rgba(220, 38, 38, 0.1)"
                   } : {}}
-                  className={`relative flex-shrink-0 w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden transition-all duration-500 snap-center shadow-lg ${
+                  className={`relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden transition-all duration-500 snap-center shadow-lg ${
                     selectedCategory === category.id
                       ? "shadow-2xl shadow-red-300/40 ring-2 ring-red-200"
                       : "hover:shadow-2xl"

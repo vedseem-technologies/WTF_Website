@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 function Footer() {
   return (
-    <footer className="w-full bg-white pt-10 px-2 md:px-12">
+    <footer className="w-full bg-white pt-10 pb-24 md:pb-0 px-2 md:px-12">
       <div className="max-w-full mx-auto">
         {/* Desktop Layout: Original 5-column grid */}
         <div className="hidden lg:grid lg:grid-cols-5 gap-8 md:gap-12">

@@ -90,8 +90,8 @@ export default function CategoryDetails() {
       </div>
 
       {/* Items Grid */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24">
-        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+      <section className="max-w-7xl mx-auto px-2 md:px-8 py-16 md:py-24">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-8">
           {section.items.map((item, index) => (
             <motion.div
               key={item.id}
@@ -141,7 +141,7 @@ export default function CategoryDetails() {
         <div className="mt-20 text-center">
           <Link 
             href="/menu" 
-            className="inline-flex items-center gap-2 text-white/60 hover:text-white text-3xl transition-colors uppercase tracking-widest"
+            className="inline-flex items-center gap-2 text-white/60 hover:text-white text-xl md:text-3xl transition-colors uppercase tracking-widest"
           >
             ← Explore other ranges
           </Link>

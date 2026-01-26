@@ -23,12 +23,17 @@ function CateringPage() {
   const [showCityModal, setShowCityModal] = useState(false);
   
   useEffect(() => {
-    // Show modal if no city is selected
-    if (!selectedCity) {
-      setShowCityModal(true);
-    } else {
-      setShowCityModal(false);
-    }
+    // Small timeout to allow context/localStorage to sync
+    const checkCity = () => {
+      const savedCity = localStorage.getItem("catering_selected_city");
+      if (!savedCity && !selectedCity) {
+        setShowCityModal(true);
+      } else {
+        setShowCityModal(false);
+      }
+    };
+
+    checkCity();
   }, [selectedCity]);
 
   const [hoveredOccasion, setHoveredOccasion] = useState(null);
@@ -133,7 +138,7 @@ function CateringPage() {
   });
 
   return (
-    <div className={`min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white font-dongle ${showCityModal ? "overflow-hidden h-screen" : ""}`}>
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white font-dongle">
       
       <AnimatePresence>
         {showCityModal && (
@@ -149,7 +154,7 @@ function CateringPage() {
       <Header/>
 
       {/* Header Section */}
-      <section className="relative bg-white pt-24 pb-8 overflow-hidden">
+      <section className="relative bg-white pt-20 md:pt-24 pb-8 overflow-hidden">
         {/* Subtle background decoration */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-20 left-10 w-72 h-72 bg-red-600 rounded-full blur-3xl"></div>
@@ -166,7 +171,7 @@ function CateringPage() {
               initial={{ opacity: 0, letterSpacing: "0.5em" }}
               animate={{ opacity: 1, letterSpacing: "0.2em" }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-red-600 text-sm md:text-xl my-3 uppercase tracking-widest font-semibold"
+              className="text-red-600 text-md md:text-xl md:my-3 my-2 uppercase tracking-widest font-semibold"
             >
               catering
             </motion.p>
@@ -229,21 +234,21 @@ function CateringPage() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-            className="text-3xl md:text-5xl font-bold text-red-800 mb-10 flex items-center gap-4"
+            className="text-3xl md:text-5xl font-bold text-red-800 mb-4 md:mb-10 flex items-center gap-4"
           >
             <motion.span 
               initial={{ width: 0 }}
               whileInView={{ width: 48 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
+              className="md:h-1 h-0.5 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
             ></motion.span>
-            <span className="tracking-tight">Choose Your Occasion</span>
+            <span className="tracking-tight text-3xl md:text-5xl">Choose Your Occasion</span>
           </motion.h2>
           
           {/* Scrollable Occasions Row */}
           <div className="relative">
-            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-4 md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 md:pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
               {occasions.map((occasion) => (
                 <div key={occasion.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                   <motion.button
@@ -261,7 +266,7 @@ function CateringPage() {
                     }}
                     whileHover={{ scale: 1.05, y: -8 }}
                     whileTap={{ scale: 0.96 }}
-                    className={`relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 shadow-lg group ${
+                    className={`relative w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 shadow-lg group ${
                       selectedOccasion === occasion.id
                         ? "shadow-2xl shadow-red-300/40 ring-4 ring-red-500"
                         : "hover:shadow-2xl"
@@ -311,27 +316,27 @@ function CateringPage() {
       </section>
 
       {/* Choose Your Services Section */}
-      <section className="relative bg-white py-6 px-4 md:px-8">
+      <section className="relative bg-white md:py-6 py-4 px-2 md:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.h2 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-            className="text-3xl md:text-5xl font-bold text-red-800 mb-10 flex items-center gap-4"
+            className="text-3xl md:text-5xl font-bold text-red-800 mb-4 md:mb-10 flex items-center gap-4"
           >
             <motion.span 
               initial={{ width: 0 }}
               whileInView={{ width: 48 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
+              className="md:h-1 h-0.5 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
             ></motion.span>
             <span className="tracking-tight">Choose Your Services</span>
           </motion.h2>
           
           {/* Scrollable Services Row */}
-          <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-4 md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+          <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 md:pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
             {services.map((service) => (
               <div key={service.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                 <motion.button
@@ -349,7 +354,7 @@ function CateringPage() {
                   }}
                   whileHover={{ scale: 1.05, y: -8 }}
                   whileTap={{ scale: 0.96 }}
-                  className={`relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 shadow-lg group ${
+                  className={`relative w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 shadow-lg group ${
                     selectedService === service.id
                       ? "shadow-2xl shadow-red-300/40 ring-4 ring-red-500"
                       : "hover:shadow-2xl"
@@ -398,7 +403,7 @@ function CateringPage() {
       </section>
 
       {/* SELECT & CUSTOMIZED Package Section */}
-      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 py-4 md:py-6 px-4 md:px-8">
+      <section className="relative bg-gradient-to-b from-gray-50 via-white to-gray-50 md:py-6 py-2 px-2 md:px-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -412,7 +417,7 @@ function CateringPage() {
               whileInView={{ opacity: 1, letterSpacing: "0.2em" }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-red-600 text-sm md:text-xl mb-4 uppercase tracking-widest font-semibold"
+              className="text-red-600 text-sm md:text-xl md:mb-4 uppercase tracking-widest font-semibold"
             >
               SELECT & CUSTOMIZED
             </motion.p>
@@ -450,20 +455,20 @@ function CateringPage() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-              className="text-2xl md:text-4xl font-bold text-red-800 mb-10 flex items-center gap-4"
+              className="text-2xl md:text-4xl font-bold text-red-800 mb-4 md:mb-10 flex items-center gap-4"
             >
               <motion.span 
                 initial={{ width: 0 }}
                 whileInView={{ width: 40 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
+                className="md:h-1 h-0.5 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
               ></motion.span>
               <span className="tracking-tight">Categories</span>
             </motion.h3>
             
             {/* Scrollable Categories Row */}
-            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
+            <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 md:pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
               {categories.map((category) => (
                 <div key={category.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                   <motion.button
@@ -481,7 +486,7 @@ function CateringPage() {
                     }}
                     whileHover={{ scale: 1.05, y: -8 }}
                     whileTap={{ scale: 0.96 }}
-                    className={`relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden transition-all duration-500 shadow-lg group ${
+                    className={`relative w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden transition-all duration-500 shadow-lg group ${
                       selectedCategory === category.id
                         ? "shadow-2xl shadow-red-300/40 ring-4 ring-red-500"
                         : "hover:shadow-2xl"
@@ -673,6 +678,16 @@ function CateringPage() {
 }
 
 function CitySelectionModal({ onSelect }) {
+  useEffect(() => {
+    // Disable background scroll
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      // Re-enable background scroll
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
+
   const cities = [
     { name: "Mumbai", icon: "🏙️", description: "The City of Dreams" },
     { name: "Delhi", icon: "🏛️", description: "Heart of the Nation" },
@@ -682,6 +697,10 @@ function CitySelectionModal({ onSelect }) {
     { name: "Chennai", icon: "🌊", description: "Gateway to the South" },
     { name: "Kolkata", icon: "🌉", description: "City of Joy" },
     { name: "Pune", icon: "⛰️", description: "Oxford of the East" },
+    { name: "Jaipur", icon: "🕌", description: "The Pink City" },
+    { name: "Lucknow", icon: "🏰", description: "City of Nawabs" },
+    { name: "Chandigarh", icon: "🌳", description: "The City Beautiful" },
+    { name: "Gurgaon", icon: "🏢", description: "Millennium City" },
   ];
 
   return (
@@ -689,87 +708,111 @@ function CitySelectionModal({ onSelect }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 md:p-6"
     >
-      {/* Dynamic Background */}
-      <div className="absolute inset-0 bg-gray-950/40 backdrop-blur-2xl px-4 py-4" />
+      {/* Dynamic Background Overlay */}
+      <div className="absolute inset-0 bg-gray-950/60 backdrop-blur-md" />
       
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
-        className="relative w-full max-w-4xl bg-white/90 backdrop-blur-md rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/20"
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="relative w-full max-w-4xl bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden border border-white/20 flex flex-col h-[60vh] md:h-auto md:max-h-[85vh]"
       >
         {/* Decorative Elements */}
-        <div className="absolute top-0 right-0 p-8 opacity-10">
+        <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
           <div className="w-32 h-32 bg-red-600 rounded-full blur-3xl animate-pulse" />
         </div>
-        <div className="absolute bottom-0 left-0 p-8 opacity-10">
+        <div className="absolute bottom-0 left-0 p-8 opacity-10 pointer-events-none">
           <div className="w-32 h-32 bg-red-400 rounded-full blur-3xl animate-pulse" />
         </div>
 
-        <div className="relative z-10 p-8 md:p-12">
-          <div className="text-center mb-12">
-            <motion.div
-              initial={{ y: -10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="inline-block px-4 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest mb-4"
-            >
-              Location Required
-            </motion.div>
-            <motion.h2
-              initial={{ y: -10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-5xl md:text-7xl font-bold text-gray-900 mb-4"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-            >
-              Select Your City
-            </motion.h2>
-            <motion.p
-              initial={{ y: -10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="text-gray-500 text-xl max-w-md mx-auto"
-            >
-              To serve you better, please let us know your location for our catering services.
-            </motion.p>
-          </div>
+        {/* Modal Header - Sticky */}
+        <div className="relative z-20 pt-8 pb-4 px-6 md:px-12 text-center bg-white/80 backdrop-blur-md border-b border-gray-100">
+          <motion.div
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-block px-3 py-1 rounded-full bg-red-50 text-red-600 text-[10px] md:text-sm font-black uppercase tracking-[0.2em] mb-3"
+          >
+            Location Required
+          </motion.div>
+          
+          <motion.h2
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-4xl md:text-7xl font-black text-gray-900 leading-tight"
+          >
+            Select Your City
+          </motion.h2>
+          
+          <motion.p
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-gray-500 text-lg md:text-3xl max-w-md mx-auto leading-none mt-1"
+          >
+            We customize our services based on your location.
+          </motion.p>
+        </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        {/* Modal Body - Scrollable */}
+        <div className="relative z-10 flex-1 overflow-y-auto px-4 py-6 md:px-12 custom-scrollbar">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6">
             {cities.map((city, index) => (
               <motion.button
                 key={city.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + index * 0.05 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4 + index * 0.03 }}
+                whileHover={{ y: -4, scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
                 onClick={() => onSelect(city.name)}
-                className="group relative flex flex-col items-center justify-center p-6 rounded-3xl bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-red-100 transition-all duration-300"
+                className="group relative flex flex-col items-center justify-center p-4 md:p-6 rounded-2xl md:rounded-3xl bg-gray-50 border border-gray-100 transition-all duration-300 hover:bg-white hover:shadow-xl hover:shadow-red-500/10 hover:border-red-200"
               >
-                <div className="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">
+                <div className="text-3xl md:text-5xl transition-transform duration-500 group-hover:scale-125 group-hover:rotate-6">
                   {city.icon}
                 </div>
-                <h3 className="text-xl font-extrabold text-gray-800 mb-1 group-hover:text-red-600 transition-colors">
+                <h3 className="text-2xl md:text-3xl font-black text-gray-800 leading-tight transition-colors group-hover:text-red-600">
                   {city.name}
                 </h3>
-                <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {/* <p className="hidden md:block text-xl text-gray-400 font-bold leading-none mt-1 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
                   {city.description}
-                </p>
+                </p> */}
                 
-                {/* Active selection glow */}
-                <div className="absolute inset-0 rounded-3xl ring-2 ring-red-500 ring-opacity-0 group-hover:ring-opacity-20 transition-all duration-300" />
+                {/* Visual Feedback on click */}
+                <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-red-600 opacity-0 group-active:opacity-5 transition-opacity" />
               </motion.button>
             ))}
           </div>
-          
-          <div className="mt-12 text-center text-gray-400 text-sm">
-            Can't find your city? <button className="text-red-500 font-semibold hover:underline">Contact Support</button>
+
+          {/* Footer - Tighter spacing */}
+          <div className="mt-8 mb-4 text-center text-gray-400 text-lg font-bold">
+            Can't find your city? 
+            <button className="ml-2 text-red-500 hover:text-red-700 transition-colors border-b-2 border-red-500/20 hover:border-red-500">
+              Get in touch
+            </button>
           </div>
         </div>
       </motion.div>
+
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #fee2e2;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #fecaca;
+        }
+      `}</style>
     </motion.div>
   );
 }
