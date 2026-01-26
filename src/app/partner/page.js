@@ -25,24 +25,24 @@ export default function BrandReveal() {
 
           <motion.div className="flex flex-row gap-4 md:gap-6 w-full justify-center">
             {/* Logo with 3D Flip & Scale */}
-            <motion.div 
+            {/* <motion.div 
               initial={{ rotateY: 180, scale: 0, opacity: 0 }}
               animate={!loading ? { rotateY: 0, scale: 1, opacity: 1 } : {}}
               transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.8 }}
               className="w-32 h-32 md:w-48 md:h-48 relative mb-2 md:mb-4"
             >
               <Image src="/Logo.png" alt="Brand Logo" fill className="object-contain" priority />
-            </motion.div>
+            </motion.div> */}
   
             {/* Logo with 3D Flip & Scale */}
-            <motion.div 
+            {/* <motion.div 
               initial={{ rotateY: 180, scale: 0, opacity: 0 }}
               animate={!loading ? { rotateY: 0, scale: 1, opacity: 1 } : {}}
               transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.8 }}
               className="w-32 h-32 md:w-48 md:h-48 relative mb-2 md:mb-4"
             >
               <Image src="/rollx-logo.png" alt="Brand Logo" fill className="object-contain" priority />
-            </motion.div>
+            </motion.div> */}
           </motion.div>
           {/* Headline with Character-like Slide Up */}
           <motion.h1 
@@ -79,7 +79,14 @@ export default function BrandReveal() {
                     whileHover={{ scale: 1.05, y: -5 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    WTF
+                  <motion.div 
+                    initial={{ rotateY: 180, scale: 0, opacity: 0 }}
+                    animate={!loading ? { rotateY: 0, scale: 1, opacity: 1 } : {}}
+                    transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.8 }}
+                    className="w-32 h-32 md:w-48 md:h-48 relative mb-2 md:mb-4"
+                  >
+                    <Image src="/rollx-logo.png" alt="Brand Logo" fill className="object-contain" priority />
+                  </motion.div>
                 </motion.a>
 
                 <motion.a
@@ -93,12 +100,19 @@ export default function BrandReveal() {
                     whileHover={{ scale: 1.05, y: -5 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    ROLL-X
+                  <motion.div 
+                    initial={{ rotateY: 180, scale: 0, opacity: 0 }}
+                    animate={!loading ? { rotateY: 0, scale: 1, opacity: 1 } : {}}
+                    transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.8 }}
+                    className="w-32 h-32 md:w-48 md:h-48 relative mb-2 md:mb-4"
+                  >
+                    <Image src="/Logo.png" alt="Brand Logo" fill className="object-contain" priority />
+                  </motion.div>
                 </motion.a>
             </div>
 
             {/* Contact Button with Bloom/Fade In */}
-            <motion.a
+            {/* <motion.a
                 href="https://www.instagram.com/sahil.sethi01/"
                 initial={{ opacity: 0, y: 20 }}
                 animate={!loading ? { opacity: 1, y: 0 } : {}}
@@ -110,7 +124,7 @@ export default function BrandReveal() {
                 whileTap={{ scale: 0.95 }}
             >
                 Contact
-            </motion.a>
+            </motion.a> */}
           </motion.div>
         </motion.div>
 

@@ -49,7 +49,7 @@ function Banner() {
   return (
     <div className='w-full bg-white pt-8 pb-16 overflow-hidden'>
         {/* Main Banner Image - Premium Framed Look */}
-        <div className="max-w-full mx-auto px-4 md:px-8 mb-16 md:mb-24">
+        {/* <div className="max-w-full mx-auto px-4 md:px-8 mb-16 md:mb-24">
             <motion.div 
                 initial={{ opacity: 0, scale: 0.98 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -71,7 +71,7 @@ function Banner() {
                     </h2>
                 </div>
             </motion.div>
-        </div>
+        </div> */}
         
         {/* Process Section - Replaces the old Blocks */}
         <div className='w-full px-4 md:px-8 max-w-7xl mx-auto'>

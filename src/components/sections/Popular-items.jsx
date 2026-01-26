@@ -176,9 +176,9 @@ function PopularItems() {
           className="text-center mb-6 md:mb-6"
         >
           <span className="text-white font-bold tracking-[0.3rem] uppercase text-md md:mb-4 block">Chef's Top Picks</span>
-          <h2 className="text-4xl md:text-8xl font-black text-white tracking- uppercase">
+          {/* <h2 className="text-4xl md:text-8xl font-black text-white tracking- uppercase">
             Most <span className="text-yellow-400">Popular</span> Items
-          </h2>
+          </h2> */}
           <div className="w-full h-0.5 md:h-1 bg-yellow-400 mx-auto -mt-2 md:-mt-4 rounded-full" />
         </motion.div>
 
@@ -298,7 +298,7 @@ function PopularItems() {
                 image: '/images/franchise-model.png'
               },
               { 
-                label: 'Fine Dining', 
+                label: 'Dining', 
                 image: '/images/dining.png'
               },
               { 
