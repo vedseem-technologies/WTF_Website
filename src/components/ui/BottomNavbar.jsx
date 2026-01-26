@@ -128,7 +128,7 @@ const BottomNavbar = () => {
         </div>
 
         {/* Navigation Items Container */}
-        <div className="absolute inset-x-0 bottom-0 pb-safe h-14 flex justify-between items-center px-4">
+        <div className="absolute inset-x-0 bottom-0 pb-safe h-14 flex justify-between items-center px-2">
           {navItems.map((item, idx) => {
             if (item.isCentral) {
               return <div key="central-space" className="w-16 h-full" />;
