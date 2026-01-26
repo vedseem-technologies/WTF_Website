@@ -34,6 +34,9 @@ export const metadata = {
   description: "Franchise Opportunity",
 };
 
+import BottomNavbar from "@/components/ui/BottomNavbar";
+import PageLoader from "@/components/ui/PageLoader";
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -41,7 +44,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} ${dancingScript.variable} ${playfairDisplay.variable} ${montserrat.variable} antialiased`}
         suppressHydrationWarning
       >
+        <PageLoader />
         {children}
+        <BottomNavbar />
       </body>
     </html>
   );

@@ -85,7 +85,11 @@ const PopularItemCard = memo(({ item, index }) => (
         </span>
       </div>
       
-      <p className="text-zinc-500 text-[20px] md:text-xl font-medium mb-3 md:mb-6 leading-tight">
+      <p className="text-zinc-500 text-[20px] md:text-xl font-medium mb-3 md:mb-6 leading-tight"
+         style={{
+            lineHeight: "0.9"
+         }}
+      >
         {item.description}
       </p>
 

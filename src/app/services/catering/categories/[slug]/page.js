@@ -111,6 +111,14 @@ export default function CategoryPage({ params }) {
     return grouped;
   };
 
+  React.useEffect(() => {
+    if (selectedItem || isBookingModalOpen) {
+      window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: true }));
+    } else {
+      window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: false }));
+    }
+  }, [selectedItem, isBookingModalOpen]);
+
   if (showSummary) {
     return (
       <CateringSummaryView
@@ -449,13 +457,15 @@ export default function CategoryPage({ params }) {
                     </label>
                     <button
                       onClick={() => setCalendarOpen(!calendarOpen)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left font-medium text-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition flex items-center justify-between"
+                      className={`w-full rounded-xl border-2 px-4 py-3 text-left transition flex items-center justify-between outline-none ${
+                        !bookingDetails.date && !calendarOpen ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
+                      } focus:border-red-500 focus:ring-2 focus:ring-red-100`}
                     >
-                      <span className={bookingDetails.date ? "text-slate-800" : "text-slate-300"}>
+                      <span className={`text-3xl font-bold ${bookingDetails.date ? "text-slate-800" : "text-slate-300"}`}>
                         {bookingDetails.date || "DD / MM / YYYY"}
                       </span>
-                      <svg className="h-5 w-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <svg className={`h-6 w-6 ${bookingDetails.date ? "text-red-500" : "text-slate-300"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                     </button>
 
@@ -478,13 +488,15 @@ export default function CategoryPage({ params }) {
                     </label>
                     <button
                       onClick={() => setTimePickerOpen(!timePickerOpen)}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-left font-medium text-slate-800 focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition flex items-center justify-between"
+                      className={`w-full rounded-xl border-2 px-4 py-3 text-left transition flex items-center justify-between outline-none ${
+                        !bookingDetails.time && !timePickerOpen ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
+                      } focus:border-red-500 focus:ring-2 focus:ring-red-100`}
                     >
-                      <span className={bookingDetails.time ? "text-slate-800" : "text-slate-300"}>
+                      <span className={`text-3xl font-bold ${bookingDetails.time ? "text-slate-800" : "text-slate-300"}`}>
                         {bookingDetails.time || "e.g. 7:00 PM"}
                       </span>
-                      <svg className="h-5 w-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <svg className={`h-6 w-6 ${bookingDetails.time ? "text-red-500" : "text-slate-300"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </button>
 
@@ -552,7 +564,7 @@ export default function CategoryPage({ params }) {
                                   setBookingDetails({ ...bookingDetails, vegGuests: num });
                                   setGuestDropdownOpen(false);
                                 }}
-                                className={`flex w-full items-center justify-between px-6 py-3 text-left transition
+                                className={`flex w-full items-center justify-between px-6 py-3 text-left text-2xl transition
                                   ${
                                     bookingDetails.vegGuests === num
                                       ? "bg-emerald-50 text-emerald-700 font-bold"
@@ -583,8 +595,17 @@ export default function CategoryPage({ params }) {
       
                 {/* CTA */}
                 <button
-                  onClick={() => setShowSummary(true)}
-                  className="mt-4 flex w-full items-center justify-center rounded-2xl bg-red-600 px-6 py-4 text-4xl font-bold text-white shadow-lg shadow-red-200 transition hover:bg-red-700 active:scale-[0.98]"
+                  onClick={() => {
+                    if (bookingDetails.date && bookingDetails.time) {
+                      setShowSummary(true);
+                    }
+                  }}
+                  disabled={!bookingDetails.date || !bookingDetails.time}
+                  className={`mt-4 flex w-full items-center justify-center rounded-2xl px-6 py-4 text-4xl font-bold text-white shadow-lg transition active:scale-[0.98] ${
+                    bookingDetails.date && bookingDetails.time 
+                      ? "bg-red-600 shadow-red-200 hover:bg-red-700" 
+                      : "bg-slate-300 shadow-none cursor-not-allowed"
+                  }`}
                 >
                   Customize & Check Price
                 </button>

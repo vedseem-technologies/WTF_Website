@@ -52,9 +52,9 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
             onSelect(`${d.toString().padStart(2, '0')} / ${(month + 1).toString().padStart(2, '0')} / ${year}`);
             onClose();
           }}
-          className={`h-10 w-10 rounded-full flex items-center justify-center text-sm font-semibold transition-colors
+          className={`h-11 w-11 rounded-full flex items-center justify-center text-2xl font-semibold transition-colors
             ${isSelected 
-              ? "bg-red-600 text-white shadow-lg shadow-red-200" 
+              ? "bg-red-600 text-white shadow-md shadow-red-200" 
               : "text-slate-700 hover:bg-red-50 hover:text-red-600"
             }`}
         >
@@ -90,10 +90,10 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
         </button>
         
         <div className="text-center">
-          <h3 className="text-lg font-black text-slate-900 leading-tight">
+          <h3 className="text-3xl font-black text-slate-900 leading-tight">
             {months[currentDate.getMonth()]}
           </h3>
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">
+          <p className="text-xl font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">
             {currentDate.getFullYear()}
           </p>
         </div>
@@ -111,7 +111,7 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
       {/* Week Days */}
       <div className="grid grid-cols-7 gap-1 mb-2">
         {days.map(day => (
-          <div key={day} className="h-10 w-10 flex items-center justify-center text-[10px] font-black uppercase tracking-tighter text-slate-300">
+          <div key={day} className="h-10 w-10 flex items-center justify-center text-lg font-black uppercase tracking-tighter text-slate-300">
             {day}
           </div>
         ))}

@@ -25,7 +25,7 @@ const CustomTimePicker = ({ selectedTime, onSelect, onClose }) => {
         className="relative z-50 mt-2 p-4 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-red-100 shadow-2xl shadow-red-100/50 w-[240px] max-h-[300px] flex flex-col"
       >
         <div className="px-2 mb-3 border-b border-red-50 pb-2">
-          <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Select Time</h3>
+          <h3 className="text-xl font-black text-slate-900 uppercase tracking-widest">Select Time</h3>
         </div>
         
         <div className="overflow-y-auto flex-1 pr-2 custom-scrollbar">
@@ -41,7 +41,7 @@ const CustomTimePicker = ({ selectedTime, onSelect, onClose }) => {
                     onSelect(time);
                     onClose();
                   }}
-                  className={`px-4 py-2.5 rounded-xl text-left text-sm font-bold transition-all
+                  className={`px-4 py-2.5 rounded-xl text-left text-2xl font-bold transition-all
                     ${isSelected 
                       ? "bg-red-600 text-white shadow-lg shadow-red-200" 
                       : "text-slate-600 hover:bg-red-50 hover:text-red-600"

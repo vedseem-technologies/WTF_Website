@@ -16,6 +16,8 @@ function Header() {
     { label: "Menu", href: "/menu", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" },
     { label: "Services", href: "/services", icon: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
     { label: "About", href: "/about", icon: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+    { label: "Catering", href: "/services/catering", icon: "M12 15h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+    { label: "Reels", href: "/reels", icon: "M14.75 6.25L10 9l4.75 2.75V6.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" },
     { label: "Contact", href: "/contact", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
   ];
 
@@ -109,7 +111,7 @@ function Header() {
               </button>
               </Link>
               <Link href="/login">
-              <button className="bg-white text-black px-8 py-2 rounded-full text-xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
+              <button className="bg-white text-black px-8 py-2 rounded-full text-2xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
               </Link>
             </div>
           </div>
@@ -153,8 +155,10 @@ function Header() {
 
                 {/* Minimal Navigation List */}
                 <div className="flex flex-col px-6 md:px-12 py-6 md:py-8">
-                  {navItems.map((item, index) => {
-                    const isActive = pathname === item.href;
+                  {navItems
+                    .filter(item => !["Home", "Menu", "Catering", "Reels"].includes(item.label))
+                    .map((item, index) => {
+                      const isActive = pathname === item.href;
                     return (
                       <motion.div
                         key={item.label}

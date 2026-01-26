@@ -12,6 +12,15 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
   const [showPayment, setShowPayment] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
 
+  React.useEffect(() => {
+    // Hide bottom bar when this view is active
+    window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: true }));
+    return () => {
+      // Show bottom bar when this view is inactive
+      window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: false }));
+    };
+  }, []);
+
   const groupItemsByCategory = (items) => {
     const grouped = {};
     items?.forEach((item) => {
@@ -59,16 +68,17 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
     <div className="min-h-screen bg-white pb-24 pt-12 overflow-hidden relative font-dongle">
       
       {/* Fixed Progress Bar Section */}
-      <div className="max-w-3xl mx-auto px-6 md:px-24 md:mb-8">
+      <div className="max-w-3xl mx-auto px-4 md:px-24 md:mb-8">
+        
         <div className="relative flex items-center justify-between mb-8 md:mb-12">
           {/* Base line */}
-          <div className="absolute inset-x-0 top-1/2 h-[2px] bg-red-100 -translate-y-3" />
+          <div className="absolute inset-x-5 top-[20px] h-[2px] bg-red-100" />
         
           {/* Active progress line */}
           <motion.div
-            className="absolute top-1/2 h-[2px] bg-red-500 -translate-y-3"
+            className="absolute left-5 top-[20px] h-[2px] bg-red-500 origin-left"
             initial={false}
-            animate={{ width: `${(currentStep / 3) * 100}%` }}
+            animate={{ width: `calc(${(currentStep / 3) * 100}% - ${currentStep === 3 ? '40px' : '20px'})` }}
             transition={{ duration: 0.5 }}
           />
         
@@ -89,7 +99,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                     color: isCompleted || isActive ? "#ffffff" : "#fecaca",
                     scale: isActive ? 1.1 : 1,
                   }}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold shadow-sm border-2 ${
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-sm border-2 ${
                     isCompleted || isActive ? "border-transparent" : "border-red-100"
                   }`}
                 >
@@ -101,7 +111,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                     idx + 1
                   )}
                 </motion.div>
-                <span className={`text-[10px] font-semibold uppercase tracking-widest transition-colors duration-300 ${
+                <span className={`text-lg font-semibold uppercase tracking-widest transition-colors duration-300 ${
                   isCompleted || isActive ? "text-red-600" : "text-red-200"
                 }`}>
                   {step.label}
@@ -193,7 +203,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                                 {liveServices.map((service, idx) => (
                                   <div key={idx} className="flex-shrink-0 w-36 h-44 bg-gray-50 rounded-2xl overflow-hidden relative snap-center border border-gray-100">
                                     <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                                    <span className="absolute bottom-3 inset-x-3 text-white text-[10px] font-black uppercase tracking-tight z-20">
+                                    <span className="absolute bottom-3 inset-x-3 text-white text-lg font-black uppercase tracking-tight z-20">
                                       {service.name}
                                     </span>
                                   </div>
@@ -232,14 +242,14 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "-100%", opacity: 0 }}
               transition={{ type: "spring", damping: 28, stiffness: 220 }}
-              className="pb-20"
+              className="pb-20 pt-6 md:pt-0"
             >
               <div className="flex items-center gap-4 mb-8">
-                <div>
-                  <h1 className="text-xl font-semibold text-gray-900">
+                <div style={{lineHeight: "0.7"}}>
+                  <h1 className="text-4xl font-semibold text-gray-900">
                     Price Summary
                   </h1>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-md text-gray-400 mt-1">
                     Order ID • WTF-{Math.floor(1000 + Math.random() * 9000)}
                   </p>
                 </div>
@@ -247,31 +257,31 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
               
               <div className="bg-white border border-gray-200 rounded-2xl">
                 <div className="px-6 py-5 border-b border-gray-100">
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start" style={{lineHeight: "0.7"}}>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">
+                      <p className="text-2xl font-medium text-gray-900">
                         Standard Catering Package
                       </p>
-                      <p className="text-xs text-gray-400 mt-1">
+                      <p className="text-md text-gray-400 mt-1">
                         Vegetarian • {bookingDetails?.vegGuests || 10} Guests
                       </p>
                     </div>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-2xl font-semibold text-gray-900">
                       ₹{759 * (bookingDetails?.vegGuests || 10)}
                     </p>
                   </div>
                 </div>
               
-                <div className="px-6 py-5 space-y-3">
-                  <div className="flex justify-between text-sm text-gray-600">
+                <div className="px-6 py-5 md:space-y-3">
+                  <div className="flex justify-between text-2xl text-gray-600">
                     <span>Service & Setup</span>
                     <span className="font-medium text-gray-900">₹1,500</span>
                   </div>
-                  <div className="flex justify-between text-sm text-gray-600">
+                  <div className="flex justify-between text-2xl text-gray-600">
                     <span>Equipment Charges</span>
                     <span className="font-medium text-gray-900">₹0</span>
                   </div>
-                  <div className="flex justify-between text-sm text-gray-600">
+                  <div className="flex justify-between text-2xl text-gray-600">
                     <span>Live Counters</span>
                     <span className="font-medium text-gray-900">₹0</span>
                   </div>
@@ -280,11 +290,11 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                 <div className="border-t border-gray-200" />
               
                 <div className="px-6 py-5 flex justify-between items-center">
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-gray-400">
+                  <div style={{lineHeight: "0.7"}}>
+                    <p className="text-md uppercase tracking-wide text-gray-400">
                       Total Payable
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-md text-gray-400 mt-1">
                       Taxes calculated at checkout
                     </p>
                   </div>
@@ -294,7 +304,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                 </div>
               </div>
               
-              <div className="mt-6 flex gap-6 text-xs text-gray-500">
+              <div className="mt-6 flex gap-6 text-md text-gray-500" style={{lineHeight: "0.7"}}>
                 <span>• FSSAI certified kitchens</span>
                 <span>• On-time setup guarantee</span>
               </div>
@@ -306,13 +316,13 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "100%", opacity: 0 }}
               transition={{ type: "spring", damping: 28, stiffness: 220 }}
-              className="pb-20"
+              className="pb-20 pt-6"
             >
-              <div className="mb-8">
-                <h1 className="text-xl font-semibold text-gray-900">
+              <div className="mb-8" style={{lineHeight: "0.5"}}>
+                <h1 className="text-3xl font-semibold text-gray-900">
                   Select Payment Method
                 </h1>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-md text-gray-400 mt-1">
                   Secure your booking with these options
                 </p>
               </div>
@@ -333,9 +343,9 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                         <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h10v2H6zm12-4h2v2h-2zm-4 0h2v2h-2z"/>
                       </svg>
                     </div>
-                    <div>
-                      <p className="font-bold text-gray-900">Razorpay</p>
-                      <p className="text-xs text-gray-500">Cards, Netbanking, UPI, Wallets</p>
+                    <div style={{lineHeight: "0.5"}}>
+                      <p className="font-bold text-3xl text-gray-900">Razorpay</p>
+                      <p className="text-md text-gray-500">Cards, Netbanking, UPI, Wallets</p>
                     </div>
                   </div>
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
@@ -362,9 +372,9 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                         <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
                       </svg>
                     </div>
-                    <div>
-                      <p className="font-bold text-gray-900">Cash on Delivery</p>
-                      <p className="text-xs text-gray-500">Pay 100% at the venue</p>
+                    <div style={{lineHeight: "0.5"}}>
+                      <p className="font-bold text-3xl text-gray-900">Cash on Delivery</p>
+                      <p className="text-md text-gray-500">Pay 100% at the venue</p>
                     </div>
                   </div>
                   <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
@@ -379,8 +389,8 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
 
               <div className="mt-8 bg-gray-50 rounded-2xl p-6 border border-gray-100/50">
                 <div className="flex justify-between items-center text-sm mb-2">
-                  <span className="text-gray-500">Payable amount now</span>
-                  <span className="font-extrabold text-gray-900">₹{paymentMethod === "cod" ? "0" : (759 * (bookingDetails?.vegGuests || 10) + 1500)}</span>
+                  <span className="text-gray-500 text-2xl">Payable amount now</span>
+                  <span className="font-extrabold text-gray-900 text-2xl">₹{paymentMethod === "cod" ? "0" : (759 * (bookingDetails?.vegGuests || 10) + 1500)}</span>
                 </div>
                 {paymentMethod === "cod" && (
                   <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight">
@@ -394,7 +404,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
       </div>
 
       {/* Sticky Footer */}
-      <div className="fixed bottom-0 inset-x-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 p-6 z-[120]">
+      <div className="fixed bottom-0 inset-x-0 bg-white/80 backdrop-blur-xl border-t border-gray-100 md:p-6 p-4 z-[120]">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-4 md:px-28">
           <button
             onClick={() => {
@@ -418,19 +428,19 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
           {!showPriceBreakup && !showPayment ? (
             <button 
               onClick={handlePriceCheck}
-              className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-lg font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700"
+              className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-2xl font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700"
             >
               Check Price
             </button>
           ) : !showPayment ? (
             <button 
               onClick={handleProceedToPay}
-              className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-lg font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700"
+              className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-2xl font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700"
             >
               Proceed to Pay
             </button>
           ) : (
-            <button className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-3xl font-bold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700 uppercase tracking-tight">
+            <button className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-2xl font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700 uppercase tracking-tight">
               {paymentMethod === "cod" ? "Place Order" : "Pay Now"}
             </button>
           )}
