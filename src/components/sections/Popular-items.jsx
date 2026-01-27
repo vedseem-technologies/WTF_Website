@@ -260,17 +260,10 @@ function PopularItems() {
           className="w-full grid md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 items-center bg-gray-500/10 md:bg-white/5 backdrop-blur-xl rounded-[3rem] p-6 md:p-6 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
         >
           <div className="flex flex-col text-center md:text-left md:px-8">
-<<<<<<< HEAD
-            <h3 className="text-4xl md:text-6xl lg:text-8xl font-black text-white uppercase tracking-tighter mb-6"
-                style={{
-                    lineHeight: "0.7"
-                }}
-=======
             <h3 className="text-5xl md:text-6xl lg:text-8xl font-black text-white uppercase tracking-tighter mb-6"
               style={{
                 lineHeight: "0.7"
               }}
->>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
             >
               Best Potatoes<br />
               <span className="text-yellow-400 ">For French Fries</span>
@@ -343,15 +336,6 @@ function PopularItems() {
           {isMobile && (
             <div className="absolute inset-0 bg-red-600/10 blur-[80px] rounded-full scale-125 -z-10 animate-pulse" />
           )}
-<<<<<<< HEAD
-          <Image 
-            src="/chef.png" 
-            alt="Chef Master" 
-            width={isMobile ? 320 : 600} 
-            height={1000} 
-            priority={false}
-            className={`filter contrast-125 brightness-90 transition-transform duration-700 ${isMobile ? 'scale-100 w-[85vw] h-auto' : 'group-hover:scale-[1.02]'} will-change-transform`} 
-=======
           <Image
             src="/chef.png"
             alt="Chef Master"
@@ -359,19 +343,13 @@ function PopularItems() {
             height={1000}
             priority={false}
             className={`filter contrast-125 brightness-90 transition-transform duration-700 ${isMobile ? 'scale-105' : 'group-hover:scale-[1.02]'} will-change-transform`}
->>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
           />
         </div>
 
         <div className="w-full max-w-[90%] mx-auto px-6 mt-4 mb-8 md:mt-12 relative z-20">
           <div className="text-center mb-12">
-<<<<<<< HEAD
-            <h3 className="font-black uppercase tracking-tighter leading-none flex flex-col items-center text-3xl md:text-8xl text-red-800">
-               <div className="text-red-800">Multiple {"  "}<span className="text-red-800">{" "}Services</span></div>
-=======
             <h3 className="font-black uppercase tracking-tighter leading-none flex flex-col items-center text-4xl md:text-8xl text-red-800">
               <div className="text-red-800">Multiple {"  "}<span className="text-red-800">{" "}Services</span></div>
->>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
             </h3>
           </div>
 

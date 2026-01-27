@@ -127,12 +127,6 @@ function Header() {
                   Be a Partner ?
                 </button>
               </Link>
-              {/* <Link href="/login">
-              <button className="bg-white text-black px-8 py-2 rounded-full text-2xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
-<<<<<<< HEAD
-              </Link> */}
-=======
-              </Link>
 
               {user ? (
                 // Profile Icon with Dropdown
@@ -179,7 +173,6 @@ function Header() {
                   <button className="bg-white text-black px-8 py-2 rounded-full text-xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
                 </Link>
               )}
->>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
             </div>
           </div>
         </div>

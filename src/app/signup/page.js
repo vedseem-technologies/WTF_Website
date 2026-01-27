@@ -16,7 +16,6 @@ export default function SignupPage() {
     confirmPassword: '',
     addresses: [''], // Initialize with one empty address
   });
-  const [addresses, setAddresses] = useState(['']);
   const [otp, setOtp] = useState('');
   const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,23 +32,6 @@ export default function SignupPage() {
   };
 
   const handleAddressChange = (index, value) => {
-<<<<<<< HEAD
-    const newAddresses = [...addresses];
-    newAddresses[index] = value;
-    setAddresses(newAddresses);
-  };
-
-  const addAddressField = () => {
-    setAddresses([...addresses, '']);
-  };
-
-  const removeAddressField = (index) => {
-    if (addresses.length > 1) {
-      setAddresses(addresses.filter((_, i) => i !== index));
-    }
-  };
-
-=======
     const newAddresses = [...formData.addresses];
     newAddresses[index] = value;
     setFormData({ ...formData, addresses: newAddresses });
@@ -65,8 +47,6 @@ export default function SignupPage() {
     const newAddresses = formData.addresses.filter((_, i) => i !== index);
     setFormData({ ...formData, addresses: newAddresses });
   };
-
->>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -97,11 +77,7 @@ export default function SignupPage() {
           lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
-<<<<<<< HEAD
-          addresses: addresses.filter(addr => addr.trim() !== ''),
-=======
-          addresses: formData.addresses,
->>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
+          addresses: formData.addresses.filter(addr => addr.trim() !== ''),
         }),
       });
 
@@ -290,44 +266,7 @@ export default function SignupPage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-xl md:text-md text-gray-500 uppercase mb-2">
-                  Address(es)
-                </label>
-                {addresses.map((address, index) => (
-                  <div key={index} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={address}
-                      onChange={(e) => handleAddressChange(index, e.target.value)}
-                      className="w-full px-4 py-3 text-gray-800 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none placeholder:text-gray-400"
-                      placeholder={`Address ${index + 1}`}
-                      required={index === 0}
-                    />
-                    {index > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => removeAddressField(index)}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-xl"
-                      >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addAddressField}
-                  className="mt-1 flex items-center gap-1 text-red-600 font-bold hover:text-red-700 transition-colors"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                  </svg>
-                  <span>Add another address</span>
-                </button>
-              </div>
+
 
               {/* Dynamic Address Fields */}
               <div className="space-y-3">
