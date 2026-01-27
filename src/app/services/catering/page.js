@@ -708,6 +708,9 @@ function CitySelectionModal({ onSelect }) {
           <div className="w-32 h-32 bg-red-400 rounded-full blur-3xl animate-pulse" />
         </div>
 
+
+        {/* SELECT YOUR CITY  */}
+
         <div className="relative z-10 p-8 md:p-12">
           <div className="text-center mb-12">
             <motion.div
