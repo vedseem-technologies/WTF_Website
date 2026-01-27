@@ -10,6 +10,8 @@ function Header() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const navItems = [
     { label: "Home", href: "/", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
@@ -20,6 +22,14 @@ function Header() {
     // { label: "Reels", href: "/reels", icon: "M14.75 6.25L10 9l4.75 2.75V6.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" },
     // { label: "Contact", href: "/contact", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
   ];
+
+  // Check if user is logged in
+  useEffect(() => {
+    const userData = localStorage.getItem('wtf_user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   // Hide / show header on scroll
   useEffect(() => {
@@ -32,12 +42,20 @@ function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  // Logout function
+  const handleLogout = () => {
+    localStorage.removeItem('wtf_token');
+    localStorage.removeItem('wtf_user');
+    setUser(null);
+    setShowProfileMenu(false);
+    window.location.href = '/';
+  };
+
   return (
     <>
       <div
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isVisible ? "lg:translate-y-0" : "lg:-translate-y-full"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isVisible ? "lg:translate-y-0" : "lg:-translate-y-full"
+          }`}
       >
         {/* Mobile & Tablet Header: Flat, Full-width, Minimal */}
         <div className="lg:hidden w-full px-4 md:px-10 py-2 md:py-2 flex justify-between items-center bg-black/5 backdrop-blur-sm">
@@ -71,11 +89,10 @@ function Header() {
                 return (
                   <Link href={item.href} key={item.label}>
                     <p
-                      className={`px-5 py-1 rounded-full text-2xl font-semibold transition-all duration-300 ${
-                        isActive
-                          ? "bg-red-600 text-white shadow-lg shadow-red-600/20"
-                          : "text-white/60 hover:text-white hover:bg-white/5"
-                      }`}
+                      className={`px-5 py-1 rounded-full text-2xl font-semibold transition-all duration-300 ${isActive
+                        ? "bg-red-600 text-white shadow-lg shadow-red-600/20"
+                        : "text-white/60 hover:text-white hover:bg-white/5"
+                        }`}
                     >
                       {item.label}
                     </p>
@@ -88,7 +105,7 @@ function Header() {
             <div className="flex items-center gap-6">
               <Link href="https://wtf-foods.vercel.app/">
                 <button
-                className="
+                  className="
                   relative text-3xl font-semibold
                   bg-gradient-to-r from-yellow-400 to-red-500
                   bg-clip-text text-transparent
@@ -106,13 +123,63 @@ function Header() {
                   after:transition-all after:duration-300
                   hover:after:w-full
                 "
-              >
-                Be a Partner ?
-              </button>
+                >
+                  Be a Partner ?
+                </button>
               </Link>
               {/* <Link href="/login">
               <button className="bg-white text-black px-8 py-2 rounded-full text-2xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
+<<<<<<< HEAD
               </Link> */}
+=======
+              </Link>
+
+              {user ? (
+                // Profile Icon with Dropdown
+                <div className="relative">
+                  <button
+                    onMouseEnter={() => setShowProfileMenu(true)}
+                    onMouseLeave={() => setShowProfileMenu(false)}
+                    className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-rose-600 flex items-center justify-center text-white font-bold text-xl hover:scale-110 transition-all shadow-lg hover:shadow-red-500/50"
+                  >
+                    {user.firstName?.charAt(0).toUpperCase()}
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {showProfileMenu && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        onMouseEnter={() => setShowProfileMenu(true)}
+                        onMouseLeave={() => setShowProfileMenu(false)}
+                        className="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+                      >
+                        <div className="px-4 py-3 bg-gradient-to-r from-red-600 to-rose-600">
+                          <p className="text-white font-bold text-lg">Hello {user.firstName}!</p>
+                          <p className="text-white/80 text-sm truncate">{user.email}</p>
+                        </div>
+                        <button
+                          onClick={handleLogout}
+                          className="w-full px-4 py-3 text-left text-red-600 font-bold hover:bg-red-50 transition-colors flex items-center gap-2"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          </svg>
+                          Logout
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                // Login Button
+                <Link href="/login">
+                  <button className="bg-white text-black px-8 py-2 rounded-full text-xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
+                </Link>
+              )}
+>>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
             </div>
           </div>
         </div>
@@ -171,9 +238,8 @@ function Header() {
                           onClick={() => setIsOpen(false)}
                           className="flex items-center justify-between py-2 md:py-4 border-b border-white/[0.03] group"
                         >
-                          <span className={`text-3xl md:text-4xl dongle-regular tracking-tight transition-colors ${
-                             isActive ? "text-red-600" : "text-white/60 group-hover:text-white"
-                          }`}>
+                          <span className={`text-3xl md:text-4xl dongle-regular tracking-tight transition-colors ${isActive ? "text-red-600" : "text-white/60 group-hover:text-white"
+                            }`}>
                             {item.label}
                           </span>
                           {isActive && (

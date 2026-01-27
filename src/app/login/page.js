@@ -14,7 +14,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3008';
+  const API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000';
 
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
@@ -70,14 +70,14 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 flex items-center justify-center p-6 relative">
       {/* Back Button */}
-      <button 
+      <button
         onClick={() => router.push('/')}
         className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl text-gray-600 font-bold hover:bg-white hover:shadow-lg transition-all active:scale-95 group"
       >
-        <svg 
-          className="w-5 h-5 group-hover:-translate-x-1 transition-transform" 
-          fill="none" 
-          stroke="currentColor" 
+        <svg
+          className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

@@ -7,13 +7,14 @@ import Toast from '../../components/Toast';
 
 export default function SignupPage() {
   const router = useRouter();
-  const [step, setStep] = useState(1); // 1: Signup Form, 2: OTP Verification
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
+    addresses: [''], // Initialize with one empty address
   });
   const [addresses, setAddresses] = useState(['']);
   const [otp, setOtp] = useState('');
@@ -21,7 +22,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3008';
+  const API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000';
 
   const showToast = (message, type = 'success') => {
     setToast({ show: true, message, type });
@@ -32,6 +33,7 @@ export default function SignupPage() {
   };
 
   const handleAddressChange = (index, value) => {
+<<<<<<< HEAD
     const newAddresses = [...addresses];
     newAddresses[index] = value;
     setAddresses(newAddresses);
@@ -47,6 +49,24 @@ export default function SignupPage() {
     }
   };
 
+=======
+    const newAddresses = [...formData.addresses];
+    newAddresses[index] = value;
+    setFormData({ ...formData, addresses: newAddresses });
+  };
+
+  const handleAddAddress = () => {
+    if (formData.addresses.length < 3) {
+      setFormData({ ...formData, addresses: [...formData.addresses, ''] });
+    }
+  };
+
+  const handleRemoveAddress = (index) => {
+    const newAddresses = formData.addresses.filter((_, i) => i !== index);
+    setFormData({ ...formData, addresses: newAddresses });
+  };
+
+>>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
   const handleSignup = async (e) => {
     e.preventDefault();
 
@@ -77,16 +97,29 @@ export default function SignupPage() {
           lastName: formData.lastName,
           email: formData.email,
           password: formData.password,
+<<<<<<< HEAD
           addresses: addresses.filter(addr => addr.trim() !== ''),
+=======
+          addresses: formData.addresses,
+>>>>>>> 211a45d3d9e23baffad708ccaa17bcc347c27775
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setUserId(data.userId);
-        setStep(2);
-        showToast('OTP sent to your email!', 'success');
+        // Auto-login after signup (Email verification disabled)
+        localStorage.setItem('wtf_token', data.token);
+        localStorage.setItem('wtf_user', JSON.stringify(data.user));
+        showToast('Account created successfully! 🎉', 'success');
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
+
+        // OTP FLOW (COMMENTED OUT)
+        // setUserId(data.userId);
+        // setStep(2);
+        // showToast('OTP sent to your email!', 'success');
       } else {
         showToast(data.message || 'Signup failed', 'error');
       }
@@ -159,14 +192,14 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-red-50 flex items-center justify-center p-6 relative">
       {/* Back Button */}
-      <button 
+      <button
         onClick={() => router.push('/')}
         className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl text-gray-600 font-bold hover:bg-white hover:shadow-lg transition-all active:scale-95 group"
       >
-        <svg 
-          className="w-5 h-5 group-hover:-translate-x-1 transition-transform" 
-          fill="none" 
-          stroke="currentColor" 
+        <svg
+          className="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+          fill="none"
+          stroke="currentColor"
           viewBox="0 0 24 24"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -294,6 +327,47 @@ export default function SignupPage() {
                   </svg>
                   <span>Add another address</span>
                 </button>
+              </div>
+
+              {/* Dynamic Address Fields */}
+              <div className="space-y-3">
+                <label className="block text-xl md:text-md text-gray-500 uppercase mb-2">
+                  Addresses (Max 3)
+                </label>
+                {formData.addresses.map((address, index) => (
+                  <div key={index} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={(e) => handleAddressChange(index, e.target.value)}
+                      className="w-full px-4 py-3 text-gray-500 bg-gray-50 border-2 border-transparent rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 transition-all outline-none"
+                      placeholder={`Address ${index + 1}`}
+                      required
+                    />
+
+                    {formData.addresses.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveAddress(index)}
+                        className="px-4 py-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition-colors font-bold text-xl"
+                        title="Remove address"
+                      >
+                        ✕
+                      </button>
+                    )}
+
+                    {index === formData.addresses.length - 1 && formData.addresses.length < 3 && (
+                      <button
+                        type="button"
+                        onClick={handleAddAddress}
+                        className="px-4 py-2 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition-colors font-bold text-xl"
+                        title="Add another address"
+                      >
+                        +
+                      </button>
+                    )}
+                  </div>
+                ))}
               </div>
 
               <button

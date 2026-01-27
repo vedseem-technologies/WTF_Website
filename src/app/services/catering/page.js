@@ -758,6 +758,37 @@ function CitySelectionModal({ onSelect }) {
           </motion.p>
         </div>
 
+        {/* SELECT YOUR CITY  */}
+
+        <div className="relative z-10 p-8 md:p-12">
+          <div className="text-center mb-12">
+            <motion.div
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="inline-block px-4 py-1.5 rounded-full bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest mb-4"
+            >
+              Location Required
+            </motion.div>
+            <motion.h2
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-5xl md:text-7xl font-bold text-gray-900 mb-4"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+            >
+              Select Your City
+            </motion.h2>
+            <motion.p
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-gray-500 text-xl max-w-md mx-auto"
+            >
+              To serve you better, please let us know your location for our catering services.
+            </motion.p>
+          </div>
+
         {/* Modal Body - Scrollable */}
         <div className="relative z-10 flex-1 overflow-y-auto px-4 py-6 md:px-12 custom-scrollbar">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6">
