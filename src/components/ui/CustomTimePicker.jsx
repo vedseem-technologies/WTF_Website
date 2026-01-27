@@ -22,7 +22,7 @@ const CustomTimePicker = ({ selectedTime, onSelect, onClose }) => {
         initial={{ opacity: 0, scale: 0.95, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-        className="relative z-50 mt-2 p-4 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-red-100 shadow-2xl shadow-red-100/50 w-[240px] max-h-[300px] flex flex-col"
+        className="relative z-50 mt-2 p-4 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-red-100 shadow-2xl shadow-red-100/50 w-full max-w-[260px] max-h-[300px] flex flex-col"
       >
         <div className="px-2 mb-3 border-b border-red-50 pb-2">
           <h3 className="text-xl font-black text-slate-900 uppercase tracking-widest">Select Time</h3>

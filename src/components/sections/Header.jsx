@@ -18,7 +18,7 @@ function Header() {
     { label: "About", href: "/about", icon: "M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
     { label: "Catering", href: "/services/catering", icon: "M12 15h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
     // { label: "Reels", href: "/reels", icon: "M14.75 6.25L10 9l4.75 2.75V6.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" },
-    { label: "Contact", href: "/contact", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+    // { label: "Contact", href: "/contact", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
   ];
 
   // Hide / show header on scroll
@@ -86,7 +86,7 @@ function Header() {
 
             {/* Desktop Buttons */}
             <div className="flex items-center gap-6">
-              <Link href="/partner">
+              <Link href="https://wtf-foods.vercel.app/">
                 <button
                 className="
                   relative text-3xl font-semibold
@@ -110,9 +110,9 @@ function Header() {
                 Be a Partner ?
               </button>
               </Link>
-              <Link href="/login">
+              {/* <Link href="/login">
               <button className="bg-white text-black px-8 py-2 rounded-full text-2xl font-bold active:scale-95 transition-all hover:bg-zinc-100 hover:cursor-pointer">Login</button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>
@@ -187,9 +187,9 @@ function Header() {
 
                 {/* Primary Actions Footer */}
                 <div className="p-6 md:px-12 md:pt-4 md:pb-8 pt-2 pb-4 md:gap-8 grid grid-cols-2 gap-4">
-                  <Link className="bg-white text-black py-2 md:py-3 rounded-xl text-2xl md:text-3xl text-center dongle-regular uppercase tracking-[0.1em] active:scale-95 transition-all" href="/login">
+                  {/* <Link className="bg-white text-black py-2 md:py-3 rounded-xl text-2xl md:text-3xl text-center dongle-regular uppercase tracking-[0.1em] active:scale-95 transition-all" href="/login">
                     Login
-                  </Link>
+                  </Link> */}
                   <Link className="bg-gradient-to-r from-yellow-400 to-red-500 text-center text-white py-2 md:py-3 rounded-xl text-2xl md:text-3xl dongle-regular uppercase tracking-[0.1em] border border-white/5 active:scale-95 transition-all" href="/partner">
                     Partner
                   </Link>

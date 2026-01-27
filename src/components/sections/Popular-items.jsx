@@ -175,7 +175,7 @@ function PopularItems() {
           transition={{ delay: 0.2, duration: 0.5 }}
           className="text-center mb-6 md:mb-6"
         >
-          <span className="text-white font-bold tracking-[0.3rem] uppercase text-md md:mb-4 block">Chef's Top Picks</span>
+          <span className="text-white font-bold tracking-[0.1rem] md:tracking-[0.3rem] uppercase text-2xl md:text-5xl md:mb-4 block">Chef's <span className="text-yellow-400">Top </span>Picks</span>
           {/* <h2 className="text-4xl md:text-8xl font-black text-white tracking- uppercase">
             Most <span className="text-yellow-400">Popular</span> Items
           </h2> */}
@@ -198,7 +198,7 @@ function PopularItems() {
           className="w-full grid md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 items-center bg-gray-500/10 md:bg-white/5 backdrop-blur-xl rounded-[3rem] p-6 md:p-6 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
         >
           <div className="flex flex-col text-center md:text-left md:px-8">
-            <h3 className="text-5xl md:text-6xl lg:text-8xl font-black text-white uppercase tracking-tighter mb-6"
+            <h3 className="text-4xl md:text-6xl lg:text-8xl font-black text-white uppercase tracking-tighter mb-6"
                 style={{
                     lineHeight: "0.7"
                 }}
@@ -230,7 +230,7 @@ function PopularItems() {
               animate={{ rotate: 360 }}
               transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
               className="relative w-[90%] h-[90%] bg-transparent overflow-hidden will-change-transform"
-              style={{ clipPath: 'circle(42%)' }}
+              style={{ clipPath: 'circle(39%)' }}
             >
               <Image 
                 src="/images/fries.png" 
@@ -277,16 +277,16 @@ function PopularItems() {
           <Image 
             src="/chef.png" 
             alt="Chef Master" 
-            width={isMobile ? 380 : 600} 
+            width={isMobile ? 320 : 600} 
             height={1000} 
             priority={false}
-            className={`filter contrast-125 brightness-90 transition-transform duration-700 ${isMobile ? 'scale-105' : 'group-hover:scale-[1.02]'} will-change-transform`} 
+            className={`filter contrast-125 brightness-90 transition-transform duration-700 ${isMobile ? 'scale-100 w-[85vw] h-auto' : 'group-hover:scale-[1.02]'} will-change-transform`} 
           />
         </div>
         
         <div className="w-full max-w-[90%] mx-auto px-6 mt-4 mb-8 md:mt-12 relative z-20">
           <div className="text-center mb-12">
-            <h3 className="font-black uppercase tracking-tighter leading-none flex flex-col items-center text-4xl md:text-8xl text-red-800">
+            <h3 className="font-black uppercase tracking-tighter leading-none flex flex-col items-center text-3xl md:text-8xl text-red-800">
                <div className="text-red-800">Multiple {"  "}<span className="text-red-800">{" "}Services</span></div>
             </h3>
           </div>

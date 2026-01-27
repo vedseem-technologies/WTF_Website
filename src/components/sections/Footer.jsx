@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 function Footer() {
   return (
-    <footer className="w-full bg-white pt-10 pb-24 md:pb-0 px-2 md:px-12">
+    <footer className="w-full bg-white pt-10 pb-20 md:pb-0 px-2 md:px-12">
       <div className="max-w-full mx-auto">
         {/* Desktop Layout: Original 5-column grid */}
         <div className="hidden lg:grid lg:grid-cols-5 gap-8 md:gap-12">
@@ -49,7 +49,7 @@ function Footer() {
             <h3 className="text-red-800 text-3xl font-bold mb-4">Information</h3>
             <ul className="space-y-2">
               <li><Link href="/about" className="text-black text-2xl hover:text-red-800">About Us</Link></li>
-              <li><Link href="/search" className="text-black text-2xl hover:text-red-800">More Search</Link></li>
+              {/* <li><Link href="/search" className="text-black text-2xl hover:text-red-800">More Search</Link></li> */}
               <li><Link href="/blogs" className="text-black text-2xl hover:text-red-800">Blogs</Link></li>
               <li><Link href="/testimonials" className="text-black text-2xl hover:text-red-800">Testimonials</Link></li>
               <li><Link href="/events" className="text-black text-2xl hover:text-red-800">Events</Link></li>
@@ -61,7 +61,7 @@ function Footer() {
             <h3 className="text-red-800 text-3xl font-bold mb-4">Helpful Links</h3>
             <ul className="space-y-2">
               <li><Link href="/services" className="text-black text-2xl hover:text-red-800">Services</Link></li>
-              <li><Link href="/support" className="text-black text-2xl hover:text-red-800">Supports</Link></li>
+              <li><Link href="/contact" className="text-black text-2xl hover:text-red-800">Contact</Link></li>
               <li><Link href="/terms" className="text-black text-2xl hover:text-red-800">Terms & Conditions</Link></li>
               <li><Link href="/privacy" className="text-black text-2xl hover:text-red-800">Privacy Policy</Link></li>
             </ul>
@@ -156,7 +156,7 @@ function Footer() {
               <h3 className="text-red-800 text-3xl font-bold mb-2">Information</h3>
               <ul className="space-y-0">
                 <li><Link href="/about" className="text-black text-2xl hover:text-red-800 transition-colors block">About Us</Link></li>
-                <li><Link href="/search" className="text-black text-2xl hover:text-red-800 transition-colors block">More Search</Link></li>
+                {/* <li><Link href="/search" className="text-black text-2xl hover:text-red-800 transition-colors block">More Search</Link></li> */}
                 <li><Link href="/blogs" className="text-black text-2xl hover:text-red-800 transition-colors block">Blogs</Link></li>
                 <li><Link href="/testimonials" className="text-black text-2xl hover:text-red-800 transition-colors block">Testimonials</Link></li>
               </ul>
@@ -167,7 +167,7 @@ function Footer() {
               <h3 className="text-red-800 text-3xl font-bold mb-2">Helpful Links</h3>
               <ul className="space-y-0">
                 <li><Link href="/services" className="text-black text-2xl hover:text-red-800 transition-colors block">Services</Link></li>
-                <li><Link href="/support" className="text-black text-2xl hover:text-red-800 transition-colors block">Supports</Link></li>
+                <li><Link href="/contact" className="text-black text-2xl hover:text-red-800 transition-colors block">Contact</Link></li>
                 <li><Link href="/terms" className="text-black text-2xl hover:text-red-800 transition-colors block">Terms</Link></li>
                 <li><Link href="/privacy" className="text-black text-2xl hover:text-red-800 transition-colors block">Privacy</Link></li>
               </ul>

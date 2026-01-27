@@ -8,7 +8,7 @@ import Banner from '../components/sections/Banner'
 
 function page() {
   return (
-    <div className='overflow-hidden'>
+    <div className='overflow-x-hidden'>
       <Header />
       <Hero />
       <Carousel />

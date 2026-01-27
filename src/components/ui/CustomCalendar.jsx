@@ -29,14 +29,20 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
     const totalDays = daysInMonth(year, month);
     const startDay = firstDayOfMonth(year, month);
     const dateCells = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
 
     // Empty cells for the start of the month
     for (let i = 0; i < startDay; i++) {
-      dateCells.push(<div key={`empty-${i}`} className="h-10 w-10" />);
+      dateCells.push(<div key={`empty-${i}`} className="h-8 w-full" />);
     }
 
     // Actual dates
     for (let d = 1; d <= totalDays; d++) {
+      const currentCellDate = new Date(year, month, d);
+      currentCellDate.setHours(0, 0, 0, 0);
+      const isPastDate = currentCellDate < today;
+      
       const isSelected = selectedDate && 
         new Date(selectedDate).getDate() === d && 
         new Date(selectedDate).getMonth() === month && 
@@ -45,17 +51,21 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
       dateCells.push(
         <motion.button
           key={d}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={isPastDate ? {} : { scale: 1.1 }}
+          whileTap={isPastDate ? {} : { scale: 0.95 }}
           onClick={() => {
+            if (isPastDate) return;
             const date = new Date(year, month, d);
             onSelect(`${d.toString().padStart(2, '0')} / ${(month + 1).toString().padStart(2, '0')} / ${year}`);
             onClose();
           }}
-          className={`h-11 w-11 rounded-full flex items-center justify-center text-2xl font-semibold transition-colors
-            ${isSelected 
-              ? "bg-red-600 text-white shadow-md shadow-red-200" 
-              : "text-slate-700 hover:bg-red-50 hover:text-red-600"
+          disabled={isPastDate}
+          className={`h-8 w-full rounded-full flex items-center justify-center text-lg font-semibold transition-colors
+            ${isPastDate 
+              ? "text-slate-300 cursor-not-allowed" 
+              : isSelected 
+                ? "bg-red-600 text-white shadow-md shadow-red-200" 
+                : "text-slate-700 hover:bg-red-50 hover:text-red-600"
             }`}
         >
           {d}
@@ -76,10 +86,10 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
         initial={{ opacity: 0, scale: 0.9, y: 10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 10 }}
-        className="relative z-50 mt-2 p-6 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-red-100 shadow-2xl shadow-red-100/50 w-[320px]"
+        className="relative z-50 mt-2 p-4 rounded-[2rem] bg-white/80 backdrop-blur-xl border border-red-100 shadow-2xl shadow-red-100/50 w-[320px]"
       >
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-3">
         <button
           onClick={handlePrevMonth}
           className="p-2 rounded-xl hover:bg-red-50 text-red-600 transition-colors"
@@ -90,10 +100,10 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
         </button>
         
         <div className="text-center">
-          <h3 className="text-3xl font-black text-slate-900 leading-tight">
+          <h3 className="text-2xl font-black text-slate-900 leading-tight">
             {months[currentDate.getMonth()]}
           </h3>
-          <p className="text-xl font-bold text-slate-400 uppercase tracking-widest leading-none mt-1">
+          <p className="text-lg font-bold text-slate-400 uppercase tracking-widest leading-none mt-0.5">
             {currentDate.getFullYear()}
           </p>
         </div>
@@ -109,16 +119,16 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
       </div>
 
       {/* Week Days */}
-      <div className="grid grid-cols-7 gap-1 mb-2">
+      <div className="grid grid-cols-7 gap-0.5 mb-1">
         {days.map(day => (
-          <div key={day} className="h-10 w-10 flex items-center justify-center text-lg font-black uppercase tracking-tighter text-slate-300">
+          <div key={day} className="h-7 w-full flex items-center justify-center text-sm font-black uppercase tracking-tighter text-slate-300">
             {day}
           </div>
         ))}
       </div>
 
       {/* Date Grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-0.5">
         {renderDays()}
       </div>
     </motion.div>

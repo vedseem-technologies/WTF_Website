@@ -76,9 +76,6 @@ export default function BlogsPage() {
                   >
                     {blog.excerpt}
                   </p>
-                  <button className="text-red-800 font-semibold text-xl hover:underline">
-                    Read More →
-                  </button>
                 </div>
               </article>
             ))}

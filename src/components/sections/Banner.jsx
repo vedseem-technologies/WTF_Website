@@ -1,136 +1,147 @@
 'use client'
 import React from 'react'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
+
+const testimonials = [
+  {
+    id: 1,
+    name: "Rahul Sharma",
+    role: "Event Planner",
+    content: "The catering from Where's The Fork was the highlight of our corporate gala. The flavors were authentic, and the presentation was absolutely world-class.",
+    rating: 5,
+    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Rahul"
+  },
+  {
+    id: 2,
+    name: "Priya Patel",
+    role: "Food Blogger",
+    content: "I've tried many places, but the French fries here are out of this world! Perfect crunch and seasoning. A must-visit for every food lover.",
+    rating: 5,
+    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Priya"
+  },
+  {
+    id: 3,
+    name: "Vikram Mehta",
+    role: "Business Owner",
+    content: "Professional, punctual, and delicious. Their franchise model is so well-structured, it made my entry into the food industry seamless.",
+    rating: 5,
+    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Vikram"
+  },
+  {
+    id: 4,
+    name: "Ananya Iyer",
+    role: "Frequent Guest",
+    content: "The atmosphere and the food together create an experience you can't find elsewhere. The Roll-X variety is simply incredible!",
+    rating: 5,
+    image: "https://api.dicebear.com/9.x/avataaars/svg?seed=Ananya"
+  }
+]
+
+const StarIcon = ({ filled }) => (
+  <svg 
+    className={`w-5 h-5 ${filled ? "text-yellow-400" : "text-zinc-200"}`} 
+    fill="currentColor" 
+    viewBox="0 0 20 20"
+  >
+    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+  </svg>
+)
+
+function TestimonialCard({ testimony, index }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.6 }}
+      whileHover={{ y: -10 }}
+      className="bg-white p-8 rounded-[2rem] shadow-xl border border-zinc-100 flex flex-col gap-6 relative"
+    >
+      <div className="absolute -top-4 -left-4 w-12 h-12 bg-red-600 rounded-full flex items-center justify-center text-white shadow-lg">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C15.4647 8 15.017 8.44772 15.017 9V12C15.017 12.5523 14.5693 13 14.017 13H13.017V21H14.017ZM6.01703 21L6.01703 18C6.01703 16.8954 6.91244 16 8.01703 16H11.017C11.5693 16 12.017 15.5523 12.017 15V9C12.017 8.44772 11.5693 8 11.017 8H8.01703C7.46475 8 7.01703 8.44772 7.01703 9V12C7.01703 12.5523 6.56932 13 6.01703 13H5.01703V21H6.01703Z" />
+        </svg>
+      </div>
+
+      <p className="dongle-regular text-2xl md:text-3xl text-zinc-600 italic leading-tight mt-4">
+        "{testimony.content}"
+      </p>
+
+      <div className="mt-auto flex items-center gap-4 border-t border-zinc-100 pt-6">
+        <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-red-100">
+          <Image 
+            src={testimony.image} 
+            alt={testimony.name}
+            fill
+            unoptimized
+            className="object-cover"
+          />
+        </div>
+        <div>
+          <h4 className="font-black text-xl text-zinc-900 uppercase tracking-tight">{testimony.name}</h4>
+          <p className="text-red-600 font-bold text-lg leading-none">{testimony.role}</p>
+          <div className="flex gap-1 mt-1">
+            {[...Array(testimony.rating)].map((_, i) => <StarIcon key={i} filled={true} />)}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+}
 
 function Banner() {
-  const processSteps = [
-    {
-      id: '01',
-      title: 'Select Your Menu',
-      description: 'Choose from our curated selection of signature dishes or customize your own.',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A10.003 10.003 0 0012 3v0a10.003 10.003 0 0110 10v0c0 5.523-4.477 10-10 10H8.343" />
-        </svg>
-      )
-    },
-    {
-      id: '02',
-      title: 'Chef Collaboration',
-      description: 'Our executive chefs work with you to perfect every flavor profile.',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M22 21v-2a4 4 0 00-3-3.87" />
-          <path d="M16 3.13a4 4 0 010 7.75" />
-        </svg>
-      )
-    },
-    {
-      id: '03',
-      title: 'Culinary Delivery',
-      description: 'We bring the gourmet experience directly to your venue with precision.',
-      icon: '/images/food-deliver.png'
-    },
-    {
-      id: '04',
-      title: 'Exquisite Event',
-      description: 'Watch your vision come to life with professional execution and flair.',
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z" />
-        </svg>
-      )
-    }
-  ]
-
   return (
-    <div className='w-full bg-white pt-8 pb-16 overflow-hidden'>
-        {/* Main Banner Image - Premium Framed Look */}
-        {/* <div className="max-w-full mx-auto px-4 md:px-8 mb-16 md:mb-24">
-            <motion.div 
-                initial={{ opacity: 0, scale: 0.98 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className='relative w-full aspect-[21/9] rounded-[0.5rem] md:rounded-[1rem] overflow-hidden shadow-2xl shadow-zinc-200'
-            >
-                <Image 
-                    src="/banner-1.png" 
-                    alt="Premium Catering Experience" 
-                    fill
-                    className="object-cover"
-                    unoptimized
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                <div className="hidden md:absolute bottom-8 left-8 md:bottom-12 md:left-12 max-w-lg">
-                    <span className="text-white/60 text-xl md:text-2xl font-bold uppercase tracking-[0.4em] mb-3 block">Grand Excellence</span>
-                    <h2 className="text-5xl md:text-7xl font-black text-white uppercase leading-none">
-                        Crafting <span className="text-red-600">Legendary</span> Events
-                    </h2>
-                </div>
-            </motion.div>
-        </div> */}
-        
-        {/* Process Section - Replaces the old Blocks */}
-        <div className='w-full px-4 md:px-8 max-w-7xl mx-auto'>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
-                <div className="max-w-xl">
-                    <span className="text-red-600 font-bold uppercase tracking-widest text-md mb-2 block">Our Workflow</span>
-                    <h3 className="text-4xl md:text-6xl font-black text-zinc-950 uppercase tracking-tighter leading-none">
-                        How <span className="text-red-500">Excellence</span> Happens
-                    </h3>
-                </div>
-                <p className="md:hidden text-zinc-400 text-2xl md:text-3xl font-medium max-w-xs md:text-right"
-                   style={{lineHeight: '0.9'}}
-                >
-                    Methodical approach to ensuring your culinary vision is realized with absolute precision.
-                </p>
-            </div>
-
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8'>
-                {processSteps.map((step, index) => (
-                    <motion.div
-                        key={step.id}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1, duration: 0.6 }}
-                        className="group relative flex flex-col p-8 rounded-[2.5rem] bg-zinc-50 border-2 border-zinc-200 hover:bg-white hover:border-red-300 transition-all duration-500 hover:shadow-2xl hover:shadow-red-600/5 hover:-translate-y-2"
-                    >
-                        <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-red-600 mb-8 border border-zinc-50 group-hover:bg-red-600 group-hover:text-white transition-all duration-500 group-hover:rotate-12">
-                            {typeof step.icon === 'string' ? (
-                                <Image 
-                                    src={step.icon} 
-                                    alt={step.title} 
-                                    width={24} 
-                                    height={24} 
-                                    className="transition-all duration-500 [filter:brightness(0)_saturate(100%)_invert(13%)_sepia(94%)_saturate(5436%)_hue-rotate(352deg)_brightness(83%)_contrast(105%)] group-hover:[filter:brightness(0)_invert(1)]"
-                                />
-                            ) : (
-                                step.icon
-                            )}
-                        </div>
-                        
-                        <span className="text-4xl font-black text-zinc-500 group-hover:text-red-500 absolute top-8 right-8 transition-colors">
-                            {step.id}
-                        </span>
-
-                        <h4 className="text-3xl font-black text-zinc-950 uppercase tracking-tighter mb-3 transition-colors group-hover:text-red-600">
-                            {step.title}
-                        </h4>
-                        <p className="text-zinc-500 text-2xl font-medium leading-relaxed"
-                           style={{lineHeight: '0.9'}}
-                        >
-                            {step.description}
-                        </p>
-                        
-                        <div className="mt-8 h-1 w-0 bg-red-600 rounded-full transition-all duration-700 group-hover:w-16" />
-                    </motion.div>
-                ))}
-            </div>
+    <section className="w-full bg-zinc-50 py-20 md:py-32 overflow-hidden relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
+        <div className="flex flex-col items-center text-center mb-16 md:mb-24">
+          <motion.span 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-red-600 font-bold uppercase tracking-[0.3em] text-lg mb-4"
+          >
+            Guest Experiences
+          </motion.span>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="font-cheddar text-5xl md:text-8xl text-zinc-950 uppercase leading-none mb-6"
+          >
+            What Our <span className="text-red-600">Guests</span> Say
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+              className="dongle-regular text-3xl md:text-4xl text-zinc-500 max-w-2xl leading-tight"
+          >
+            Hear from the people who have experienced the magic of Where's The Fork firsthand.
+          </motion.p>
         </div>
-    </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          {testimonials.map((testimony, index) => (
+            <TestimonialCard key={testimony.id} testimony={testimony} index={index} />
+          ))}
+        </div>
+
+        {/* Brand Accent */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 0.05, scale: 1 }}
+          viewport={{ once: true }}
+          className="absolute -right-20 md:-right-20 top-40 pointer-events-none select-none overflow-hidden hidden md:block"
+        >
+          <h2 className="font-cheddar text-[10rem] md:text-[20rem] text-red-600 uppercase leading-none rotate-90 opacity-20">
+            TESTIMONY
+          </h2>
+        </motion.div>
+      </div>
+    </section>
   )
 }
 

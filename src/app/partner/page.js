@@ -62,30 +62,30 @@ export default function BrandReveal() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-col items-center gap-4 mt-6 md:mt-8 w-full"
           >
-            <h2 className="text-2xl md:text-3xl font-bold text-[#D62828] tracking-wide uppercase">
+            {/* <h2 className="text-2xl md:text-3xl font-bold text-[#D62828] tracking-wide uppercase">
                 Get Franchise
-            </h2>
+            </h2> */}
 
             {/* Buttons Row with Sequential Pop-in */}
-            <div className="flex flex-row gap-4 md:gap-6 w-full justify-center">
-                 <motion.a
+            <div className="flex flex-row gap-8 md:gap-12 w-full justify-center items-center mt-4">
+                <motion.a
                     href="https://partnerships.wtffoods.in/forms/wtf"
                     initial={{ scale: 0, opacity: 0 }}
                     animate={!loading ? { scale: 1, opacity: 1 } : {}}
-                    transition={{ delay: 0.8 }}
+                    transition={{}}
                     target="_blank"
                     rel="noopener noreferrer" 
-                    className="px-8 py-3 md:py-4 bg-[#D62828] text-white text-lg md:text-xl font-bold rounded-full transition-all duration-300 shadow-lg text-center min-w-[120px] md:min-w-[150px] hover:shadow-red-500/50"
+                    className="transition-all duration-300 flex flex-col items-center"
                     whileHover={{ scale: 1.05, y: -5 }}
                     whileTap={{ scale: 0.95 }}
                 >
                   <motion.div 
                     initial={{ rotateY: 180, scale: 0, opacity: 0 }}
                     animate={!loading ? { rotateY: 0, scale: 1, opacity: 1 } : {}}
-                    transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.8 }}
+                    transition={{ type: "spring", damping: 15, stiffness: 100 }}
                     className="w-32 h-32 md:w-48 md:h-48 relative mb-2 md:mb-4"
                   >
-                    <Image src="/rollx-logo.png" alt="Brand Logo" fill className="object-contain" priority />
+                    <Image src="/Logo.png" alt="Brand Logo" fill className="object-contain" priority />
                   </motion.div>
                 </motion.a>
 
@@ -93,20 +93,20 @@ export default function BrandReveal() {
                     href="https://partnerships.wtffoods.in/forms/roll-x"
                     initial={{ scale: 0, opacity: 0 }}
                     animate={!loading ? { scale: 1, opacity: 1 } : {}}
-                    transition={{ delay: 1.0 }}
+                    transition={{}}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-8 py-3 md:py-4 bg-[#D62828] text-white text-lg md:text-xl font-bold rounded-full transition-all duration-300 shadow-lg text-center min-w-[120px] md:min-w-[150px] hover:shadow-red-500/50"
+                    className="transition-all duration-300 flex flex-col items-center"
                     whileHover={{ scale: 1.05, y: -5 }}
                     whileTap={{ scale: 0.95 }}
                 >
                   <motion.div 
                     initial={{ rotateY: 180, scale: 0, opacity: 0 }}
                     animate={!loading ? { rotateY: 0, scale: 1, opacity: 1 } : {}}
-                    transition={{ type: "spring", damping: 15, stiffness: 100, delay: 0.8 }}
+                    transition={{ type: "spring", damping: 15, stiffness: 100 }}
                     className="w-32 h-32 md:w-48 md:h-48 relative mb-2 md:mb-4"
                   >
-                    <Image src="/Logo.png" alt="Brand Logo" fill className="object-contain" priority />
+                    <Image src="/rollx-logo.png" alt="Brand Logo" fill className="object-contain" priority />
                   </motion.div>
                 </motion.a>
             </div>

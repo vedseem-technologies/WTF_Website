@@ -11,6 +11,26 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
   const [showPriceBreakup, setShowPriceBreakup] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
+  const [showDetails, setShowDetails] = useState(false);
+  const [user, setUser] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [authFormData, setAuthFormData] = useState({ email: '', password: '', firstName: '', lastName: '' });
+  const [authAddresses, setAuthAddresses] = useState(['']);
+  const [loading, setLoading] = useState(false);
+  const [showAddAddress, setShowAddAddress] = useState(false);
+  const [newAddressInput, setNewAddressInput] = useState('');
+
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem('wtf_user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      if (parsedUser.addresses && parsedUser.addresses.length > 0) {
+        setSelectedAddress(parsedUser.addresses[0]);
+      }
+    }
+  }, []);
 
   React.useEffect(() => {
     // Hide bottom bar when this view is active
@@ -60,8 +80,72 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
   };
 
   const handleProceedToPay = () => {
-    setShowPayment(true);
+    setShowPriceBreakup(false);
+    setShowDetails(true);
     setCurrentStep(3);
+  };
+
+  const handleDetailsComplete = () => {
+    if (!selectedAddress) {
+      alert("Please select or add an address");
+      return;
+    }
+    setShowPayment(true);
+    setCurrentStep(4);
+  };
+
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3008';
+    
+    try {
+      const endpoint = isLoginMode ? '/api/auth/login' : '/api/auth/signup';
+      const body = isLoginMode 
+        ? { email: authFormData.email, password: authFormData.password }
+        : { ...authFormData, addresses: authAddresses.filter(a => a.trim()) };
+
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        if (isLoginMode) {
+          localStorage.setItem('wtf_token', data.token);
+          localStorage.setItem('wtf_user', JSON.stringify(data.user));
+          setUser(data.user);
+          if (data.user.addresses?.length > 0) setSelectedAddress(data.user.addresses[0]);
+        } else {
+          // Signup might need OTP, but for simplicity here we assume it logs in or user needs to verify
+          // If the backend requires OTP, this will need more complex handling.
+          // For now, let's assume login works if they already have account or signup is direct for this flow.
+          alert("Signup successful! Please login.");
+          setIsLoginMode(true);
+        }
+      } else {
+        alert(data.message || "Authentication failed");
+      }
+    } catch (err) {
+      alert("Network error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddNewAddress = () => {
+    if (!newAddressInput.trim()) return;
+    const updatedUser = {
+      ...user,
+      addresses: [...(user.addresses || []), newAddressInput.trim()]
+    };
+    setUser(updatedUser);
+    localStorage.setItem('wtf_user', JSON.stringify(updatedUser));
+    setSelectedAddress(newAddressInput.trim());
+    setNewAddressInput('');
+    setShowAddAddress(false);
   };
 
   return (
@@ -78,7 +162,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
           <motion.div
             className="absolute left-5 top-[20px] h-[2px] bg-red-500 origin-left"
             initial={false}
-            animate={{ width: `calc(${(currentStep / 3) * 100}% - ${currentStep === 3 ? '40px' : '20px'})` }}
+            animate={{ width: `calc(${(currentStep / 4) * 100}% - ${currentStep === 4 ? '40px' : '20px'})` }}
             transition={{ duration: 0.5 }}
           />
         
@@ -86,6 +170,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
             { label: "Event" },
             { label: "Menu" },
             { label: "Price" },
+            { label: "Details" },
             { label: "Pay" },
           ].map((step, idx) => {
             const isCompleted = idx < currentStep;
@@ -126,7 +211,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
       {/* Main Content Area with Sliding Animation */}
       <div className="relative max-w-3xl mx-auto px-6 md:px-24 min-h-[400px]">
         <AnimatePresence mode="wait">
-          {!showPriceBreakup && !showPayment ? (
+          {!showPriceBreakup && !showDetails && !showPayment ? (
             <motion.div
               key="summary"
               initial={{ opacity: 0, x: -20 }}
@@ -309,6 +394,179 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                 <span>• On-time setup guarantee</span>
               </div>
             </motion.div>
+          ) : showDetails && !showPayment ? (
+            <motion.div
+              key="details"
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "-100%", opacity: 0 }}
+              className="pb-20 pt-6"
+            >
+              {!user ? (
+                <div className="space-y-6">
+                  <div className="mb-8">
+                    <h1 className="text-4xl font-bold text-gray-900">{isLoginMode ? 'Login to Continue' : 'Create Account'}</h1>
+                    <p className="text-2xl text-gray-500">Please {isLoginMode ? 'login' : 'sign up'} to proceed with your booking</p>
+                  </div>
+                  <form onSubmit={handleAuthSubmit} className="space-y-4">
+                    {!isLoginMode && (
+                      <div className="grid grid-cols-2 gap-4">
+                        <input
+                          type="text"
+                          placeholder="First Name"
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-3xl text-gray-800 placeholder:text-gray-400 outline-none focus:bg-white focus:border-red-500 transition-all"
+                          value={authFormData.firstName}
+                          onChange={(e) => setAuthFormData({...authFormData, firstName: e.target.value})}
+                          required
+                        />
+                        <input
+                          type="text"
+                          placeholder="Last Name"
+                          className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-3xl text-gray-800 placeholder:text-gray-400 outline-none focus:bg-white focus:border-red-500 transition-all"
+                          value={authFormData.lastName}
+                          onChange={(e) => setAuthFormData({...authFormData, lastName: e.target.value})}
+                        />
+                      </div>
+                    )}
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-3xl text-gray-800 placeholder:text-gray-400 outline-none focus:bg-white focus:border-red-500 transition-all"
+                      value={authFormData.email}
+                      onChange={(e) => setAuthFormData({...authFormData, email: e.target.value})}
+                      required
+                    />
+                    <input
+                      type="password"
+                      placeholder="Password"
+                      className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-3xl text-gray-800 placeholder:text-gray-400 outline-none focus:bg-white focus:border-red-500 transition-all"
+                      value={authFormData.password}
+                      onChange={(e) => setAuthFormData({...authFormData, password: e.target.value})}
+                      required
+                    />
+                    {!isLoginMode && (
+                      <div className="space-y-2">
+                        <label className="text-xl text-gray-500 block">Addresses</label>
+                        {authAddresses.map((addr, idx) => (
+                          <div key={idx} className="flex gap-2">
+                            <input
+                              type="text"
+                              placeholder={`Address ${idx + 1}`}
+                              className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-3xl text-gray-800 placeholder:text-gray-400 outline-none focus:bg-white focus:border-red-500 transition-all"
+                              value={addr}
+                              onChange={(e) => {
+                                const newAddrs = [...authAddresses];
+                                newAddrs[idx] = e.target.value;
+                                setAuthAddresses(newAddrs);
+                              }}
+                              required={idx === 0}
+                            />
+                            {idx > 0 && (
+                              <button type="button" onClick={() => setAuthAddresses(authAddresses.filter((_, i) => i !== idx))} className="text-red-500">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        <button type="button" onClick={() => setAuthAddresses([...authAddresses, ''])} className="text-red-600 font-bold text-xl flex items-center gap-1">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                          Add Address
+                        </button>
+                      </div>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-red-600 text-white rounded-xl py-4 text-2xl font-bold hover:bg-red-700 transition-all disabled:opacity-50"
+                    >
+                      {loading ? 'Processing...' : (isLoginMode ? 'Login' : 'Sign Up')}
+                    </button>
+                  </form>
+                  <p className="text-center text-xl text-gray-500 mt-4">
+                    {isLoginMode ? "Don't have an account?" : "Already have an account?"}
+                    <button onClick={() => setIsLoginMode(!isLoginMode)} className="ml-2 text-red-600 font-bold underline">
+                      {isLoginMode ? 'Sign Up' : 'Login'}
+                    </button>
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-8">
+                  <div className="mb-8">
+                    <h1 className="text-4xl font-bold text-gray-900">Delivery Details</h1>
+                    <p className="text-2xl text-gray-500">Confirm your details and select delivery address</p>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className="text-2xl font-bold text-gray-800">Your Information</h2>
+                      <button 
+                        onClick={() => {
+                          localStorage.removeItem('wtf_token');
+                          localStorage.removeItem('wtf_user');
+                          setUser(null);
+                        }}
+                        className="text-red-600 font-bold text-xl uppercase tracking-tighter"
+                      >
+                        Edit / Logout
+                      </button>
+                    </div>
+                    <p className="text-2xl text-gray-600">{user.firstName} {user.lastName}</p>
+                    <p className="text-xl text-gray-500">{user.email}</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h2 className="text-2xl font-bold text-gray-800">Select Delivery Address</h2>
+                    <div className="space-y-3">
+                      {user.addresses?.map((addr, idx) => (
+                        <div 
+                          key={idx}
+                          onClick={() => setSelectedAddress(addr)}
+                          className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedAddress === addr ? 'border-red-500 bg-red-50/20' : 'border-gray-100 hover:border-gray-200'}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr ? 'border-red-500 bg-red-500' : 'border-gray-300'}`}>
+                              {selectedAddress === addr && <div className="w-2 h-2 rounded-full bg-white" />}
+                            </div>
+                            <span className="text-2xl text-gray-700">{addr}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {showAddAddress ? (
+                      <div className="mt-4 flex gap-2">
+                        <input
+                          type="text"
+                          value={newAddressInput}
+                          onChange={(e) => setNewAddressInput(e.target.value)}
+                          placeholder="Enter new address"
+                          className="flex-1 bg-white border border-gray-200 rounded-xl py-2 px-4 text-2xl text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-red-100"
+                        />
+                        <button 
+                          onClick={handleAddNewAddress}
+                          className="bg-red-600 text-white px-4 py-2 rounded-xl text-xl font-bold"
+                        >
+                          Add
+                        </button>
+                        <button 
+                          onClick={() => setShowAddAddress(false)}
+                          className="text-gray-400 px-2"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button 
+                        onClick={() => setShowAddAddress(true)}
+                        className="flex items-center gap-2 text-red-600 font-bold text-2xl mt-2"
+                      >
+                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                         Add New Address
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+            </motion.div>
           ) : (
             <motion.div
               key="payment"
@@ -358,7 +616,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                 </button>
 
                 {/* COD Option */}
-                <button
+                {/* <button
                   onClick={() => setPaymentMethod("cod")}
                   className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all duration-300 ${
                     paymentMethod === "cod"
@@ -384,7 +642,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                       <div className="w-2.5 h-2.5 rounded-full bg-white shadow-sm" />
                     )}
                   </div>
-                </button>
+                </button> */}
               </div>
 
               <div className="mt-8 bg-gray-50 rounded-2xl p-6 border border-gray-100/50">
@@ -410,6 +668,10 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
             onClick={() => {
               if (showPayment) {
                 setShowPayment(false);
+                setCurrentStep(3);
+              } else if (showDetails) {
+                setShowDetails(false);
+                setShowPriceBreakup(true);
                 setCurrentStep(2);
               } else if (showPriceBreakup) {
                 setShowPriceBreakup(false);
@@ -425,19 +687,27 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
             </svg>
           </button>
           
-          {!showPriceBreakup && !showPayment ? (
+          {(!showPriceBreakup && !showDetails && !showPayment) ? (
             <button 
               onClick={handlePriceCheck}
               className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-2xl font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700"
             >
               Check Price
             </button>
-          ) : !showPayment ? (
+          ) : showPriceBreakup ? (
             <button 
               onClick={handleProceedToPay}
               className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-2xl font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700"
             >
               Proceed to Pay
+            </button>
+          ) : showDetails ? (
+            <button 
+              onClick={handleDetailsComplete}
+              disabled={!user}
+              className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-2xl font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700 disabled:opacity-50"
+            >
+              Confirm Details
             </button>
           ) : (
             <button className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-2xl font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700 uppercase tracking-tight">

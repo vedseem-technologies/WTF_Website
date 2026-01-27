@@ -464,7 +464,7 @@ export default function OccasionPage({ params }) {
                         !bookingDetails.date && !calendarOpen ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
                       } focus:border-red-500 focus:ring-2 focus:ring-red-100`}
                     >
-                      <span className={`text-3xl font-bold ${bookingDetails.date ? "text-slate-800" : "text-slate-300"}`}>
+                      <span className={`text-3xl ${bookingDetails.date ? "text-slate-800 font-bold" : "text-slate-300"}`}>
                         {bookingDetails.date || "DD / MM / YYYY"}
                       </span>
                       <svg className={`h-6 w-6 ${bookingDetails.date ? "text-red-500" : "text-slate-300"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -474,7 +474,7 @@ export default function OccasionPage({ params }) {
 
                     <AnimatePresence>
                       {calendarOpen && (
-                        <div className="absolute top-full left-0 z-[120]">
+                        <div className="absolute top-full left-0 right-0 z-[120] mt-2">
                           <CustomCalendar
                             selectedDate={bookingDetails.date}
                             onSelect={(date) => setBookingDetails({ ...bookingDetails, date })}
@@ -495,7 +495,7 @@ export default function OccasionPage({ params }) {
                         !bookingDetails.date && !calendarOpen ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
                       } focus:border-red-500 focus:ring-2 focus:ring-red-100`}
                     >
-                      <span className={`text-3xl font-bold ${bookingDetails.time ? "text-slate-800" : "text-slate-300"}`}>
+                      <span className={`text-3xl ${bookingDetails.time ? "text-slate-800 font-bold" : "text-slate-300"}`}>
                         {bookingDetails.time || "e.g. 7:00 PM"}
                       </span>
                       <svg className={`h-6 w-6 ${bookingDetails.time ? "text-red-500" : "text-slate-300"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -505,7 +505,7 @@ export default function OccasionPage({ params }) {
 
                     <AnimatePresence>
                       {timePickerOpen && (
-                        <div className="absolute top-full left-0 z-[120]">
+                        <div className="absolute top-full left-0 right-0 z-[120] mt-2">
                           <CustomTimePicker
                             selectedTime={bookingDetails.time}
                             onSelect={(time) => setBookingDetails({ ...bookingDetails, time })}
