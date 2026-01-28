@@ -4,40 +4,40 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 
-// const itemData = [
-//   { 
-//     name: 'Gourmet Biriyani', 
-//     image: '/images/biriyani.png',
-//     description: 'with saffron and aromatic spices',
-//     rating: 9.5,
-//     price: 15,
-//     stars: 5
-//   },
-//   { 
-//     name: 'Kabab Platter', 
-//     image: '/images/kabab.png',
-//     description: 'with grilled veggies and mint dip',
-//     rating: 9.2,
-//     price: 12,
-//     stars: 5
-//   },
-//   { 
-//     name: 'Napoli Pizza', 
-//     image: '/images/pizza.png',
-//     description: 'with fresh basil and buffalo mozzarella',
-//     rating: 8.8,
-//     price: 18,
-//     stars: 4
-//   },
-//   { 
-//     name: 'Signature Burger', 
-//     image: '/images/burger.png',
-//     description: 'with melting cheese and crisp lettuce',
-//     rating: 8.5,
-//     price: 10,
-//     stars: 4
-//   },
-// ]
+const itemData = [
+  { 
+    name: 'Gourmet Biriyani', 
+    image: '/images/biriyani.png',
+    description: 'Aromatic basmati rice cooked with premium spices and tender meat.',
+    rating: '9.5',
+    price: 350,
+    stars: 5
+  },
+  { 
+    name: 'Kabab Platter', 
+    image: '/images/kabab.png',
+    description: 'Succulent grilled skewers served with fresh mint chutney.',
+    rating: '9.2',
+    price: 450,
+    stars: 5
+  },
+  { 
+    name: 'Napoli Pizza', 
+    image: '/images/pizza.png',
+    description: 'Authentic wood-fired pizza with fresh basil and mozzarella.',
+    rating: '8.8',
+    price: 550,
+    stars: 4
+  },
+  { 
+    name: 'Signature Burger', 
+    image: '/images/burger.png',
+    description: 'Juicy patty with melting cheese, crisp lettuce, and secret sauce.',
+    rating: '8.5',
+    price: 250,
+    stars: 4
+  },
+]
 
 const StarIcon = memo(({ filled }) => (
   <svg
@@ -141,9 +141,6 @@ ServiceCard.displayName = 'ServiceCard';
 
 function PopularItems() {
   const [isMobile, setIsMobile] = useState(false)
-  const [itemData, setItemData] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     const mql = window.matchMedia('(max-width: 640px)');
@@ -151,39 +148,6 @@ function PopularItems() {
     setIsMobile(mql.matches);
     mql.addEventListener('change', onChange);
     return () => mql.removeEventListener('change', onChange);
-  }, [])
-
-  // Fetch popular items from backend
-  useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000'
-        const response = await fetch(`${API_URL}/api/food`)
-
-        if (!response.ok) throw new Error('Failed to fetch food items')
-
-        const data = await response.json()
-
-        // Map backend data to component format
-        const mappedData = data.slice(0, 4).map((item, index) => ({
-          name: item.name,
-          image: item.image,
-          description: item.description || 'Delicious food item',
-          rating: (9.5 - index * 0.3).toFixed(1),
-          price: item.price,
-          stars: item.price > 15 ? 5 : 4,
-          isVeg: item.isVeg
-        }))
-
-        setItemData(mappedData)
-        setLoading(false)
-      } catch (error) {
-        console.error('Error fetching food items:', error)
-        setError(error.message)
-        setLoading(false)
-      }
-    }
-    fetchItems()
   }, [])
 
   return (
@@ -221,34 +185,9 @@ function PopularItems() {
 
         {/* Product Grid - Improved for Mobile */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 w-full mb-24">
-          {loading ? (
-            // Loading skeleton
-            [...Array(4)].map((_, index) => (
-              <div key={index} className="bg-white/50 backdrop-blur-md rounded-2xl md:rounded-[1.5rem] overflow-hidden shadow-2xl animate-pulse">
-                <div className="aspect-[4/4] sm:aspect-[4/3] bg-gray-300"></div>
-                <div className="p-4 space-y-2">
-                  <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                  <div className="h-3 bg-gray-300 rounded w-full"></div>
-                </div>
-              </div>
-            ))
-          ) : error ? (
-            // Error state
-            <div className="col-span-2 lg:col-span-4 text-center py-12">
-              <p className="text-white text-xl font-bold">Failed to load popular items</p>
-              <p className="text-white/70 mt-2">{error}</p>
-            </div>
-          ) : itemData.length === 0 ? (
-            // Empty state
-            <div className="col-span-2 lg:col-span-4 text-center py-12">
-              <p className="text-white text-xl font-bold">No popular items yet</p>
-              <p className="text-white/70 mt-2">Check back soon!</p>
-            </div>
-          ) : (
-            itemData.map((item, index) => (
-              <PopularItemCard key={item.name} item={item} index={index} />
-            ))
-          )}
+          {itemData.map((item, index) => (
+            <PopularItemCard key={item.name} item={item} index={index} />
+          ))}
         </div>
 
         {/* Featured Section - Inspired by the bottom part of the provided image */}
@@ -292,7 +231,7 @@ function PopularItems() {
               animate={{ rotate: 360 }}
               transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
               className="relative w-[90%] h-[90%] bg-transparent overflow-hidden will-change-transform"
-              style={{ clipPath: 'circle(39%)' }}
+              style={{ clipPath: 'circle(50%)' }}
             >
               <Image
                 src="/images/fries.png"
@@ -360,7 +299,7 @@ function PopularItems() {
                 image: '/images/franchise-model.png'
               },
               { 
-                label: 'Fine Dining', 
+                label: 'Dining', 
                 image: '/images/dining.png'
               },
               {
