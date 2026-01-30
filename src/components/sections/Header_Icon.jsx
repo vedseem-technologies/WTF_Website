@@ -14,13 +14,31 @@ function Header() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const navItems = [
-    { label: "Home", href: "/" },
-    // { label: "Locations", href: "#locations" },
-    { label: "Menu", href: "/menu" },
-    { label: "Who We Are", href: "/about" },
-    // { label: "Instagram", href: "https://instagram.com" },
-    { label: "Services", href: "/services" },
-    { label: "Catering", href: "/services/catering" },
+    { 
+      label: "Home", 
+      href: "/",
+      icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+    },
+    { 
+      label: "Menu", 
+      href: "/menu",
+      icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+    },
+    { 
+      label: "Who We Are", 
+      href: "/about",
+      icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+    },
+    { 
+      label: "Services", 
+      href: "/services",
+      icon: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+    },
+    { 
+      label: "Catering", 
+      href: "/services/catering",
+      icon: "M12 6v6m0 0v6m0-6h6m-6 0H6"
+    },
   ];
 
   // Check if user is logged in
@@ -133,13 +151,30 @@ function Header() {
             return (
               <Link href={item.href} key={item.label}>
                 <div
-                  className={`px-5 py-2 rounded-sm transition-all duration-300 group cursor-pointer
+                  className={`group relative flex items-center rounded-full transition-all duration-300 cursor-pointer overflow-hidden
                     ${isActive 
-                      ? "bg-red-600 text-white shadow-xl shadow-red-600/30 scale-105" 
-                      : "bg-white text-red-700 border border-red-100 hover:bg-red-600 hover:text-white"
+                      ? "bg-red-600 text-white shadow-xl shadow-red-600/30 w-14 h-14 hover:w-auto hover:pr-5" 
+                      : "bg-white text-red-700 border border-red-100 hover:bg-red-600 hover:text-white w-14 h-14 hover:w-auto hover:pr-5"
                     }`}
                 >
-                  <p className="text-2xl font-bold font-mono tracking-tighter">
+                  {/* Icon - Always Visible */}
+                  <div className="w-14 h-14 flex items-center justify-center flex-shrink-0">
+                    <svg 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d={item.icon} />
+                    </svg>
+                  </div>
+                  
+                  {/* Label - Visible on Hover */}
+                  <p className="text-xl font-bold font-mono tracking-tighter whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     {item.label}
                   </p>
                 </div>
@@ -149,8 +184,28 @@ function Header() {
           
           {/* Be a Partner Button as a specialized side button */}
           <Link href="https://wtf-foods.vercel.app/" className="mt-4">
-            <div className="px-8 py-3 rounded bg-gradient-to-r from-yellow-400 to-red-600 text-white shadow-2xl hover:scale-105 transition-all group">
-              <p className="text-2xl font-bold font-mono tracking-tighter uppercase text-center">
+            <div className="group relative flex items-center rounded-full bg-gradient-to-r from-yellow-400 to-red-600 text-white shadow-2xl transition-all duration-300 overflow-hidden w-14 h-14 hover:w-auto hover:pr-5">
+              {/* Icon - Always Visible */}
+              <div className="w-14 h-14 flex items-center justify-center flex-shrink-0">
+                <svg 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                  <path d="M16 3.13a4 4 0 010 7.75" />
+                </svg>
+              </div>
+              
+              {/* Label - Visible on Hover */}
+              <p className="text-xl font-bold font-mono tracking-tighter uppercase whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 Be a Partner ?
               </p>
             </div>

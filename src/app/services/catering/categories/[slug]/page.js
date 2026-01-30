@@ -3,8 +3,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { notFound } from "next/navigation";
-import CateringSummaryView from "@/components/sections/CateringSummaryView";
+import { notFound, useRouter } from "next/navigation";
 import CustomCalendar from "@/components/ui/CustomCalendar";
 import CustomTimePicker from "@/components/ui/CustomTimePicker";
 
@@ -75,6 +74,7 @@ const categories = [
 
 export default function CategoryPage({ params }) {
   const { slug } = React.use(params);
+  const router = useRouter();
   const [selectedItem, setSelectedItem] = React.useState(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = React.useState(false);
   const [bookingDetails, setBookingDetails] = React.useState({
@@ -85,7 +85,6 @@ export default function CategoryPage({ params }) {
   const [guestDropdownOpen, setGuestDropdownOpen] = React.useState(false);
   const [calendarOpen, setCalendarOpen] = React.useState(false);
   const [timePickerOpen, setTimePickerOpen] = React.useState(false);
-  const [showSummary, setShowSummary] = React.useState(false);
 
   // Find the category
   const category = categories.find((c) => c.slug === slug);
@@ -118,16 +117,6 @@ export default function CategoryPage({ params }) {
       window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: false }));
     }
   }, [selectedItem, isBookingModalOpen]);
-
-  if (showSummary) {
-    return (
-      <CateringSummaryView
-        selectedItem={selectedItem}
-        bookingDetails={bookingDetails}
-        onBack={() => setShowSummary(false)}
-      />
-    );
-  }
 
   return (
     <div className="min-h-screen bg-[#fafafa] relative overflow-hidden">
@@ -593,11 +582,13 @@ export default function CategoryPage({ params }) {
                   </div>
                 </div>
       
-                {/* CTA */}
                 <button
                   onClick={() => {
                     if (bookingDetails.date && bookingDetails.time) {
-                      setShowSummary(true);
+                      // Store booking details in sessionStorage
+                      sessionStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
+                      // Navigate to package-specific URL
+                      router.push(`/services/catering/categories/${slug}/${selectedItem.slug}`);
                     }
                   }}
                   disabled={!bookingDetails.date || !bookingDetails.time}

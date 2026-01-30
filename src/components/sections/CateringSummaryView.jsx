@@ -4,7 +4,141 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "./Header";
 
-const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
+// Full menu data with all available items by category
+const fullMenuData = {
+  "delivery-only": [
+    // Starters
+    { name: "Paneer Tikka", image: "/block-1.png", category: "Starters", type: "veg" },
+    { name: "Veg Spring Roll", image: "/block-2.png", category: "Starters", type: "veg" },
+    { name: "Hara Bhara Kebab", image: "/block-3.png", category: "Starters", type: "veg" },
+    { name: "Corn Cheese Balls", image: "/block-1.png", category: "Starters", type: "veg" },
+    { name: "Mushroom Tikka", image: "/block-2.png", category: "Starters", type: "veg" },
+    { name: "Crispy Veg", image: "/block-3.png", category: "Starters", type: "veg" },
+    { name: "Aloo Tikki", image: "/block-1.png", category: "Starters", type: "veg" },
+    
+    // Mains
+    { name: "Dal Makhani", image: "/block-1.png", category: "Mains", type: "veg" },
+    { name: "Shahi Paneer", image: "/block-2.png", category: "Mains", type: "veg" },
+    { name: "Veg Biryani", image: "/block-3.png", category: "Mains", type: "veg" },
+    { name: "Palak Paneer", image: "/block-1.png", category: "Mains", type: "veg" },
+    { name: "Kadai Paneer", image: "/block-2.png", category: "Mains", type: "veg" },
+    { name: "Malai Kofta", image: "/block-3.png", category: "Mains", type: "veg" },
+    { name: "Mix Veg Curry", image: "/block-1.png", category: "Mains", type: "veg" },
+    
+    // Bread & Rice
+    { name: "Naan", image: "/block-1.png", category: "Bread & Rice", type: "veg" },
+    { name: "Jeera Rice", image: "/block-2.png", category: "Bread & Rice", type: "veg" },
+    { name: "Butter Naan", image: "/block-3.png", category: "Bread & Rice", type: "veg" },
+    { name: "Garlic Naan", image: "/block-1.png", category: "Bread & Rice", type: "veg" },
+    { name: "Roti", image: "/block-2.png", category: "Bread & Rice", type: "veg" },
+    { name: "Pulao", image: "/block-3.png", category: "Bread & Rice", type: "veg" },
+    
+    // Desserts
+    { name: "Gulab Jamun", image: "/block-3.png", category: "Desserts", type: "veg" },
+    { name: "Rasgulla", image: "/block-1.png", category: "Desserts", type: "veg" },
+    { name: "Kheer", image: "/block-2.png", category: "Desserts", type: "veg" },
+    { name: "Jalebi", image: "/block-3.png", category: "Desserts", type: "veg" },
+  ],
+  "on-site": [
+    // Starters
+    { name: "Chicken Tikka", image: "/block-1.png", category: "Starters", type: "nonveg" },
+    { name: "Fish Amritsari", image: "/block-2.png", category: "Starters", type: "nonveg" },
+    { name: "Paneer Tikka", image: "/block-3.png", category: "Starters", type: "veg" },
+    { name: "Tandoori Chicken", image: "/block-1.png", category: "Starters", type: "nonveg" },
+    { name: "Chicken Wings", image: "/block-2.png", category: "Starters", type: "nonveg" },
+    { name: "Prawn Fry", image: "/block-3.png", category: "Starters", type: "nonveg" },
+    { name: "Mutton Seekh Kebab", image: "/block-1.png", category: "Starters", type: "nonveg" },
+    { name: "Hara Bhara Kebab", image: "/block-2.png", category: "Starters", type: "veg" },
+    
+    // Mains
+    { name: "Butter Chicken", image: "/block-1.png", category: "Mains", type: "nonveg" },
+    { name: "Mutton Rogan Josh", image: "/block-2.png", category: "Mains", type: "nonveg" },
+    { name: "Dal Makhani", image: "/block-3.png", category: "Mains", type: "veg" },
+    { name: "Chicken Curry", image: "/block-1.png", category: "Mains", type: "nonveg" },
+    { name: "Fish Curry", image: "/block-2.png", category: "Mains", type: "nonveg" },
+    { name: "Paneer Butter Masala", image: "/block-3.png", category: "Mains", type: "veg" },
+    { name: "Kadai Chicken", image: "/block-1.png", category: "Mains", type: "nonveg" },
+    
+    // Bread & Rice
+    { name: "Butter Naan", image: "/block-1.png", category: "Bread & Rice", type: "veg" },
+    { name: "Biryani", image: "/block-2.png", category: "Bread & Rice", type: "nonveg" },
+    { name: "Garlic Naan", image: "/block-3.png", category: "Bread & Rice", type: "veg" },
+    { name: "Jeera Rice", image: "/block-1.png", category: "Bread & Rice", type: "veg" },
+    { name: "Roti", image: "/block-2.png", category: "Bread & Rice", type: "veg" },
+    
+    // Desserts
+    { name: "Kheer", image: "/block-3.png", category: "Desserts", type: "veg" },
+    { name: "Gulab Jamun", image: "/block-1.png", category: "Desserts", type: "veg" },
+    { name: "Rasmalai", image: "/block-2.png", category: "Desserts", type: "veg" },
+    { name: "Ice Cream", image: "/block-3.png", category: "Desserts", type: "veg" },
+  ],
+  "full-service": [
+    // Starters
+    { name: "Tandoori Chicken", image: "/block-1.png", category: "Starters", type: "nonveg" },
+    { name: "Seekh Kebab", image: "/block-2.png", category: "Starters", type: "nonveg" },
+    { name: "Malai Tikka", image: "/block-3.png", category: "Starters", type: "nonveg" },
+    { name: "Fish Tikka", image: "/block-1.png", category: "Starters", type: "nonveg" },
+    { name: "Chicken Tikka", image: "/block-2.png", category: "Starters", type: "nonveg" },
+    { name: "Paneer Tikka", image: "/block-3.png", category: "Starters", type: "veg" },
+    { name: "Mushroom Tikka", image: "/block-1.png", category: "Starters", type: "veg" },
+    { name: "Hara Bhara Kebab", image: "/block-2.png", category: "Starters", type: "veg" },
+    
+    // Mains
+    { name: "Paneer Lababdar", image: "/block-1.png", category: "Mains", type: "veg" },
+    { name: "Chicken Curry", image: "/block-2.png", category: "Mains", type: "nonveg" },
+    { name: "Fish Curry", image: "/block-3.png", category: "Mains", type: "nonveg" },
+    { name: "Butter Chicken", image: "/block-1.png", category: "Mains", type: "nonveg" },
+    { name: "Mutton Korma", image: "/block-2.png", category: "Mains", type: "nonveg" },
+    { name: "Dal Makhani", image: "/block-3.png", category: "Mains", type: "veg" },
+    { name: "Shahi Paneer", image: "/block-1.png", category: "Mains", type: "veg" },
+    { name: "Kadai Chicken", image: "/block-2.png", category: "Mains", type: "nonveg" },
+    
+    // Bread & Rice
+    { name: "Garlic Naan", image: "/block-1.png", category: "Bread & Rice", type: "veg" },
+    { name: "Pulao", image: "/block-2.png", category: "Bread & Rice", type: "veg" },
+    { name: "Butter Naan", image: "/block-3.png", category: "Bread & Rice", type: "veg" },
+    { name: "Biryani", image: "/block-1.png", category: "Bread & Rice", type: "nonveg" },
+    { name: "Jeera Rice", image: "/block-2.png", category: "Bread & Rice", type: "veg" },
+    { name: "Roti", image: "/block-3.png", category: "Bread & Rice", type: "veg" },
+    
+    // Desserts
+    { name: "Rasmalai", image: "/block-3.png", category: "Desserts", type: "veg" },
+    { name: "Ice Cream", image: "/block-1.png", category: "Desserts", type: "veg" },
+    { name: "Gulab Jamun", image: "/block-2.png", category: "Desserts", type: "veg" },
+    { name: "Kheer", image: "/block-3.png", category: "Desserts", type: "veg" },
+    { name: "Jalebi", image: "/block-1.png", category: "Desserts", type: "veg" },
+  ],
+  "wedding": [
+    // Starters
+    { name: "Tandoori Chicken", image: "/block-1.png", category: "Starters", type: "nonveg" },
+    { name: "Seekh Kebab", image: "/block-2.png", category: "Starters", type: "nonveg" },
+    { name: "Fish Tikka", image: "/block-3.png", category: "Starters", type: "nonveg" },
+    { name: "Paneer Tikka", image: "/block-1.png", category: "Starters", type: "veg" },
+    { name: "Hara Bhara Kebab", image: "/block-2.png", category: "Starters", type: "veg" },
+    { name: "Chicken Wings", image: "/block-3.png", category: "Starters", type: "nonveg" },
+    
+    // Mains
+    { name: "Butter Chicken", image: "/block-1.png", category: "Mains", type: "nonveg" },
+    { name: "Mutton Rogan Josh", image: "/block-2.png", category: "Mains", type: "nonveg" },
+    { name: "Dal Makhani", image: "/block-3.png", category: "Mains", type: "veg" },
+    { name: "Shahi Paneer", image: "/block-1.png", category: "Mains", type: "veg" },
+    { name: "Fish Curry", image: "/block-2.png", category: "Mains", type: "nonveg" },
+    
+    // Bread & Rice
+    { name: "Biryani", image: "/block-3.png", category: "Mains", type: "nonveg" },
+    { name: "Butter Naan", image: "/block-1.png", category: "Bread & Rice", type: "veg" },
+    { name: "Garlic Naan", image: "/block-2.png", category: "Bread & Rice", type: "veg" },
+    { name: "Jeera Rice", image: "/block-3.png", category: "Bread & Rice", type: "veg" },
+    
+    // Desserts
+    { name: "Gulab Jamun", image: "/block-1.png", category: "Desserts", type: "veg" },
+    { name: "Rasmalai", image: "/block-2.png", category: "Desserts", type: "veg" },
+    { name: "Kheer", image: "/block-3.png", category: "Desserts", type: "veg" },
+    { name: "Ice Cream", image: "/block-1.png", category: "Desserts", type: "veg" },
+  ],
+};
+
+const CateringSummaryView = ({ selectedItem, bookingDetails: initialBookingDetails, onBack, slug, packageSlug }) => {
   const [expandedCategory, setExpandedCategory] = useState("Starter");
   const [items, setItems] = useState(selectedItem?.items || []);
   const [currentStep, setCurrentStep] = useState(1);
@@ -20,6 +154,19 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
   const [loading, setLoading] = useState(false);
   const [showAddAddress, setShowAddAddress] = useState(false);
   const [newAddressInput, setNewAddressInput] = useState('');
+  const [showAddMore, setShowAddMore] = useState({});
+  
+  // Get booking details from sessionStorage or use initial
+  const [bookingDetails, setBookingDetails] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const stored = sessionStorage.getItem('bookingDetails');
+      return stored ? JSON.parse(stored) : (initialBookingDetails || { date: "", time: "", vegGuests: "10" });
+    }
+    return initialBookingDetails || { date: "", time: "", vegGuests: "10" };
+  });
+
+  // Get full menu for the selected category
+  const categoryFullMenu = slug ? fullMenuData[slug] || [] : [];
 
   React.useEffect(() => {
     const storedUser = localStorage.getItem('wtf_user');
@@ -278,7 +425,7 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                               </div>
                               <input
                                 type="text"
-                                placeholder={`Add more ${cat.label}`}
+                                placeholder={`Search ${cat.label}`}
                                 className="w-full bg-gray-50 text-gray-800 border border-gray-100 rounded-xl py-3.5 pl-12 pr-4 text-2xl font-medium focus:ring-2 focus:ring-red-100 transition-all outline-none"
                               />
                             </div>
@@ -296,9 +443,12 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                               </div>
                             ) : (
                               <div className="space-y-3 pb-6">
+                                {/* Package Items */}
                                 {categoryItems.map((item, idx) => (
                                   <div key={idx} className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100/50">
-                                    <div className="w-12 h-12 rounded-xl bg-gray-200 shrink-0" />
+                                    <div className="w-12 h-12 rounded-xl bg-gray-200 shrink-0">
+                                      <Image src={item.image} alt={item.name} width={48} height={48} className="w-full h-full object-cover rounded-xl" unoptimized />
+                                    </div>
                                     <div className="flex-1">
                                       <div className="flex items-center gap-1.5 font-bold text-3xl text-gray-800">
                                         <div className={`w-1.5 h-1.5 rounded-full ${item.type === 'veg' ? 'bg-green-500' : 'bg-red-500'}`} />
@@ -306,10 +456,73 @@ const CateringSummaryView = ({ selectedItem, bookingDetails, onBack }) => {
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <div className="bg-white border border-gray-100 rounded-lg px-2 py-1 text-2xl font-black">20 pcs</div>
+                                      {/* Quantity Controls */}
+                                      <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-2 py-1">
+                                        <button className="w-7 h-7 flex items-center justify-center rounded bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all">
+                                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20 12H4" />
+                                          </svg>
+                                        </button>
+                                        <span className="text-2xl font-black text-gray-800 min-w-[60px] text-center">20 pcs</span>
+                                        <button className="w-7 h-7 flex items-center justify-center rounded bg-red-50 text-red-600 hover:bg-red-600 hover:text-white transition-all">
+                                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
+                                          </svg>
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
                                 ))}
+
+                                {/* Add More Button */}
+                                {categoryFullMenu.filter(item => item.category === cat.key).length > 0 && (
+                                  <button
+                                    onClick={() => setShowAddMore({ ...showAddMore, [cat.key]: !showAddMore[cat.key] })}
+                                    className="w-full py-3 px-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white rounded-xl font-bold text-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
+                                  >
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                    <span>{showAddMore[cat.key] ? 'Hide Additional Items' : 'Add More Items'}</span>
+                                  </button>
+                                )}
+
+                                {/* Additional Menu Items */}
+                                <AnimatePresence>
+                                  {showAddMore[cat.key] && (
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: "auto", opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      className="space-y-3 overflow-hidden"
+                                    >
+                                      <div className="pt-3 border-t-2 border-dashed border-gray-200">
+                                        <p className="text-2xl font-bold text-gray-700 mb-3 uppercase tracking-wide">Available {cat.label} Items</p>
+                                        {categoryFullMenu
+                                          .filter(item => item.category === cat.key)
+                                          .map((item, idx) => (
+                                            <div key={idx} className="flex items-center gap-4 p-4 bg-white rounded-2xl border-2 border-gray-100 hover:border-red-200 hover:shadow-md transition-all">
+                                              <div className="w-12 h-12 rounded-xl bg-gray-200 shrink-0">
+                                                <Image src={item.image} alt={item.name} width={48} height={48} className="w-full h-full object-cover rounded-xl" unoptimized />
+                                              </div>
+                                              <div className="flex-1">
+                                                <div className="flex items-center gap-1.5 font-bold text-3xl text-gray-800">
+                                                  <div className={`w-1.5 h-1.5 rounded-full ${item.type === 'veg' ? 'bg-green-500' : 'bg-red-500'}`} />
+                                                  {item.name}
+                                                </div>
+                                              </div>
+                                              <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold text-xl transition-all flex items-center gap-2">
+                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                </svg>
+                                                Add
+                                              </button>
+                                            </div>
+                                          ))}
+                                      </div>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
                               </div>
                             )}
                           </motion.div>
