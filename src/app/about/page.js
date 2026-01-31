@@ -289,72 +289,49 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Mission Statement */}
-        <section className="py-14 md:py-20 bg-white">
-          <div className="max-w-6xl mx-auto px-6 md:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="inline-block px-4 py-2 rounded-full bg-red-50 border border-red-100 text-red-600 font-bold text-sm uppercase tracking-wider mb-6">
-                  Our Mission
-                </div>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-zinc-950 mb-6 leading-tight"
-                     style={{lineHeight: '0.8'}}
+        {/* Mission Statement / Stats Section */}
+        <section className="pb-8 md:pb-22 bg-white relative overflow-hidden">
+          {/* Subtle Background Decoration */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-red-50/50 rounded-full blur-[120px] -z-10" />
+          
+          <div className="max-w-7xl mx-auto px-6 md:px-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+              {[
+                { label: "Delivery Time", value: "<30min", icon: "⚡", color: "from-yellow-400 to-orange-500" },
+                { label: "Satisfaction", value: "98%", icon: "😊", color: "from-green-400 to-emerald-600" },
+                { label: "Active Users", value: "500K+", icon: "👥", color: "from-blue-400 to-indigo-600" },
+                { label: "Daily Orders", value: "50K+", icon: "📦", color: "from-red-400 to-rose-600" }
+              ].map((item, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.1 }}
+                  whileHover={{ y: -10 }}
+                  className="group relative"
                 >
-                  Connecting People Through <span className="text-red-600">Great Food</span>
-                </h2>
-                <div className="space-y-4 text-zinc-600 text-md leading-relaxed"
-                     style={{lineHeight: '0.8'}}
-                >
-                  <p>
-                    At WTF, we believe food is more than sustenance—it's an experience that brings people together. 
-                    Our mission is to make exceptional dining accessible to everyone, everywhere.
-                  </p>
-                  <p>
-                    By partnering with the best restaurants and leveraging cutting-edge technology, we ensure 
-                    every order meets the highest standards of quality, speed, and service.
-                  </p>
-                </div>
-                <div className="mt-8 flex gap-4">
-                  <Link 
-                    href="/menu"
-                    className="px-8 py-4 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors"
-                  >
-                    Explore Menu
-                  </Link>
-               
-                </div>
-              </motion.div>
+                  <div className="relative bg-white rounded-3xl p-8 border border-zinc-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-all duration-500 h-full flex flex-col items-center text-center">
+                    {/* Icon container with gradient background on hover */}
+                    <div className="mb-6 w-16 h-16 rounded-2xl bg-zinc-50 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-500 relative">
+                       <span className="relative z-10">{item.icon}</span>
+                       <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-500`} />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <h4 className="text-4xl md:text-5xl font-black text-zinc-950 tracking-tight group-hover:text-red-600 transition-colors duration-300">
+                        {item.value}
+                      </h4>
+                      <p className="text-zinc-500 font-bold uppercase tracking-widest text-sm">
+                        {item.label}
+                      </p>
+                    </div>
 
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="relative"
-              >
-                <div className="relative bg-gradient-to-br from-zinc-100 to-zinc-50 rounded-3xl p-12 border border-zinc-200">
-                  <div className="grid grid-cols-2 gap-8">
-                    {[
-                      { label: "Delivery Time", value: "<30min", icon: "⚡" },
-                      { label: "Satisfaction", value: "98%", icon: "😊" },
-                      { label: "Active Users", value: "500K+", icon: "👥" },
-                      { label: "Daily Orders", value: "50K+", icon: "📦" }
-                    ].map((item, idx) => (
-                      <div key={idx} className="text-center">
-                        <div className="text-4xl mb-2">{item.icon}</div>
-                        <div className="text-3xl font-black text-zinc-950 mb-1">{item.value}</div>
-                        <div className="text-md text-zinc-600">{item.label}</div>
-                      </div>
-                    ))}
+                    {/* Decorative Bottom Bar */}
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-1 bg-red-600 rounded-full group-hover:w-16 transition-all duration-500" />
                   </div>
-                </div>
-                <div className="absolute -inset-4 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-3xl blur-2xl -z-10" />
-              </motion.div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
