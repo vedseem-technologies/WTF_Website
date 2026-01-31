@@ -8,69 +8,7 @@ import CustomCalendar from "@/components/ui/CustomCalendar";
 import CustomTimePicker from "@/components/ui/CustomTimePicker";
 
 // Menu items data with category associations and package details
-const cateringMenuItems = [
-  {
-    id: 1,
-    name: "Cocktail Menu",
-    slug: "cocktail-menu",
-    price: "₹759",
-    image: "/block-1.png",
-    type: "nonveg",
-    servingSize: "8+",
-    categories: [1, 2, 3], // Delivery only, On-site, Full service
-    items: [
-      { name: "Bhuttayan De Kebab", image: "/block-1.png", category: "Starters" },
-      { name: "Paneer Chilgoza", image: "/block-3.png", category: "Starters" },
-      { name: "Hara mutter ki tikki", image: "/block-1.png", category: "Starters" },
-      { name: "Lasooni Khumb Peshawari", image: "/block-3.png", category: "Starters" },
-      { name: "Tawa Veg Masala", image: "/block-1.png", category: "Mains" },
-      { name: "Dal Moradabadi", image: "/block-3.png", category: "Mains" },
-    ],
-  },
-  {
-    id: 2,
-    name: "Indian DeGustibus",
-    slug: "indian-degustibus",
-    price: "₹689",
-    image: "/block-3.png",
-    type: "veg",
-    servingSize: "8+",
-    categories: [1, 2], // Delivery only, On-site
-    items: [
-      { name: "Bhuttayan De Kebab", image: "/block-1.png", category: "Starters" },
-      { name: "Paneer Chilgoza", image: "/block-3.png", category: "Starters" },
-      { name: "Hara mutter ki tikki", image: "/block-1.png", category: "Starters" },
-      { name: "Lasooni Khumb Peshawari", image: "/block-3.png", category: "Starters" },
-      { name: "Tawa Veg Masala", image: "/block-1.png", category: "Mains" },
-      { name: "Dal Moradabadi", image: "/block-3.png", category: "Mains" },
-    ],
-  },
-  {
-    id: 3,
-    name: "Wedding Feast",
-    slug: "wedding-feast",
-    price: "₹899",
-    image: "/block-3.png",
-    type: "nonveg",
-    servingSize: "10+",
-    categories: [3], // Full service
-    items: [
-      { name: "Chicken Tikka", image: "/block-1.png", category: "Starters" },
-      { name: "Fish Amritsari", image: "/block-3.png", category: "Starters" },
-      { name: "Mutton Seekh Kebab", image: "/block-1.png", category: "Starters" },
-      { name: "Butter Chicken", image: "/block-3.png", category: "Mains" },
-      { name: "Mutton Rogan Josh", image: "/block-1.png", category: "Mains" },
-      { name: "Biryani", image: "/block-3.png", category: "Mains" },
-    ],
-  },
-];
-
-const categories = [
-  { id: 1, name: "Delivery Only", slug: "delivery-only" },
-  { id: 2, name: "On-site", slug: "on-site" },
-  { id: 3, name: "Full Service", slug: "full-service" },
-  { id: 4, name: "DIY", slug: "diy" },
-];
+import { cateringMenuItems, categories } from "@/data/cateringData";
 
 export default function CategoryPage({ params }) {
   const { slug } = React.use(params);

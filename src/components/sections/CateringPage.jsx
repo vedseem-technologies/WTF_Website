@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCatering } from "../../context/CateringContext";
 import { useRouter } from "next/navigation";
+import { occasions, services, categories, packages, cateringMenuItems } from "@/data/cateringData";
 
 function CateringPage() {
   const {
@@ -21,87 +22,7 @@ function CateringPage() {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const router = useRouter();
 
-  const occasions = [
-    { id: 1, name: "Birthday", image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=400&fit=crop" },
-    { id: 2, name: "Wedding", image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=400&fit=crop" },
-    { id: 3, name: "Corporate", image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=400&fit=crop" },
-    { id: 4, name: "Anniversary", image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop" },
-    { id: 5, name: "Graduation", image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=400&fit=crop" },
-    { id: 6, name: "Festival", image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&h=400&fit=crop" },
-    { id: 7, name: "Other", image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=400&h=400&fit=crop" },
-  ];
 
-  const services = [
-    { id: 1, name: "Full Service", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=400&fit=crop" },
-    { id: 2, name: "Buffet", image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=400&fit=crop" },
-    { id: 3, name: "Plated", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=400&fit=crop" },
-    {
-      id: 4,
-      name: "Cocktail Menu",
-      slug: "cocktail-menu",
-      price: "₹759",
-      image: "/block-1.png",
-      type: "nonveg",
-      servingSize: "8+",
-      occasions: [1,2,3,4,5,6,7],
-      categories: [1,2,3],
-    },
-    { id: 5, name: "BBQ", image: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=400&fit=crop" },
-    { id: 6, name: "Dessert", image: "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=400&fit=crop" },
-    { id: 7, name: "Beverages", image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&h=400&fit=crop" },
-  ];
-
-  const categories = [
-    { id: 1, name: "Delivery only", image: "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=400&h=400&fit=crop" },
-    { id: 2, name: "Delivery + Services", image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=400&fit=crop" },
-    { id: 3, name: "Live Service", image: "https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&h=400&fit=crop" },
-    { id: 4, name: "Snack Box", image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=400&h=400&fit=crop" },
-    { id: 5, name: "Meal Box", image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=400&fit=crop" },
-  ];
-
-  const packages = [
-    { id: 1, name: "Multiplex", image: "/block-1.png", stat: "12+", label: "Years Of Excellence" },
-    { id: 2, name: "Premium", image: "/block-2.png", stat: "100+", label: "Menu Options" },
-    { id: 3, name: "Standard", image: "/block-3.png", stat: "200+", label: "Staff" },
-    { id: 4, name: "Basic", image: "/block-4.png", stat: "10K+", label: "Happy Foodies" },
-  ];
-
-  // Catering menu items with occasion and category associations
-  const cateringMenuItems = [
-    {
-      id: 1,
-      name: "Cocktail Menu",
-      slug: "cocktail-menu",
-      price: "₹759",
-      image: "/block-1.png",
-      type: "nonveg",
-      servingSize: "8+",
-      occasions: [1,2,3,4,5,6,7],
-      categories: [1,2,3],
-    },
-    {
-      id: 2,
-      name: "Indian DeGustibus",
-      slug: "indian-degustibus",
-      price: "₹689",
-      image: "/block-3.png",
-      type: "veg",
-      servingSize: "8+",
-      occasions: [1,2,4,6],
-      categories: [1,2,3],
-    },
-    {
-      id: 11,
-      name: "Wedding Feast",
-      slug: "wedding-feast",
-      price: "₹899",
-      image: "/block-3.png",
-      type: "nonveg",
-      servingSize: "10+",
-      occasions: [2],
-      categories: [2,3],
-    },
-  ];
 
 
   const banners = [

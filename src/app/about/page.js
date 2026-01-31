@@ -244,13 +244,13 @@ export default function AboutPage() {
                 className="space-y-8"
               >
                 <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-red-50 border border-red-100">
-                  <span className="text-red-600 text-lg font-bold uppercase tracking-widest">Our Vision</span>
+                  <span className="text-red-600 text-3xl font-bold uppercase tracking-widest">Our Vision</span>
                 </div>
                 
-                <h2 className="text-5xl md:text-7xl font-black text-zinc-950 leading-[0.9] tracking-tighter"
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-zinc-950 leading-[0.9] tracking-tighter"
                     style={{lineHeight: '0.7'}}
                 >
-                  Crafting the Best <br />
+                  Crafting the Best {""}
                   <span className="text-red-600">Culinary Experience</span>
                 </h2>
                 
@@ -266,10 +266,10 @@ export default function AboutPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
                 >
-                  <div className="inline-block px-4 py-2 mt-8 rounded-full bg-red-50 border border-red-100 text-red-600 font-bold text-lg uppercase tracking-wider mb-6">
+                  <div className="inline-block px-4 py-2 mt-8 rounded-full bg-red-50 border border-red-100 text-red-600 font-bold text-3xl uppercase tracking-wider mb-6">
                     Our Mission
                   </div>
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-zinc-950 mb-6 leading-tight"
+                  <h2 className="text-xl md:text-3xl lg:text-4xl font-black text-zinc-950 mb-6 leading-tight"
                        style={{lineHeight: '0.7'}}
                   >
                     Connecting People Through <span className="text-red-600">Great Food</span>
@@ -326,12 +326,7 @@ export default function AboutPage() {
                   >
                     Explore Menu
                   </Link>
-                  <Link 
-                    href="/contact"
-                    className="px-8 py-4 border-2 border-zinc-200 text-zinc-900 font-bold rounded-xl hover:border-zinc-300 transition-colors"
-                  >
-                    Contact Us
-                  </Link>
+               
                 </div>
               </motion.div>
 
@@ -449,7 +444,7 @@ function ProfessionalTimeline({ timelineStory }) {
       
         // Progress calculation
         const rawProgress =
-          (viewportCenter - containerTop) / containerHeight;
+          ((viewportCenter - containerTop) / containerHeight) * 1.2;
       
         const percentage = Math.max(0, Math.min(1, rawProgress));
       
@@ -480,7 +475,7 @@ function ProfessionalTimeline({ timelineStory }) {
   }, []);
 
   return (
-    <section ref={timelineRef} className="relative pt-16 bg-white overflow-hidden">
+    <section ref={timelineRef} className="relative pt-8 bg-white overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(239,68,68,0.05),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(249,115,22,0.05),transparent_50%)]" />
@@ -491,7 +486,7 @@ function ProfessionalTimeline({ timelineStory }) {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-24"
+          className="text-center mb-12"
         >
           <div className="inline-block px-4 py-2 rounded-full bg-red-50 border border-red-100 text-red-600 font-bold text-sm uppercase tracking-wider mb-6">
             Our Journey
@@ -589,7 +584,7 @@ function TimelineCard({ item, index, lineHeight, totalItems, containerRef }) {
     <div
       className={`relative flex items-center ${
         isLeft ? "md:flex-row" : "md:flex-row-reverse"
-      } flex-row gap-8 md:gap-16 mb-32 md:mb-40`}
+      } flex-row gap-8 md:gap-16 mb-10 md:mb-12`}
     >
       {/* Content Card - Appears when line reaches this position */}
       <div className={`w-full md:w-[calc(50%-4rem)] text-left pl-20 md:pl-0 ${isLeft ? "md:pr-8" : "md:pl-8"}`}>

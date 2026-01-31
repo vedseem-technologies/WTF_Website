@@ -111,9 +111,9 @@ export default function EventsPage() {
                         {event.type}
                       </span>
                     </div>
-                    <button className="px-8 py-3 bg-red-800 text-white rounded-full text-xl font-semibold hover:bg-red-700 transition-colors whitespace-nowrap">
+                    {/* <button className="px-8 py-3 bg-red-800 text-white rounded-full text-xl font-semibold hover:bg-red-700 transition-colors whitespace-nowrap">
                       Register Now
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               ))}

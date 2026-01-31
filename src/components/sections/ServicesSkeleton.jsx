@@ -9,38 +9,42 @@ function ServicesSkeleton() {
   const router = useRouter();
 
   const services = [
-    {
-      id: 1,
-      name: "Franchise Model",
-      image: "/block-1.png",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-      bgColor: "bg-[#2A2A2A]",
-      imagePos: "left",
-    },
-    {
-      id: 2,
-      name: "Catering Services",
-      image: "/block-2.png",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-      bgColor: "bg-[#351515]",
-      imagePos: "right",
-    },
-    {
-      id: 3,
-      name: "Food Delivery",
-      image: "/block-3.png",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-      bgColor: "bg-[#2A2A2A]",
-      imagePos: "left",
-    },
-    {
-      id: 4,
-      name: "Dining",
-      image: "/block-4.png",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam",
-      bgColor: "bg-[#351515]",
-      imagePos: "right",
-    },
+   {
+     id: 1,
+     name: "Franchise Model",
+     image: "/franshise-model.jpg",
+     description:
+       "Our franchise model offers a proven business framework with end-to-end operational support, standardized recipes, and strong brand backing. Partners benefit from optimized supply chains, marketing assistance, and scalable growth opportunities.",
+     bgColor: "bg-[#2A2A2A]",
+     imagePos: "left",
+   },
+   {
+     id: 2,
+     name: "Catering Services",
+     image: "https://i.pinimg.com/1200x/7d/d8/66/7dd866f939cd7b7ab37229c897bb949c.jpg",
+     description:
+       "We provide customized catering solutions for corporate events, weddings, and private gatherings. With consistent quality, timely delivery, and diverse menu options, we ensure a memorable food experience for every occasion.",
+     bgColor: "bg-[#351515]",
+     imagePos: "right",
+   },
+   {
+     id: 3,
+     name: "Food Delivery",
+     image: "https://i.pinimg.com/736x/2c/ae/93/2cae934e8a5af707381fa1ca026e476f.jpg",
+     description:
+       "Our food delivery service focuses on speed, freshness, and reliability. Leveraging smart logistics and efficient packaging, we bring restaurant-quality meals straight to customers’ doorsteps without compromising taste or quality.",
+     bgColor: "bg-[#2A2A2A]",
+     imagePos: "left",
+   },
+   {
+     id: 4,
+     name: "Dining",
+     image: "https://i.pinimg.com/1200x/9d/70/cb/9d70cb377a3d3e8f5e9a8c3c40a07486.jpg",
+     description:
+       "Our dine-in experience is designed around comfort, ambiance, and exceptional service. Guests enjoy freshly prepared meals in a welcoming environment that reflects our commitment to quality and customer satisfaction.",
+     bgColor: "bg-[#351515]",
+     imagePos: "right",
+   },
   ];
 
   

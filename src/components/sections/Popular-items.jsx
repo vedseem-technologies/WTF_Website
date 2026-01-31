@@ -204,23 +204,28 @@ function PopularItems() {
                 lineHeight: "0.7"
               }}
             >
-              Best Potatoes<br />
-              <span className="text-yellow-400 ">For French Fries</span>
+             Best Noodles<br />
+             <span className="text-yellow-400">For Chowmein</span>
             </h3>
-            <p className="text-white/70 hidden sm:block text-base md:text-2xl font-medium leading-tight max-w-md">
-              Russet potatoes have a high starch content and low moisture, making them ideal for creating the perfect, golden-brown French fries with a fluffy interior and crispy exterior.
-            </p>
-            <motion.button
-              whileHover={{ x: 10 }}
-              className="mt-10 hidden md:flex items-center gap-4 text-yellow-400 font-black uppercase tracking-widest text-xl group"
-            >
-              Explore Full Menu
-              <div className="w-10 h-10 rounded-full border border-yellow-400/30 flex items-center justify-center transition-all group-hover:bg-yellow-400 group-hover:text-white">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </div>
-            </motion.button>
+
+             <p className="text-white/70 hidden sm:block text-base md:text-2xl font-medium leading-tight ma  x-w-md">
+              Fresh wheat noodles with the right balance of chewiness and softness are per  fect for chowmein. 
+              They absorb sauces beautifully while staying springy, giving yo u that authentic street-style 
+              flavor with every bite.
+              </p>
+            <Link href="/menu" className="mt-10 hidden md:flex items-center gap-4 text-yellow-400 font-black uppercase tracking-widest text-xl group">
+              <motion.button
+                whileHover={{ x: 10 }}
+                className="mt-10 hidden md:flex items-center gap-4 text-yellow-400 font-black uppercase tracking-widest text-xl group hover:cursor-pointer"
+              >
+                Explore Full Menu
+                <div className="w-10 h-10 rounded-full border border-yellow-400/30 flex items-center justify-center transition-all group-hover:bg-yellow-400 group-hover:text-white">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </div>
+              </motion.button>
+            </Link>  
           </div>
 
           <div className="relative aspect-square w-full max-w-md mx-auto flex items-center justify-center">
@@ -249,7 +254,9 @@ function PopularItems() {
                 lineHeight: "0.9"
               }}
             >
-              Russet potatoes have a high starch content and low moisture, making them ideal for creating the perfect, golden-brown French fries with a fluffy interior and crispy exterior.
+              Fresh wheat noodles with the right balance of chewiness and softness are per  fect for chowmein. 
+              They absorb sauces beautifully while staying springy, giving yo u that authentic street-style 
+              flavor with every bite.
             </p>
             <Link href="/menu">
               <motion.button

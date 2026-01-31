@@ -3,10 +3,11 @@
 import React from 'react';
 import { Phone, Mail, Building, Landmark } from 'lucide-react';
 import Header from '@/components/sections/Header';
+import Footer from '@/components/sections/Footer';
 
 export default function ContactPage() {
     return (
-        <main className="min-h-screen bg-white text-slate-900 selection:bg-rose-100 selection:text-rose-600 pt-16 overflow-x-hidden">
+        <main className="min-h-screen bg-white text-slate-900 selection:bg-rose-100 selection:text-rose-600 pt-6 overflow-x-hidden">
             <Header />
             {/* Subtle Background Glows */}
             <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -99,9 +100,9 @@ export default function ContactPage() {
                             </div>
                         </form>
                     </section>
-
                 </div>
             </div>
+            <Footer />
         </main>
     );
 }

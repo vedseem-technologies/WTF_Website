@@ -7,49 +7,49 @@ const services = [
   { 
     id: 1, 
     title: "Franchise Model", 
-    image: "/block-1.png", 
+    image: "/franshise-model.jpg", 
     color: "from-blue-500/20 to-blue-900/40",
     description: "Expand your business with our proven franchise systems."
   },
   { 
     id: 2, 
     title: "Catering", 
-    image: "/block-2.png", 
+    image: "https://i.pinimg.com/1200x/7d/d8/66/7dd866f939cd7b7ab37229c897bb949c.jpg", 
     color: "from-red-500/20 to-red-900/40",
     description: "Exquisite culinary experiences for your special events."
   },
   { 
     id: 3, 
     title: "Food Delivery", 
-    image: "/block-3.png", 
+    image: "https://i.pinimg.com/736x/2c/ae/93/2cae934e8a5af707381fa1ca026e476f.jpg", 
     color: "from-yellow-500/20 to-yellow-900/40",
     description: "Fast and reliable delivery to your doorstep."
   },
   { 
     id: 4, 
-    title: "Fine Dining", 
-    image: "/block-4.png", 
+    title: "Dining", 
+    image: "https://i.pinimg.com/1200x/9d/70/cb/9d70cb377a3d3e8f5e9a8c3c40a07486.jpg", 
     color: "from-green-500/20 to-green-900/40",
     description: "Immersive atmosphere and gourmet cuisine."
   },
   { 
     id: 5, 
     title: "Event Planning", 
-    image: "/block-1.png", 
+    image: "https://i.pinimg.com/736x/0c/48/96/0c489629d94ea919bacec1432bd09821.jpg", 
     color: "from-purple-500/20 to-purple-900/40",
     description: "Seamless coordination for unforgettable gatherings."
   },
   { 
     id: 6, 
     title: "Cloud Kitchen", 
-    image: "/block-2.png", 
+    image: "https://i.pinimg.com/736x/e3/52/f7/e352f789046897e7aa6e37e671372ab5.jpg", 
     color: "from-orange-500/20 to-orange-900/40",
     description: "Efficient delivery-only kitchen solutions."
   },
   { 
     id: 7, 
     title: "Bulk Orders", 
-    image: "/block-3.png", 
+    image: "https://i.pinimg.com/736x/6b/b0/e1/6bb0e1b79b42400e43dab63a1eb1a7b6.jpg", 
     color: "from-pink-500/20 to-pink-900/40",
     description: "Customized large-scale catering and orders."
   },

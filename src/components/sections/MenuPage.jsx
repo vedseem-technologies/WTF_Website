@@ -31,7 +31,7 @@ export default function MenuPage() {
       {/* HERO */}
       <div className="relative w-full h-[280px] md:h-[420px]">
         <Image
-          src="/corousel-1.png"
+          src="/our-food-menu.jpg"
           alt="Food Banner"
           fill
           priority
