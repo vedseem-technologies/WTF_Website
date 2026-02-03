@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCatering } from "../../../context/CateringContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Header from "../../../components/sections/Header";
 import Footer from "@/components/sections/Footer";
 import { occasions, services, categories, cateringMenuItems, packages } from "@/data/cateringData";
-
+import CateringSummaryView from "../../../components/sections/CateringSummaryView";
+import CustomCalendar from "@/components/ui/CustomCalendar";
+import CustomTimePicker from "@/components/ui/CustomTimePicker";
 
 function CateringPage() {
   const {
@@ -42,9 +44,21 @@ function CateringPage() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
 
 
+  // SPA State Management
+  const [viewMode, setViewMode] = useState("landing"); // "landing", "booking", "summary"
+  const [selectedContext, setSelectedContext] = useState(null); // { type, item, slug }
+  const [bookingDetails, setBookingDetails] = useState({
+    date: "",
+    time: "",
+    vegGuests: "10",
+  });
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [timePickerOpen, setTimePickerOpen] = useState(false);
 
   const banners = [
     "/c1.jpg.jpeg",
@@ -62,12 +76,148 @@ function CateringPage() {
     return () => clearInterval(interval);
   }, [banners.length]);
 
+  // Navbar visibility handling
+  useEffect(() => {
+    if (viewMode === "summary" || viewMode === "booking") {
+      window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: true }));
+    } else {
+      window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: false }));
+    }
+  }, [viewMode]);
+
+  // 1. URL-Based State Synchronization (The Source of Truth)
+  useEffect(() => {
+    // If we are in summary mode, we might want to stay there, or let the URL drive it?
+    // For now, let's assume if params exist and we are 'landing', we go to 'booking'.
+    // If we are 'summary', we rely on the component state already being set or reading from Storage/URL?
+    // Actually, let's just sync the FILTERS from URL first.
+
+    const occasionSlug = searchParams.get("occasion");
+    const serviceSlug = searchParams.get("service");
+    const categorySlug = searchParams.get("category");
+    // const subcategorySlug = searchParams.get("subcategory"); // Use if we ever add explicit subcat
+
+    const mappedOccasion = occasions.find(o => o.slug === occasionSlug);
+    const mappedService = services.find(s => s.slug === serviceSlug);
+    const mappedCategory = categories.find(c => c.slug === categorySlug);
+
+    // Update IDs
+    if (mappedOccasion) setSelectedOccasion(mappedOccasion.id);
+    else setSelectedOccasion(null);
+
+    if (mappedService) setSelectedService(mappedService.id);
+    else setSelectedService(null);
+
+    if (mappedCategory) setSelectedCategory(mappedCategory.id);
+    else setSelectedCategory(null);
+
+    // 2. Logic to Open Modal (Booking Mode) based on URL presence
+    if (mappedOccasion || mappedService || mappedCategory) {
+      
+      // Determine Default Package
+      const targetIdOccasion = mappedOccasion?.id;
+      const targetIdService = mappedService?.id;
+      const targetIdCategory = mappedCategory?.id;
+
+      const defaultPackage = cateringMenuItems.find(menuItem => {
+         const matchesOccasion = !targetIdOccasion || menuItem.occasions.includes(targetIdOccasion);
+         const matchesCategory = !targetIdCategory || menuItem.categories.includes(targetIdCategory);
+         const matchesService = !targetIdService || menuItem.services.includes(targetIdService);
+         return matchesOccasion && matchesCategory && matchesService;
+      }) || cateringMenuItems[0];
+
+      setSelectedContext({ 
+          type: 'package',
+          item: defaultPackage, 
+          slug: defaultPackage.slug,
+          trigger: { 
+            type: mappedOccasion ? 'occasion' : mappedCategory ? 'category' : 'service',
+            item: mappedOccasion || mappedCategory || mappedService
+          } 
+      });
+
+      // Only switch to booking if we aren't already there or in summary
+      if (viewMode === 'landing') {
+        setViewMode("booking");
+      }
+    } else {
+       // No filters -> Landing page
+       if (viewMode === 'booking') {
+         setViewMode("landing");
+         setSelectedContext(null);
+       }
+    }
+    
+  }, [searchParams, viewMode]); // Depend on params
+
+  const handleSelection = (item, type) => {
+    // 1. Construct new params
+    // We want to replace the current filter of the same type, or add it?
+    // User flow seems to be "Single Select" mostly, or "Drill Down".
+    // "select any subcategory... change url with major category"
+    
+    // We will start fresh or merge? 
+    // Usually clicking a main category (Occasion) clears others for clarity, 
+    // unless we support multi-filter. Let's support swapping the type.
+    
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (type === 'occasion') {
+      params.delete("service"); 
+      params.delete("category");
+      params.set("occasion", item.slug); // Use SLUG
+    } else if (type === 'service') {
+      params.delete("occasion");
+      params.delete("category");
+      params.set("service", item.slug);
+    } else if (type === 'category') {
+      params.delete("occasion"); 
+      params.delete("service"); // Optional: clear others?
+      params.set("category", item.slug);
+    } 
+    // Treat 'package' clicks as 'category'/item clicks if they exist
+    // But we removed the grid, so this main entry is via the lists.
+
+    // Remove legacy ID or package params if they stuck around
+    params.delete("package"); 
+    params.delete("subcategory"); 
+
+    // Push new URL - this triggers the useEffect above
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  };
+
+  const handleBookingComplete = () => {
+    if (bookingDetails.date && bookingDetails.time && bookingDetails.vegGuests) {
+      sessionStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
+      
+      // We don't need to change params, just the view. 
+      // The params are already semantic (e.g. ?occasion=wedding).
+      // If we need to encode specific package choice if it differed from default:
+      // params.set("package", selectedContext.slug) 
+      // But user specifically said NOT to show package name if it confuses.
+      // We'll stick to the current params.
+      
+      setViewMode("summary");
+    }
+  };
+
   // Filter menu items based on selected occasion and category
   const filteredMenuItems = cateringMenuItems.filter((item) => {
     const matchesOccasion = !selectedOccasion || item.occasions.includes(selectedOccasion);
     const matchesCategory = !selectedCategory || item.categories.includes(selectedCategory);
     return matchesOccasion && matchesCategory;
   });
+
+  if (viewMode === "summary") {
+    return (
+      <CateringSummaryView 
+        selectedItem={selectedContext.type === 'package' ? selectedContext.item : null}
+        slug={selectedContext.slug}
+        bookingDetails={bookingDetails}
+        onBack={() => setViewMode("landing")}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white font-dongle">
@@ -80,6 +230,174 @@ function CateringPage() {
               setShowCityModal(false);
             }} 
           />
+        )}
+      </AnimatePresence>
+
+      {/* Booking Details Modal */}
+      <AnimatePresence>
+        {viewMode === "booking" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4 font-dongle"
+            onClick={() => {
+              // Close modal = Go back to landing, meaning clear params
+               router.push(pathname);
+               setViewMode("landing");
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 30 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="relative w-full max-w-lg rounded-3xl bg-white shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="relative border-b border-slate-100 px-8 py-6 text-center">
+                <button
+                  onClick={() => {
+                     router.push(pathname);
+                     setViewMode("landing");
+                  }}
+                  className="absolute left-6 top-6 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+      
+                <h2 className="text-4xl font-extrabold text-slate-900">
+                  Booking Details
+                </h2>
+                <p className="mt-1 text-2xl text-slate-500">
+                  Get exact pricing & service availability
+                </p>
+              </div>
+      
+              {/* Content */}
+              <div className="space-y-6 px-8 py-6">
+                {/* Service */}
+                <div>
+                  <label className="mb-1 block text-2xl font-semibold uppercase tracking-wide text-slate-400">
+                    Selected Interest
+                  </label>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-bold text-3xl text-slate-800">
+                    {selectedContext?.item?.name}
+                  </div>
+                </div>
+      
+                {/* Date & Time */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="relative">
+                    <label className="mb-1 block text-lg font-semibold uppercase tracking-wide text-slate-400">
+                      Event Date
+                    </label>
+                    <button
+                      onClick={() => setCalendarOpen(!calendarOpen)}
+                      className={`w-full rounded-xl border-2 px-4 py-3 text-left transition flex items-center justify-between outline-none ${
+                        !bookingDetails.date && !calendarOpen ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
+                      } focus:border-red-500 focus:ring-2 focus:ring-red-100`}
+                    >
+                      <span className={`text-3xl ${bookingDetails.date ? "text-slate-800 font-bold" : "text-slate-300"}`}>
+                        {bookingDetails.date || "DD / MM / YYYY"}
+                      </span>
+                      <svg className={`h-6 w-6 ${bookingDetails.date ? "text-red-500" : "text-slate-300"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+
+                    <AnimatePresence>
+                      {calendarOpen && (
+                        <div className="absolute top-full left-0 right-0 z-[120] mt-2">
+                          <CustomCalendar
+                            selectedDate={bookingDetails.date}
+                            onSelect={(date) => setBookingDetails({ ...bookingDetails, date })}
+                            onClose={() => setCalendarOpen(false)}
+                          />
+                        </div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+      
+                  <div className="relative">
+                    <label className="mb-1 block text-lg font-semibold uppercase tracking-wide text-slate-400">
+                      Event Time
+                    </label>
+                    <button
+                      onClick={() => setTimePickerOpen(!timePickerOpen)}
+                      className={`w-full rounded-xl border-2 px-4 py-3 text-left transition flex items-center justify-between outline-none ${
+                        !bookingDetails.time && !timePickerOpen ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
+                      } focus:border-red-500 focus:ring-2 focus:ring-red-100`}
+                    >
+                      <span className={`text-3xl ${bookingDetails.time ? "text-slate-800 font-bold" : "text-slate-300"}`}>
+                        {bookingDetails.time || "e.g. 7:00 PM"}
+                      </span>
+                      <svg className={`h-6 w-6 ${bookingDetails.time ? "text-red-500" : "text-slate-300"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+
+                    <AnimatePresence>
+                      {timePickerOpen && (
+                        <div className="absolute top-full left-0 right-0 z-[120] mt-2">
+                          <CustomTimePicker
+                            selectedTime={bookingDetails.time}
+                            onSelect={(time) => setBookingDetails({ ...bookingDetails, time })}
+                            onClose={() => setTimePickerOpen(false)}
+                          />
+                        </div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+      
+                {/* Guest Count Input */}
+                <div>
+                  <label className="mb-2 block text-xl font-bold uppercase tracking-wide text-slate-600">
+                    Number of Guests (Veg)
+                  </label>
+                
+                  <div className="relative">
+                    <div className="flex w-full items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-left transition hover:border-emerald-300 focus-within:ring-2 focus-within:ring-emerald-200">
+                      <div className="flex-1">
+                        <input
+                          type="number"
+                          min="10"
+                          value={bookingDetails.vegGuests}
+                          onChange={(e) => setBookingDetails({ ...bookingDetails, vegGuests: e.target.value })}
+                          className="w-full bg-transparent text-4xl font-black text-emerald-900 outline-none placeholder:text-emerald-900/50"
+                          placeholder="10"
+                        />
+                      </div>
+                      <div className="text-emerald-600">
+                        <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      </div>
+                    </div>
+                    {parseInt(bookingDetails.vegGuests) < 10 && (
+                      <p className="text-red-500 text-lg mt-1 font-bold ml-2">Minimum 10 guests required</p>
+                    )}
+                  </div>
+                </div>
+      
+                <button
+                  onClick={handleBookingComplete}
+                  disabled={!bookingDetails.date || !bookingDetails.time || parseInt(bookingDetails.vegGuests) < 10}
+                  className={`mt-4 flex w-full items-center justify-center rounded-2xl px-6 py-4 text-3xl font-bold text-white shadow-lg transition active:scale-[0.98] ${
+                    bookingDetails.date && bookingDetails.time && parseInt(bookingDetails.vegGuests) >= 10
+                      ? "bg-red-600 shadow-red-200 hover:bg-red-700" 
+                      : "bg-slate-300 shadow-none cursor-not-allowed"
+                  }`}
+                >
+                  Customize & Check Price
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -184,7 +502,7 @@ function CateringPage() {
               {occasions.map((occasion) => (
                 <div key={occasion.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                   <motion.button
-                    onClick={() => router.push(`/services/catering/occasions/${occasion.slug}`)}
+                    onClick={() => handleSelection(occasion, 'occasion')}
                     onMouseEnter={() => setHoveredOccasion(occasion.id)}
                     onMouseLeave={() => setHoveredOccasion(null)}
                     initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -272,7 +590,7 @@ function CateringPage() {
             {services.map((service) => (
               <div key={service.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                 <motion.button
-                  onClick={() => router.push(`/services/catering/services/${service.slug}`)}
+                  onClick={() => handleSelection(service, 'service')}
                   onMouseEnter={() => setHoveredService(service.id)}
                   onMouseLeave={() => setHoveredService(null)}
                   initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -404,7 +722,7 @@ function CateringPage() {
               {categories.map((category) => (
                 <div key={category.id} className="flex flex-col items-center gap-4 flex-shrink-0 snap-center">
                   <motion.button
-                    onClick={() => router.push(`/services/catering/categories/${category.slug}`)}                  
+                    onClick={() => handleSelection(category, 'category')}                  
                     onMouseEnter={() => setHoveredCategory(category.id)}
                     onMouseLeave={() => setHoveredCategory(null)}
                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -465,144 +783,11 @@ function CateringPage() {
             </div>
           </div>
 
-          {/* Filtered Menu Items Cards Section */}
-          {(selectedOccasion || selectedCategory) && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="mb-16"
-            >
-              <motion.h3 
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
-                className="text-2xl md:text-4xl font-bold text-red-800 mb-8 flex items-center gap-4"
-              >
-                <motion.span 
-                  initial={{ width: 0 }}
-                  whileInView={{ width: 40 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="h-1 bg-gradient-to-r from-red-600 to-red-800 rounded-full"
-                ></motion.span>
-                <span className="tracking-tight">
-                  {selectedOccasion && selectedCategory
-                    ? `${occasions.find((o) => o.id === selectedOccasion)?.name} - ${categories.find((c) => c.id === selectedCategory)?.name}`
-                    : selectedOccasion
-                    ? `${occasions.find((o) => o.id === selectedOccasion)?.name} Packages`
-                    : `${categories.find((c) => c.id === selectedCategory)?.name} Packages`}
-                </span>
-              </motion.h3>
 
-              {/* Responsive Card Grid */}
-              {filteredMenuItems.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-6 px-4 md:px-6">
-                  {filteredMenuItems.map((item, index) => (
-                    <motion.div
-                      key={item.id}
-                      initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ 
-                        duration: 0.5, 
-                        delay: index * 0.05,
-                        type: "spring",
-                        stiffness: 100
-                      }}
-                      whileHover={{ y: -6 }}
-                      className="group bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition cursor-pointer"
-                      onClick={() => router.push(`/services/catering/occasions/${item.slug}`)} // Default to occasions for details
-                    >
-                      {/* Image Section */}
-                      <div className="relative w-full h-48 md:h-56 overflow-hidden">
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          unoptimized
-                        />
-                        
-                        {/* Deep red premium gradient overlay - appears on hover */}
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-t from-red-700/90 via-red-600/20 to-transparent flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        >
-                          <span className="text-white text-lg drop-shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                            View Details
-                          </span>
-                        </motion.div>
 
-                        <div
-                          className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 backdrop-blur-md ${
-                            item.type === "veg"
-                              ? "bg-green-50/90 border-green-500"
-                              : "bg-red-50/90 border-red-500"
-                          }`}
-                        >
-                          <div className={`w-2 h-2 rounded-full ${
-                            item.type === "veg" ? "bg-green-600" : "bg-red-600"
-                          }`} />
-                        </div>
-                      </div>
 
-                      {/* Content Section */}
-                      <div className="p-4 space-y-3">
-                        <h4 className="font-bold text-gray-900 text-xl leading-tight group-hover:text-red-600 transition-colors line-clamp-1">
-                          {item.name}
-                        </h4>
 
-                        <div className="flex justify-between items-center">
-                          <div className="flex flex-col">
-                            <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Starting from</span>
-                            <span className="text-2xl font-black text-red-600 leading-none">
-                              {item.price}
-                            </span>
-                          </div>
-
-                          <div className="flex flex-col items-end">
-                            <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Serving</span>
-                            <span className="text-base font-semibold text-gray-700">
-                              {item.servingSize} People
-                            </span>
-                          </div>
-                        </div>
-
-                        <button
-                          className="
-                            mt-2 w-full py-2.5
-                            text-sm font-bold uppercase tracking-widest
-                            rounded-xl
-                            border-2 border-red-600
-                            text-red-600
-                            hover:bg-red-600 hover:text-white
-                            transition-all duration-300
-                          "
-                        >
-                          Customize
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              ) : (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center py-16 px-4"
-                >
-                  <div className="text-6xl mb-4">🍽️</div>
-                  <p className="text-gray-600 text-xl mb-2 font-semibold">No packages found</p>
-                  <p className="text-gray-500 text-sm md:text-base">
-                    Try selecting a different occasion or category
-                  </p>
-                </motion.div>
-              )}
-            </motion.div>
-          )}
-
-         
-        </div>
+          </div>
       </section>
       <Footer/>
     </div>

@@ -5,6 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useCatering } from "../../context/CateringContext";
 import { useRouter } from "next/navigation";
 import { occasions, services, categories, packages, cateringMenuItems } from "@/data/cateringData";
+import CateringSummaryView from "./CateringSummaryView";
+import CustomCalendar from "@/components/ui/CustomCalendar";
+import CustomTimePicker from "@/components/ui/CustomTimePicker";
 
 function CateringPage() {
   const {
@@ -20,10 +23,17 @@ function CateringPage() {
   const [hoveredService, setHoveredService] = useState(null);
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
-  const router = useRouter();
-
-
-
+  
+  // SPA State Management
+  const [viewMode, setViewMode] = useState("landing"); // "landing", "booking", "summary"
+  const [selectedContext, setSelectedContext] = useState(null); // { type, item, slug }
+  const [bookingDetails, setBookingDetails] = useState({
+    date: "",
+    time: "",
+    vegGuests: "10",
+  });
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [timePickerOpen, setTimePickerOpen] = useState(false);
 
   const banners = [
     "/corousel-1.png",
@@ -40,6 +50,27 @@ function CateringPage() {
     return () => clearInterval(interval);
   }, [banners.length]);
 
+  // Navbar visibility handling
+  useEffect(() => {
+    if (viewMode === "summary" || viewMode === "booking") {
+      window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: true }));
+    } else {
+      window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: false }));
+    }
+  }, [viewMode]);
+
+  const handleSelection = (item, type) => {
+    setSelectedContext({ type, item, slug: item.slug });
+    setViewMode("booking");
+  };
+
+  const handleBookingComplete = () => {
+    if (bookingDetails.date && bookingDetails.time && bookingDetails.vegGuests) {
+      sessionStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
+      setViewMode("summary");
+    }
+  };
+
   // Filter menu items based on selected occasion and category
   const filteredMenuItems = cateringMenuItems.filter((item) => {
     const matchesOccasion = !selectedOccasion || item.occasions.includes(selectedOccasion);
@@ -47,8 +78,184 @@ function CateringPage() {
     return matchesOccasion && matchesCategory;
   });
 
+  if (viewMode === "summary") {
+    // If we have specific items for this slug, we can pass them, otherwise the view handles it
+    return (
+      <CateringSummaryView 
+        selectedItem={selectedContext.type === 'package' ? selectedContext.item : null}
+        slug={selectedContext.slug}
+        bookingDetails={bookingDetails}
+        onBack={() => setViewMode("landing")}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50/30 to-white font-dongle">
+      {/* Booking Details Modal */}
+      <AnimatePresence>
+        {viewMode === "booking" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/70 backdrop-blur-md p-4 font-dongle"
+            onClick={() => setViewMode("landing")}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 30 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="relative w-full max-w-lg rounded-3xl bg-white shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="relative border-b border-slate-100 px-8 py-6 text-center">
+                <button
+                  onClick={() => setViewMode("landing")}
+                  className="absolute left-6 top-6 flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+      
+                <h2 className="text-4xl font-extrabold text-slate-900">
+                  Booking Details
+                </h2>
+                <p className="mt-1 text-2xl text-slate-500">
+                  Get exact pricing & service availability
+                </p>
+              </div>
+      
+              {/* Content */}
+              <div className="space-y-6 px-8 py-6">
+                {/* Service */}
+                <div>
+                  <label className="mb-1 block text-2xl font-semibold uppercase tracking-wide text-slate-400">
+                    Selected Interest
+                  </label>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-bold text-3xl text-slate-800">
+                    {selectedContext?.item?.name}
+                  </div>
+                </div>
+      
+                {/* Date & Time */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="relative">
+                    <label className="mb-1 block text-lg font-semibold uppercase tracking-wide text-slate-400">
+                      Event Date
+                    </label>
+                    <button
+                      onClick={() => setCalendarOpen(!calendarOpen)}
+                      className={`w-full rounded-xl border-2 px-4 py-3 text-left transition flex items-center justify-between outline-none ${
+                        !bookingDetails.date && !calendarOpen ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
+                      } focus:border-red-500 focus:ring-2 focus:ring-red-100`}
+                    >
+                      <span className={`text-3xl ${bookingDetails.date ? "text-slate-800 font-bold" : "text-slate-300"}`}>
+                        {bookingDetails.date || "DD / MM / YYYY"}
+                      </span>
+                      <svg className={`h-6 w-6 ${bookingDetails.date ? "text-red-500" : "text-slate-300"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+
+                    <AnimatePresence>
+                      {calendarOpen && (
+                        <div className="absolute top-full left-0 right-0 z-[120] mt-2">
+                          <CustomCalendar
+                            selectedDate={bookingDetails.date}
+                            onSelect={(date) => setBookingDetails({ ...bookingDetails, date })}
+                            onClose={() => setCalendarOpen(false)}
+                          />
+                        </div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+      
+                  <div className="relative">
+                    <label className="mb-1 block text-lg font-semibold uppercase tracking-wide text-slate-400">
+                      Event Time
+                    </label>
+                    <button
+                      onClick={() => setTimePickerOpen(!timePickerOpen)}
+                      className={`w-full rounded-xl border-2 px-4 py-3 text-left transition flex items-center justify-between outline-none ${
+                        !bookingDetails.time && !timePickerOpen ? "border-red-200 bg-red-50/30" : "border-slate-200 bg-white"
+                      } focus:border-red-500 focus:ring-2 focus:ring-red-100`}
+                    >
+                      <span className={`text-3xl ${bookingDetails.time ? "text-slate-800 font-bold" : "text-slate-300"}`}>
+                        {bookingDetails.time || "e.g. 7:00 PM"}
+                      </span>
+                      <svg className={`h-6 w-6 ${bookingDetails.time ? "text-red-500" : "text-slate-300"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </button>
+
+                    <AnimatePresence>
+                      {timePickerOpen && (
+                        <div className="absolute top-full left-0 right-0 z-[120] mt-2">
+                          <CustomTimePicker
+                            selectedTime={bookingDetails.time}
+                            onSelect={(time) => setBookingDetails({ ...bookingDetails, time })}
+                            onClose={() => setTimePickerOpen(false)}
+                          />
+                        </div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+      
+                {/* Guest Count Input */}
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    Number of Guests (Veg)
+                  </label>
+                
+                  <div className="relative">
+                    <div className="flex w-full items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-left transition hover:border-emerald-300 focus-within:ring-2 focus-within:ring-emerald-200">
+                      <div className="flex-1">
+                        <p className="text-2xl font-bold text-emerald-600 mb-1">
+                          Selected Guests
+                        </p>
+                        <input
+                          type="number"
+                          min="10"
+                          value={bookingDetails.vegGuests}
+                          onChange={(e) => setBookingDetails({ ...bookingDetails, vegGuests: e.target.value })}
+                          className="w-full bg-transparent text-3xl font-black text-emerald-900 outline-none placeholder:text-emerald-900/50"
+                          placeholder="Min 10"
+                        />
+                      </div>
+                      <div className="text-emerald-600">
+                        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                      </div>
+                    </div>
+                    {parseInt(bookingDetails.vegGuests) < 10 && (
+                      <p className="text-red-500 text-lg mt-1 font-bold ml-2">Minimum 10 guests required</p>
+                    )}
+                  </div>
+                </div>
+      
+                <button
+                  onClick={handleBookingComplete}
+                  disabled={!bookingDetails.date || !bookingDetails.time || parseInt(bookingDetails.vegGuests) < 10}
+                  className={`mt-4 flex w-full items-center justify-center rounded-2xl px-6 py-4 text-3xl font-bold text-white shadow-lg transition active:scale-[0.98] ${
+                    bookingDetails.date && bookingDetails.time && parseInt(bookingDetails.vegGuests) >= 10
+                      ? "bg-red-600 shadow-red-200 hover:bg-red-700" 
+                      : "bg-slate-300 shadow-none cursor-not-allowed"
+                  }`}
+                >
+                  Customize & Check Price
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header Section */}
       <section className="relative bg-white pt-24 pb-8 overflow-hidden">
         {/* Subtle background decoration */}
@@ -76,14 +283,13 @@ function CateringPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               className="text-4xl md:text-6xl py-2 dongle-regular bg-gradient-to-r from-gray-900 via-red-800 to-gray-900 bg-clip-text text-transparent mb-12"
-              // style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
             >
               Best Catering Services
             </motion.h1>
           </motion.div>
         </div>
 
-        {/* Banner Carousel - Minimal UI with Auto-Rotate & Swipe Gestures */}
+        {/* Banner Carousel */}
         <div className="w-full mb-16 overflow-hidden relative z-10 px-4 md:px-6 lg:px-8">
           <div className="relative w-full h-80 md:h-96 lg:h-[500px] rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing">
             <AnimatePresence mode="wait">
@@ -99,10 +305,8 @@ function CateringPage() {
                 onDragEnd={(event, info) => {
                   const swipeThreshold = 50;
                   if (info.offset.x > swipeThreshold) {
-                    // Swipe right - go to previous banner
                     setCurrentBannerIndex((prev) => (prev - 1 + banners.length) % banners.length);
                   } else if (info.offset.x < -swipeThreshold) {
-                    // Swipe left - go to next banner
                     setCurrentBannerIndex((prev) => (prev + 1) % banners.length);
                   }
                 }}
@@ -142,13 +346,12 @@ function CateringPage() {
             <span className="tracking-tight text-3xl md:text-5xl">Choose Your Occasion</span>
           </motion.h2>
           
-          {/* Scrollable Occasions Row */}
           <div className="relative">
             <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
               {occasions.map((occasion) => (
                 <motion.button
                   key={occasion.id}
-                  onClick={() => setSelectedOccasion(selectedOccasion === occasion.id ? null : occasion.id)}
+                  onClick={() => handleSelection(occasion, 'occasion')}
                   onMouseEnter={() => setHoveredOccasion(occasion.id)}
                   onMouseLeave={() => setHoveredOccasion(null)}
                   initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -162,16 +365,8 @@ function CateringPage() {
                   }}
                   whileHover={{ scale: 1.08, y: -8 }}
                   whileTap={{ scale: 0.96 }}
-                  animate={selectedOccasion === occasion.id ? {
-                    boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.3), 0 10px 10px -5px rgba(220, 38, 38, 0.1)"
-                  } : {}}
-                  className={`relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 snap-center shadow-lg ${
-                    selectedOccasion === occasion.id
-                      ? "shadow-2xl shadow-red-300/40 ring-2 ring-red-200"
-                      : "hover:shadow-2xl"
-                  }`}
+                  className="relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 snap-center shadow-lg hover:shadow-2xl"
                 >
-                  {/* Image */}
                   <div className="absolute inset-0">
                     <Image
                       src={occasion.image}
@@ -181,16 +376,12 @@ function CateringPage() {
                       unoptimized
                     />
                   </div>
-                  
-                  {/* Gradient overlay - appears on hover */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: hoveredOccasion === occasion.id ? 0.7 : 0 }}
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60"
                   />
-                  
-                  {/* Enhanced Name - appears on hover at bottom */}
                   <motion.div
                     initial={{ y: 30, opacity: 0, scale: 0.9 }}
                     animate={{ 
@@ -207,14 +398,6 @@ function CateringPage() {
                       </span>
                     </div>
                   </motion.div>
-                  
-                  {/* Bottom shadow on hover */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredOccasion === occasion.id ? 1 : 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none"
-                  />
                 </motion.button>
               ))}
             </div>
@@ -242,12 +425,11 @@ function CateringPage() {
             <span className="tracking-tight text-3xl md:text-5xl">Choose Your Services</span>
           </motion.h2>
           
-          {/* Scrollable Services Row */}
           <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
             {services.map((service) => (
               <motion.button
                 key={service.id}
-                onClick={() => setSelectedService(selectedService === service.id ? null : service.id)}
+                onClick={() => handleSelection(service, 'service')}
                 onMouseEnter={() => setHoveredService(service.id)}
                 onMouseLeave={() => setHoveredService(null)}
                 initial={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -261,16 +443,8 @@ function CateringPage() {
                 }}
                 whileHover={{ scale: 1.08, y: -8 }}
                 whileTap={{ scale: 0.96 }}
-                animate={selectedService === service.id ? {
-                  boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.3), 0 10px 10px -5px rgba(220, 38, 38, 0.1)"
-                } : {}}
-                className={`relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 snap-center shadow-lg ${
-                  selectedService === service.id
-                    ? "shadow-2xl shadow-red-300/40 ring-2 ring-red-200"
-                    : "hover:shadow-2xl"
-                }`}
+                className="relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl overflow-hidden transition-all duration-500 snap-center shadow-lg hover:shadow-2xl"
               >
-                {/* Image */}
                 <div className="absolute inset-0">
                   <Image
                     src={service.image}
@@ -280,16 +454,12 @@ function CateringPage() {
                     unoptimized
                   />
                 </div>
-                
-                {/* Gradient overlay - appears on hover */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: hoveredService === service.id ? 0.7 : 0 }}
                   transition={{ duration: 0.3 }}
                   className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60"
                 />
-                
-                {/* Enhanced Name - appears on hover at bottom */}
                 <motion.div
                   initial={{ y: 30, opacity: 0, scale: 0.9 }}
                   animate={{ 
@@ -306,14 +476,6 @@ function CateringPage() {
                     </span>
                   </div>
                 </motion.div>
-                
-                {/* Bottom shadow on hover */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: hoveredService === service.id ? 1 : 0 }}
-                  transition={{ duration: 0.4 }}
-                  className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none"
-                />
               </motion.button>
             ))}
           </div>
@@ -385,15 +547,11 @@ function CateringPage() {
               <span className="tracking-tight text-4xl md:text-5xl">Categories</span>
             </motion.h3>
             
-            {/* Scrollable Categories Row */}
             <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide md:pb-8 pt-4 px-4 md:px-6 snap-x snap-mandatory scroll-smooth">
               {categories.map((category) => (
                 <motion.button
                   key={category.id}
-                  onClick={() => {
-                    console.log(category);
-                    router.push(`/services/catering/${category.slug}`);
-                  }}                  
+                  onClick={() => handleSelection(category, 'category')}
                   onMouseEnter={() => setHoveredCategory(category.id)}
                   onMouseLeave={() => setHoveredCategory(null)}
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -407,16 +565,8 @@ function CateringPage() {
                   }}
                   whileHover={{ scale: 1.08, y: -8 }}
                   whileTap={{ scale: 0.96 }}
-                  animate={selectedCategory === category.id ? {
-                    boxShadow: "0 20px 25px -5px rgba(220, 38, 38, 0.3), 0 10px 10px -5px rgba(220, 38, 38, 0.1)"
-                  } : {}}
-                  className={`relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden transition-all duration-500 snap-center shadow-lg ${
-                    selectedCategory === category.id
-                      ? "shadow-2xl shadow-red-300/40 ring-2 ring-red-200"
-                      : "hover:shadow-2xl"
-                  }`}
+                  className="relative flex-shrink-0 w-32 h-32 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden transition-all duration-500 snap-center shadow-lg hover:shadow-2xl"
                 >
-                  {/* Image */}
                   <div className="absolute inset-0">
                     <Image
                       src={category.image}
@@ -426,16 +576,12 @@ function CateringPage() {
                       unoptimized
                     />
                   </div>
-                  
-                  {/* Gradient overlay - appears on hover */}
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: hoveredCategory === category.id ? 0.7 : 0 }}
                     transition={{ duration: 0.3 }}
                     className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/60"
                   />
-                  
-                  {/* Enhanced Name - appears on hover at bottom */}
                   <motion.div
                     initial={{ y: 30, opacity: 0, scale: 0.9 }}
                     animate={{ 
@@ -452,20 +598,12 @@ function CateringPage() {
                       </span>
                     </div>
                   </motion.div>
-                  
-                  {/* Bottom shadow on hover */}
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredCategory === category.id ? 1 : 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none"
-                  />
                 </motion.button>
               ))}
             </div>
           </div>
 
-          {/* Filtered Menu Items Cards Section */}
+          {/* Filtered Menu Items Cards Section - now uses handleSelection */}
           {(selectedOccasion || selectedCategory) && (
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -512,10 +650,7 @@ function CateringPage() {
                       }}
                       whileHover={{ y: -8, scale: 1.02 }}
                       className="group cursor-pointer"
-                      onClick={() => {
-                        console.log(item);
-                        router.push(`/services/catering/${item.slug}`);
-                      }}
+                      onClick={() => handleSelection(item, 'package')}
                     >
                       {/* Card Container */}
                       <div className="relative bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
@@ -528,15 +663,11 @@ function CateringPage() {
                             className="object-cover group-hover:scale-110 transition-transform duration-500"
                             unoptimized
                           />
-                          
-                          {/* Premium Options Banner */}
                           <div className="absolute top-3 left-3 bg-gradient-to-r from-yellow-500 to-orange-500 px-3 py-1 rounded-md shadow-lg">
                             <span className="text-white text-xs md:text-sm font-bold uppercase tracking-wide">
                               Premium Options
                             </span>
                           </div>
-
-                          {/* Veg/Non-Veg Indicator */}
                           <div
                             className={`absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center shadow-lg ${
                               item.type === "veg"
@@ -550,19 +681,14 @@ function CateringPage() {
                                 : "bg-red-600"
                             }`}></div>
                           </div>
-
-                          {/* Gradient Overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent"></div>
                         </div>
 
                         {/* Content Section */}
                         <div className="p-4 md:p-5 bg-gray-800">
-                          {/* Title */}
                           <h4 className="text-white font-bold text-base md:text-lg mb-3 group-hover:text-red-400 transition-colors">
                             {item.name}
                           </h4>
-
-                          {/* Serving Size and Price */}
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
                               <span className="text-gray-400 text-sm md:text-base font-medium">
@@ -573,8 +699,6 @@ function CateringPage() {
                               {item.price}
                             </span>
                           </div>
-
-                          {/* Customize Button */}
                           <button className="w-full py-2.5 md:py-3 px-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white rounded-lg font-semibold text-sm md:text-base transition-all duration-300 transform hover:scale-105 shadow-lg shadow-orange-500/30">
                             Customize
                           </button>
@@ -599,7 +723,7 @@ function CateringPage() {
             </motion.div>
           )}
 
-          {/* Packages Grid - Scrollable */}
+          {/* Packages Grid - Marketing Cards */}
           <div className="flex gap-6 md:gap-8 overflow-x-auto scrollbar-hide pb-10 pt-6 px-6 md:px-8 snap-x snap-mandatory scroll-smooth">
             {packages.map((pkg) => (
               <motion.div
@@ -617,7 +741,6 @@ function CateringPage() {
                 className="flex-shrink-0 w-72 md:w-80 lg:w-96 snap-center"
               >
                 <div className="bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-red-300/30 transition-all duration-500 relative group">
-                  {/* Image Section */}
                   <div className="relative h-56 md:h-64 lg:h-72 bg-gray-200 overflow-hidden">
                     <motion.div
                       whileHover={{ scale: 1.1 }}
@@ -632,10 +755,7 @@ function CateringPage() {
                         unoptimized
                       />
                     </motion.div>
-                    {/* Dark overlay for better text readability */}
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
-                    
-                    {/* Stats overlay */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center z-10 p-6">
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -652,8 +772,6 @@ function CateringPage() {
                         </p>
                       </motion.div>
                     </div>
-                    
-                    {/* Subtle glow effect on hover */}
                     <motion.div 
                       className="absolute inset-0 ring-4 ring-red-500/20 rounded-t-3xl"
                       initial={{ opacity: 0 }}
@@ -661,8 +779,6 @@ function CateringPage() {
                       transition={{ duration: 0.3 }}
                     ></motion.div>
                   </div>
-                  
-                  {/* Footer Section */}
                   <motion.div 
                     className="bg-gradient-to-r from-red-700 to-red-800 h-16 md:h-20 lg:h-24 flex items-center justify-center relative overflow-hidden group-hover:from-red-600 group-hover:to-red-700 transition-all duration-300"
                   >

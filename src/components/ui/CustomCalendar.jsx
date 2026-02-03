@@ -41,7 +41,7 @@ const CustomCalendar = ({ selectedDate, onSelect, onClose }) => {
     for (let d = 1; d <= totalDays; d++) {
       const currentCellDate = new Date(year, month, d);
       currentCellDate.setHours(0, 0, 0, 0);
-      const isPastDate = currentCellDate < today;
+      const isPastDate = currentCellDate <= today;
       
       const isSelected = selectedDate && 
         new Date(selectedDate).getDate() === d && 

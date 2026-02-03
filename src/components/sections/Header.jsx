@@ -5,6 +5,45 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
+const navIcons = {
+  Home: (
+    <svg viewBox="0 0 24 24" className="w-5 h-5">
+      <path d="M3 10L12 3l9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="currentColor"/>
+    </svg>
+  ),
+  Menu: (
+    <svg viewBox="0 0 24 24" className="w-5 h-5">
+      <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2"/>
+    </svg>
+  ),
+  "Who We Are": (
+    <svg viewBox="0 0 24 24" className="w-5 h-5">
+      <circle cx="12" cy="7" r="4" fill="currentColor"/>
+      <path d="M4 21c1-4 6-6 8-6s7 2 8 6" fill="currentColor"/>
+    </svg>
+  ),
+  Services: (
+    <svg viewBox="0 0 24 24" className="w-5 h-5">
+      <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" fill="currentColor"/>
+    </svg>
+  ),
+  Catering: (
+    <svg viewBox="0 0 24 24" className="w-5 h-5">
+      <path d="M4 6h16M6 6v14M18 6v14" stroke="currentColor" strokeWidth="2"/>
+    </svg>
+  ),
+};
+
+const navButtonClass = (isActive) =>
+  `relative z-10 flex items-center h-14 rounded-xl gap-4
+   transition-colors duration-300 cursor-pointer
+   ${
+     isActive
+       ? "bg-red-600 text-white shadow-xl shadow-red-600/30 scale-[1.03]"
+       : "bg-white text-red-700 hover:bg-red-600 hover:text-white shadow-sm"
+   }`;
+
+
 function Header() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(true);
@@ -12,6 +51,8 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // expanded / collapsed
+  const [isHovering, setIsHovering] = useState(false);
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -41,6 +82,23 @@ function Header() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+  useEffect(() => {
+    let lastY = window.scrollY;
+  
+    const onScroll = () => {
+      const y = window.scrollY;
+  
+      if (y > lastY + 12) setSidebarOpen(false);
+      if (y < lastY - 12) setSidebarOpen(true);
+  
+      lastY = y;
+    };
+  
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  
 
   // Logout function
   const handleLogout = () => {
@@ -126,36 +184,87 @@ function Header() {
           </div>
         </div>
 
-        {/* Side Navigation Buttons (Desktop Only) */}
-        <div className="hidden lg:flex flex-col gap-3 absolute left-12 mt-14 top-48 pointer-events-auto">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link href={item.href} key={item.label}>
-                <div
-                  className={`px-5 py-2 rounded-sm transition-all duration-300 group cursor-pointer
-                    ${isActive 
-                      ? "bg-red-600 text-white shadow-xl shadow-red-600/30 scale-105" 
-                      : "bg-white text-red-700 border border-red-100 hover:bg-red-600 hover:text-white"
-                    }`}
-                >
-                  <p className="text-2xl font-bold font-mono tracking-tighter">
-                    {item.label}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
-          
-          {/* Be a Partner Button as a specialized side button */}
-          <Link href="https://wtf-foods.vercel.app/" className="mt-4">
-            <div className="px-8 py-3 rounded bg-gradient-to-r from-yellow-400 to-red-600 text-white shadow-2xl hover:scale-105 transition-all group">
-              <p className="text-2xl font-bold font-mono tracking-tighter uppercase text-center">
-                Be a Partner ?
-              </p>
-            </div>
-          </Link>
-        </div>
+        {/* AUTO COLLAPSING SIDEBAR – DESKTOP */}
+        <motion.aside
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          animate={{
+            width: sidebarOpen || isHovering ? 240 : 68,
+          }}
+          transition={{ type: "spring", stiffness: 260, damping: 22 }}
+          className="hidden lg:flex fixed left-6 top-1/2 -translate-y-1/2 z-50
+             shadow-[0_30px_80px_rgba(0,0,0,0.25)]
+             rounded-xs p-2 overflow-hidden"
+        >
+          <div className="relative flex flex-col gap-2 w-full">
+            
+            {/* ACTIVE ROUTE INDICATOR */}
+            {/* <motion.div
+              layout
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="absolute left-2 right-2 h-12 bg-red-600 rounded-2xl z-0"
+              style={{
+                top:
+                  navItems.findIndex(i => i.href === pathname) * 52 + 12 || 12,
+              }}
+            /> */}
+        
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              const isExpanded = sidebarOpen || isHovering;
+        
+              return (
+                <Link href={item.href} key={item.label}>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 0.04 }}
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
+                    className={`${navButtonClass(isActive)} transition-none ${isExpanded ? 'px-5 justify-start' : 'px-3 justify-center'}`}
+                  >
+                    {/* ICON BOX */}
+                    <div
+                      className={`w-9 h-9 p-2 flex items-center justify-center rounded-lg min-w-[36px]
+                        ${isActive ? "bg-white/20" : "bg-red-50 text-red-600"}
+                      `}
+                    >
+                      {navIcons[item.label]}
+                    </div>
+                  
+                    {/* LABEL */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.span
+                          initial={{ opacity: 0, width: 0 }}
+                          animate={{ opacity: 1, width: "auto" }}
+                          exit={{ opacity: 0, width: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="text-xl font-bold font-mono tracking-tighter whitespace-nowrap overflow-hidden"
+                        >
+                          {item.label}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                </Link>
+              );
+            })}
+        
+            {/* PARTNER CTA */}
+            <motion.a
+              href="https://wtf-foods.vercel.app/"
+              target="_blank"
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative z-10 mt-4 bg-gradient-to-r from-yellow-400 to-red-600
+                         text-white text-center py-3 rounded-2xl font-bold flex items-center justify-center"
+            >
+              {(sidebarOpen || isHovering) ? "Be a Partner" : "🤝"}
+            </motion.a>
+          </div>
+        </motion.aside>
+
       </div>
 
       {/* MINIMAL MOBILE & TABLET DRAWER */}
@@ -182,7 +291,7 @@ function Header() {
               <div className="max-w-7xl mx-auto w-full flex flex-col">
                 {/* Header inside Drawer */}
                 <div className="px-6 md:px-12 py-2 flex items-center justify-between border-b border-white/5">
-                  <Image src="/Logo.png" alt="logo" width={60} height={35} className="w-auto h-10 md:h-12" />
+                  <Image src="/Logo.png" alt="logo" width={60} height={35} className="w-auto h-10 md:h-12 hover:cursor-pointer" />
                   <button
                     className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full text-white/50 hover:text-white transition-all active:scale-95"
                     onClick={() => setIsOpen(false)}

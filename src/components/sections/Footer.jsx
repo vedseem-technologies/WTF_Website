@@ -125,7 +125,7 @@ function Footer() {
         {/* Copyright Section - Centered at bottom */}
         <div className="border-t border-gray-300 mt-4 pt-4 pb-4">
           <p className="text-center text-gray-600 text-xl md:text-2xl">
-            © 2026 WTF. All rights reserved.
+            © 2026 Sileena Foods LLP. All rights reserved.
           </p>
         </div>
       </div>

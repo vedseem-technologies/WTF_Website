@@ -125,9 +125,6 @@ export default function CategoryDetails() {
                 </h3>
 
                 <div className="flex items-center justify-between mt-2 md:mt-4">
-                  <span className="text-white font-bold text-2xl md:text-3xl">
-                    {item.price}
-                  </span>
                   <p className="text-yellow-400 text-2xl md:text-3xl">
                     ⭐ {item.rating}
                   </p>

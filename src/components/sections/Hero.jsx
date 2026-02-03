@@ -1,21 +1,51 @@
 
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+
+// Array of hero images to rotate through
+const heroImages = [
+  { src: "/Hero.jpeg", alt: "Hero 1" },
+  { src: "/block-1.png", alt: "Hero 2" },
+  { src: "/block-2.png", alt: "Hero 3" },
+  { src: "/corousel-1.png", alt: "Hero 4" },
+  { src: "/our-food-menu.jpg", alt: "Hero 5" },
+];
 
 function Hero() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Auto-rotate images every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % heroImages.length);
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative w-full min-h-[100svh] overflow-hidden">
-      {/* Background Image */}
-      <Image
-        src="/Hero.jpeg"
-        alt="hero"
-        fill
-        priority
-        unoptimized
-        className="object-cover"
-      />
+      {/* Background Images with Transitions */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={heroImages[currentIndex].src}
+            alt={heroImages[currentIndex].alt}
+            fill
+            priority={currentIndex === 0}
+            className="object-cover"
+          />
+        </motion.div>
+      </AnimatePresence>
 
       {/* Overlay Content */}
       <div className="absolute inset-0 z-10 flex items-center px-4 sm:px-8 md:px-16 lg:px-24">
@@ -38,32 +68,27 @@ function Hero() {
             <span className="text-[#ff0000] block text-[8rem] md:text-[8rem] lg:text-[14rem] font-normal leading-none my-1">Food</span>
             <span className="block text-[6rem] md:text-[6rem] lg:text-[10rem] font-normal leading-none">Begins</span>
           </h1>
-
-          {/* Play Button */}
-          {/* <Link href="/reels" className="mt-8 inline-flex items-center gap-4 group cursor-pointer active:scale-95 transition-transform">
-            <div className="relative">
-              <div className="absolute inset-0 bg-red-600 rounded-full blur-xl opacity-20 group-hover:opacity-60 transition-opacity" />
-              <div className="relative w-20 h-20 md:w-24 md:h-24 bg-red-600 rounded-full flex items-center justify-center border-4 border-white/20 shadow-2xl group-hover:scale-110 transition-transform duration-500">
-                <svg className="w-8 h-8 md:w-10 md:h-10 text-white ml-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-3xl md:text-4xl font-cheddar tracking-widest leading-none">Watch</span>
-              <span className="text-4xl md:text-5xl font-cheddar text-red-600 tracking-widest leading-none -mt-2">Reels</span>
-            </div>
-          </Link> */}
         </div>
       </div>
 
-      {/* Optional Dark Overlay for Better Readability */}
-      {/* <div className="absolute inset-0 bg-black/30"   // text-[4.5rem]
-              // sm:text-[4.5rem]
-              // md:text-[6rem]
-              // lg:text-[8rem]
-              // xl:text-[10rem]
-              // 2xl:text-[12rem] /> */}
+      {/* Pagination Dots */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+        {heroImages.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`
+              transition-all duration-300
+              ${index === currentIndex 
+                ? "w-12 h-3 bg-red-600" 
+                : "w-3 h-3 bg-white/50 hover:bg-white/80"
+              }
+              rounded-full
+            `}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
     </section>
   );
 }
