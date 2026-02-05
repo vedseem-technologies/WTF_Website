@@ -31,7 +31,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   const [loadingMenu, setLoadingMenu] = useState(true);
   const [availableMenuItems, setAvailableMenuItems] = useState([]);
 
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   // Get booking details from sessionStorage or use initial
   const [bookingDetails, setBookingDetails] = useState(() => {

@@ -11,7 +11,7 @@ import CateringSummaryView from "../../../components/sections/CateringSummaryVie
 import CustomCalendar from "@/components/ui/CustomCalendar";
 import CustomTimePicker from "@/components/ui/CustomTimePicker";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 function CateringPage() {
   const {
@@ -244,7 +244,10 @@ function CateringPage() {
 
   if (viewMode === "summary") {
     // Determine which entity to pass: occasion, service, or category
-    const entityItem = selectedContext?.trigger?.item || null;
+    const entityItem = selectedContext?.trigger?.item ? {
+      ...selectedContext.trigger.item,
+      entityType: selectedContext.trigger.type // Add entityType: 'occasion', 'service', or 'category'
+    } : null;
 
     return (
       <CateringSummaryView
