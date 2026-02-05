@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "./Header";
@@ -31,6 +31,13 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   const [loadingMenu, setLoadingMenu] = useState(true);
   const [availableMenuItems, setAvailableMenuItems] = useState([]);
 
+  // Track if items have been initially loaded to prevent overwrites
+  const itemsInitializedRef = useRef(false);
+
+  // Order state
+  const [orderId, setOrderId] = useState(null);
+  const [orderLoading, setOrderLoading] = useState(false);
+
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   // Get booking details from sessionStorage or use initial
@@ -42,88 +49,107 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     return initialBookingDetails || { date: "", time: "", vegGuests: "10" };
   });
 
-  // **NEW: Fetch menu selection from backend**
+  // **PRODUCTION-GRADE: Fetch menu selection from backend**
+  // Extract stable primitive values to prevent infinite loops
+  const entityId = selectedItem?.id || selectedItem?._id;
+  const entityType = selectedItem?.entityType || 'occasion';
+
   React.useEffect(() => {
     const fetchMenuSelection = async () => {
+      // Guard: Don't fetch if no entity
+      if (!entityId) {
+        setLoadingMenu(false);
+        return;
+      }
+
+      // Guard: Prevent duplicate fetches for same entity
+      const fetchKey = `${entityType}-${entityId}`;
+      if (itemsInitializedRef.current) {
+        console.log(`⚡ Skipping fetch - already loaded: ${fetchKey}`);
+        return;
+      }
+
       try {
         setLoadingMenu(true);
+        console.log(`🔄 Fetching menu for ${entityType}:`, entityId);
 
-        // Fetch entity-specific menu if we have selectedItem
-        if (selectedItem?.id || selectedItem?._id) {
-          const entityId = selectedItem.id || selectedItem._id;
+        // Fetch entity-specific menu
+        const menuResponse = await fetch(`${BACKEND_URL}/api/menu-selection/${entityType}/${entityId}`);
+        const menuData = await menuResponse.json();
 
-          // Determine entity type from context (slug, packageSlug, or selectedItem type)
-          // Default to 'occasion' if coming from occasions page
-          const entityType = selectedItem.entityType || 'occasion';
+        console.log('✅ Menu data received:', menuData);
 
-          try {
-            // Fetch menu selection using entityType and entityId
-            console.log(`Fetching menu for ${entityType}:`, entityId);
-            const menuResponse = await fetch(`${BACKEND_URL}/api/menu-selection/${entityType}/${entityId}`);
-            const menuData = await menuResponse.json();
+        // Initialize items from menu selection
+        if (menuData && (menuData.starters?.length || menuData.mainCourses?.length || menuData.desserts?.length || menuData.breadRice?.length)) {
+          const initialGuests = parseInt(bookingDetails.vegGuests || 10);
+          const defaultQuantity = initialGuests * 2;
 
-            console.log('Menu data received:', menuData);
+          const allItems = [
+            ...(menuData.starters || []).map(item => ({
+              ...item,
+              baseQuantity: item.quantity,
+              category: 'Starters',
+              quantity: defaultQuantity,
+              price: item.unitPrice || item.price || 0
+            })),
+            ...(menuData.mainCourses || []).map(item => ({
+              ...item,
+              baseQuantity: item.quantity,
+              category: 'Mains',
+              quantity: defaultQuantity,
+              price: item.unitPrice || item.price || 0
+            })),
+            ...(menuData.desserts || []).map(item => ({
+              ...item,
+              baseQuantity: item.quantity,
+              category: 'Desserts',
+              quantity: defaultQuantity,
+              price: item.unitPrice || item.price || 0
+            })),
+            ...(menuData.breadRice || []).map(item => ({
+              ...item,
+              baseQuantity: item.quantity,
+              category: 'Bread & Rice',
+              quantity: defaultQuantity,
+              price: item.unitPrice || item.price || 0
+            }))
+          ];
 
-            // Initialize items from menu selection
-            if (menuData && (menuData.starters?.length || menuData.mainCourses?.length || menuData.desserts?.length || menuData.breadRice?.length)) {
-              const initialGuests = parseInt(bookingDetails.vegGuests || 10);
-              const defaultQuantity = initialGuests * 2;
-
-              const allItems = [
-                ...(menuData.starters || []).map(item => ({
-                  ...item,
-                  baseQuantity: item.quantity,
-                  category: 'Starters',
-                  quantity: defaultQuantity,
-                  price: item.unitPrice || item.price || 0
-                })),
-                ...(menuData.mainCourses || []).map(item => ({
-                  ...item,
-                  baseQuantity: item.quantity,
-                  category: 'Mains',
-                  quantity: defaultQuantity,
-                  price: item.unitPrice || item.price || 0
-                })),
-                ...(menuData.desserts || []).map(item => ({
-                  ...item,
-                  baseQuantity: item.quantity,
-                  category: 'Desserts',
-                  quantity: defaultQuantity,
-                  price: item.unitPrice || item.price || 0
-                })),
-                ...(menuData.breadRice || []).map(item => ({
-                  ...item,
-                  baseQuantity: item.quantity,
-                  category: 'Bread & Rice',
-                  quantity: defaultQuantity,
-                  price: item.unitPrice || item.price || 0
-                }))
-              ];
-
-              console.log('Initialized items:', allItems);
-              setItems(allItems);
-            } else {
-              console.log('No menu items found for this entity');
-            }
-          } catch (menuError) {
-            console.error("Error fetching menu selection:", menuError);
-          }
+          console.log('📦 Initialized items:', allItems.length, 'items');
+          setItems(allItems);
+          itemsInitializedRef.current = true; // Mark as loaded
+        } else {
+          console.log('⚠️ No menu items found for this entity');
+          itemsInitializedRef.current = true; // Still mark as attempted
         }
-
-        // Also fetch all menu items for the "Add Items" modal
-        const menuItemsResponse = await fetch(`${BACKEND_URL}/api/menu-items`);
-        const menuItemsData = await menuItemsResponse.json();
-        setAvailableMenuItems(menuItemsData.data || []);
 
         setLoadingMenu(false);
       } catch (error) {
-        console.error("Error fetching menu data:", error);
+        console.error("❌ Error fetching menu data:", error);
         setLoadingMenu(false);
       }
     };
 
     fetchMenuSelection();
-  }, [selectedItem, bookingDetails.vegGuests]);
+
+    // CRITICAL: Depend only on stable primitive values, NOT objects
+  }, [entityId, entityType, BACKEND_URL]);
+
+  // Separate effect for fetching all menu items (runs once)
+  React.useEffect(() => {
+    const fetchAllMenuItems = async () => {
+      try {
+        const menuItemsResponse = await fetch(`${BACKEND_URL}/api/menu-items`);
+        const menuItemsData = await menuItemsResponse.json();
+        setAvailableMenuItems(menuItemsData.data || []);
+        console.log('📋 Available menu items loaded:', menuItemsData.data?.length || 0);
+      } catch (error) {
+        console.error("❌ Error fetching all menu items:", error);
+      }
+    };
+
+    fetchAllMenuItems();
+  }, [BACKEND_URL]); // Run once on mount
 
   // Initialize Items with Quantity and Price if missing (OLD - now handled by package menu fetch)
   // React.useEffect(() => {
@@ -141,17 +167,25 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
   // Handle Adding Item logic from Modal
   const handleAddItem = (item) => {
+    console.log('Adding item:', item);
     const existing = items.find(i => i.name === item.name);
     if (!existing) {
       const initialGuests = parseInt(bookingDetails.vegGuests || 10);
       const newItem = {
-        ...item,
-        baseQuantity: item.quantity,
-        quantity: initialGuests * 2, // Default quantity
+        _id: item._id || item.id,
+        name: item.name,
+        image: item.image || '/block-1.png',
+        type: item.type || 'veg',
+        baseQuantity: item.baseQuantity || item.quantity || 1,
+        quantity: initialGuests * 2, // Default quantity for guests
         price: item.unitPrice || item.price || 0,
+        measurement: item.measurement || item.unit || 'pcs',
         category: getCategoryKeyFromDb(item.category)
       };
+      console.log('New item being added:', newItem);
       setItems([...items, newItem]);
+    } else {
+      console.log('Item already exists:', item.name);
     }
     // Close modal or keep open? User said "can find items in popup". Usually implies staying open.
   };
@@ -264,8 +298,60 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     return itemsTotal + 1500; // + Service Charge
   };
 
+  // Create order with backend-generated ID
+  const createOrder = async () => {
+    if (orderId) return orderId; // Already created
 
-  const handlePriceCheck = () => {
+    setOrderLoading(true);
+    try {
+      const orderData = {
+        userId: user?._id || null,
+        entityType: entityType,
+        entityId: entityId,
+        items: items.map(item => ({
+          itemId: item._id,
+          name: item.name,
+          category: item.category,
+          quantity: item.quantity,
+          price: item.price,
+          baseQuantity: item.baseQuantity,
+          measurement: item.measurement,
+          type: item.type,
+          image: item.image
+        })),
+        bookingDetails: bookingDetails,
+        totalAmount: calculateTotal(),
+        address: selectedAddress,
+        notes: ''
+      };
+
+      console.log('🔄 Creating order...', orderData);
+      const response = await fetch(`${BACKEND_URL}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        console.log('✅ Order created:', data.data.orderId);
+        setOrderId(data.data.orderId);
+        return data.data.orderId;
+      } else {
+        console.error('❌ Order creation failed:', data.message);
+        return null;
+      }
+    } catch (error) {
+      console.error('❌ Error creating order:', error);
+      return null;
+    } finally {
+      setOrderLoading(false);
+    }
+  };
+
+  const handlePriceCheck = async () => {
+    // Create order first to get backend-generated ID
+    await createOrder();
     setShowPriceBreakup(true);
     setCurrentStep(2);
   };
@@ -705,7 +791,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
                     Price Summary
                   </h1>
                   <p className="text-md text-gray-400 mt-1">
-                    Order ID • WTF-{Math.floor(1000 + Math.random() * 9000)}
+                    Order ID • {orderLoading ? 'Generating...' : (orderId || 'N/A')}
                   </p>
                 </div>
               </div>
