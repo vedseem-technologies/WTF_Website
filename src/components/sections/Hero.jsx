@@ -4,17 +4,39 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Array of hero images to rotate through
-const heroImages = [
+// Default images as fallback
+const defaultImages = [
   { src: "/Hero.jpeg", alt: "Hero 1" },
   { src: "/our-food-menu.jpg", alt: "Hero 5" },
-  { src: "/block-1.png", alt: "Hero 2" },
-  { src: "/block-2.png", alt: "Hero 3" },
-  { src: "/corousel-1.png", alt: "Hero 4" },
+  { src: "/c2.jpg.jpeg", alt: "Hero 2" },
+  { src: "/c3.jpg.jpeg", alt: "Hero 3" },
+  { src: "/c4.jpg.jpeg", alt: "Hero 4" },
 ];
 
 function Hero() {
+  const [heroImages, setHeroImages] = useState(defaultImages);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Fetch Banner Images
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/banner`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data && data.length > 0) {
+            setHeroImages(data.map((item, index) => ({
+              src: item.image,
+              alt: `Hero ${index + 1}`
+            })));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch banner images:", error);
+      }
+    };
+    fetchImages();
+  }, []);
 
   // Auto-rotate images every 30 seconds
   useEffect(() => {
@@ -23,7 +45,7 @@ function Hero() {
     }, 30000); // 30 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [heroImages.length]);
 
   return (
     <section className="relative w-full min-h-[100svh] overflow-hidden">
