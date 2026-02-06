@@ -113,7 +113,7 @@ function PopularItems() {
   useEffect(() => {
     const fetchPopularItems = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/food?limit=4`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/food?limit=4`);
         if (response.ok) {
           const data = await response.json();
           setItems(data);
