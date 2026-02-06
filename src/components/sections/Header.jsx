@@ -250,7 +250,7 @@ function Header() {
 
             {/* PARTNER CTA */}
             <motion.a
-              href="https://wtf-foods.vercel.app/"
+              href="/partner"
               target="_blank"
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}

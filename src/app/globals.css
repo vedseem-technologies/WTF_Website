@@ -23,7 +23,6 @@
 
 
 html {
-  overflow-x: hidden;
   width: 100%;
 }
 
@@ -33,7 +32,7 @@ body {
   font-family: "Dongle", sans-serif;
   font-size: 1.5rem;
   line-height: 1;
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
 }
 
@@ -48,8 +47,13 @@ body {
 }
 
 @keyframes scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-scroll {
@@ -68,8 +72,13 @@ body {
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .skeleton-shimmer {
@@ -80,11 +89,9 @@ body {
 .skeleton-shimmer-animate {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%);
   animation: shimmer 1.5s ease-in-out infinite;
 }
