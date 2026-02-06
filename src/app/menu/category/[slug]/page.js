@@ -62,7 +62,9 @@ export default function CategoryDetails() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getAllRangeMenus();
+        const response = await getAllRangeMenus();
+        // Handle both direct array (old) and paginated object (new)
+        const data = response.data || response || [];
 
         // Find which range corresponds to this slug
         const rangeName = Object.keys(rangeConfig).find(key => rangeConfig[key].slug === slug);

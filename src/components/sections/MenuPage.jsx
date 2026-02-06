@@ -55,9 +55,10 @@ export default function MenuPage() {
     const fetchMenus = async () => {
       try {
         const data = await getAllRangeMenus();
+        const items = data.data || [];
 
         // Group items by range
-        const grouped = data.reduce((acc, item) => {
+        const grouped = items.reduce((acc, item) => {
           const range = item.range;
           if (!acc[range]) {
             acc[range] = [];

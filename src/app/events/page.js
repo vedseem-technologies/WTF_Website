@@ -15,8 +15,9 @@ export default function EventsPage() {
       try {
         setLoading(true)
         const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events`)
-        if (Array.isArray(response.data)) {
-          const events = response.data
+        const data = response.data.data || response.data
+        if (Array.isArray(data)) {
+          const events = data
           const upcoming = events.filter(e => e.status !== 'Past')
           const past = events.filter(e => e.status === 'Past')
           setUpcomingEvents(upcoming)

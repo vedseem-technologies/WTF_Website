@@ -13,22 +13,26 @@ export default function BlogsPage() {
   React.useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL || 'http://localhost:5000'}/api/blogs/getblogs`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blogs/getblogs`);
         if (response.ok) {
-          const data = await response.json();
-          const mappedBlogs = data.map(blog => ({
-            id: blog._id,
-            title: blog.title,
-            excerpt: blog.description,
-            date: new Date(blog.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }),
-            image: blog.image,
-            category: blog.blogType
-          }));
-          setBlogs(mappedBlogs);
+          const result = await response.json();
+          const data = result.data || result; // Handle paginated object or direct array
+
+          if (Array.isArray(data)) {
+            const mappedBlogs = data.map(blog => ({
+              id: blog._id,
+              title: blog.title,
+              excerpt: blog.description,
+              date: new Date(blog.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              }),
+              image: blog.image,
+              category: blog.blogType
+            }));
+            setBlogs(mappedBlogs);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch blogs:", error);

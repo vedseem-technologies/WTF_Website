@@ -44,9 +44,13 @@ function CateringContent() {
           fetch(`${BACKEND_URL}/api/categories`)
         ]);
 
-        const occasionsData = await occasionsRes.json();
-        const servicesData = await servicesRes.json();
-        const categoriesData = await categoriesRes.json();
+        const occasionsResult = await occasionsRes.json();
+        const servicesResult = await servicesRes.json();
+        const categoriesResult = await categoriesRes.json();
+
+        const occasionsData = occasionsResult.data || [];
+        const servicesData = servicesResult.data || [];
+        const categoriesData = categoriesResult.data || [];
 
         // Map backend data to frontend format (add slug from title)
         setOccasions(occasionsData.map((item) => ({

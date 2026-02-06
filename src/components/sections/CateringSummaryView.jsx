@@ -80,7 +80,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
         console.log('✅ Menu data received:', menuData);
 
         // Initialize items from menu selection
-        if (menuData && (menuData.starters?.length || menuData.mainCourses?.length || menuData.desserts?.length || menuData.breadRice?.length)) {
+        if (menuData) {
           const initialGuests = parseInt(bookingDetails.vegGuests || 10);
           const defaultQuantity = initialGuests * 2;
 
@@ -117,6 +117,24 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
           console.log('📦 Initialized items:', allItems.length, 'items');
           setItems(allItems);
+
+          // **NEW: Extract and merge unselected items into availableMenuItems**
+          const unselectedItems = [
+            ...(menuData.unselectedStarters || []).map(i => ({ ...i, category: i.category || 'Starter' })),
+            ...(menuData.unselectedMainCourses || []).map(i => ({ ...i, category: i.category || 'Main Course' })),
+            ...(menuData.unselectedDesserts || []).map(i => ({ ...i, category: i.category || 'Dessert' })),
+            ...(menuData.unselectedBreadRice || []).map(i => ({ ...i, category: i.category || 'Bread & Rice' }))
+          ];
+
+          if (unselectedItems.length > 0) {
+            console.log("➕ Merging unselected items to available list:", unselectedItems.length);
+            setAvailableMenuItems(prev => {
+              const existingIds = new Set(prev.map(p => p._id || p.id));
+              const newItems = unselectedItems.filter(u => !existingIds.has(u._id || u.id));
+              return [...prev, ...newItems];
+            });
+          }
+
           itemsInitializedRef.current = true; // Mark as loaded
         } else {
           console.log('⚠️ No menu items found for this entity');
@@ -139,9 +157,16 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   React.useEffect(() => {
     const fetchAllMenuItems = async () => {
       try {
-        const menuItemsResponse = await fetch(`${BACKEND_URL}/api/menu-items`);
+        // Fetch with higher limit to get more items
+        const menuItemsResponse = await fetch(`${BACKEND_URL}/api/menu-items?limit=1000`);
         const menuItemsData = await menuItemsResponse.json();
-        setAvailableMenuItems(menuItemsData.data || []);
+        setAvailableMenuItems(prev => {
+          // Merge with existing to avoid losing unselected items if they were added first
+          const incoming = menuItemsData.data || [];
+          const existingIds = new Set(prev.map(p => p._id || p.id));
+          const newItems = incoming.filter(i => !existingIds.has(i._id || i.id));
+          return [...prev, ...newItems];
+        });
         console.log('📋 Available menu items loaded:', menuItemsData.data?.length || 0);
       } catch (error) {
         console.error("❌ Error fetching all menu items:", error);

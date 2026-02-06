@@ -21,11 +21,14 @@ function Hero() {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/banner`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/banner?limit=100`);
         if (response.ok) {
-          const data = await response.json();
-          if (data && data.length > 0) {
-            setHeroImages(data.map((item, index) => ({
+          const result = await response.json();
+          const bannerData = result.data || [];
+          const activeBanners = bannerData.filter(item => item.active);
+
+          if (activeBanners && activeBanners.length > 0) {
+            setHeroImages(activeBanners.map((item, index) => ({
               src: item.image,
               alt: `Hero ${index + 1}`
             })));

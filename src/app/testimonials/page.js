@@ -21,8 +21,9 @@ export default function TestimonialsPage() {
     try {
       setLoading(true)
       const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/testimonials`)
-      if (Array.isArray(response.data)) {
-        setTestimonials(response.data)
+      const data = response.data.data || response.data
+      if (Array.isArray(data)) {
+        setTestimonials(data)
       }
     } catch (error) {
       console.error('Error fetching testimonials:', error)
