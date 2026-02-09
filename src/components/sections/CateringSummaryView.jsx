@@ -4,6 +4,43 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "./Header";
 
+// Helper: Parse quantity rules from item data
+const getQuantityRules = (item) => {
+  // Determine if it's kg or pcs based on measurement or price string (for default label)
+  const isKg = item.measurement?.toLowerCase() === 'kg' ||
+    (typeof item.price === 'string' && item.price.toLowerCase().includes('/kg'));
+
+  const defaultLabel = isKg ? 'kg' : 'pcs';
+
+  // 1. Check for explicit quantity in price string (e.g. "120/20pcs", "500/2kg")
+  if (typeof item.price === 'string') {
+    const match = item.price.match(/\/(\d+)\s*(pcs|pc|kg)/i);
+    if (match && match[1]) {
+      const qty = parseInt(match[1], 10);
+      const unit = match[2].toLowerCase();
+      return {
+        min: qty,
+        step: qty,
+        label: unit.startsWith('kg') ? 'kg' : 'pcs'
+      };
+    }
+  }
+
+  // 2. Check for explicit baseQuantity (from DB)
+  // Only apply if baseQuantity is >= 1 (e.g. 2kg pack, 10pc pack)
+  // If baseQuantity < 1 (e.g. 0.5kg portion), default to step 1
+  if (item.baseQuantity && item.baseQuantity >= 1) {
+    return {
+      min: item.baseQuantity,
+      step: item.baseQuantity,
+      label: defaultLabel
+    };
+  }
+
+  // 3. Default/Fallback (1kg or 1pcs)
+  return { min: 1, step: 1, label: defaultLabel };
+};
+
 const CateringSummaryView = ({ selectedItem, selectionType, packageItem, bookingDetails: initialBookingDetails, onBack, slug, packageSlug }) => {
   const [expandedCategory, setExpandedCategory] = useState("Starter");
   const [items, setItems] = useState([]);
@@ -84,33 +121,43 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
           const initialGuests = parseInt(bookingDetails.vegGuests || 10);
           const defaultQuantity = initialGuests * 2;
 
+          // Helper to calculate initial quantity based on rules
+          const getInitialQty = (item, guests) => {
+            const rules = getQuantityRules(item);
+            let qty = guests * 2;
+            if (rules.step > 1) {
+              qty = Math.ceil(qty / rules.step) * rules.step;
+            }
+            return Math.max(rules.min, qty);
+          };
+
           const allItems = [
             ...(menuData.starters || []).map(item => ({
               ...item,
               baseQuantity: item.quantity,
               category: 'Starters',
-              quantity: defaultQuantity,
+              quantity: getInitialQty({ ...item, baseQuantity: item.quantity }, parseInt(bookingDetails.vegGuests || 10)),
               price: item.unitPrice || item.price || 0
             })),
             ...(menuData.mainCourses || []).map(item => ({
               ...item,
               baseQuantity: item.quantity,
               category: 'Mains',
-              quantity: defaultQuantity,
+              quantity: getInitialQty({ ...item, baseQuantity: item.quantity }, parseInt(bookingDetails.vegGuests || 10)),
               price: item.unitPrice || item.price || 0
             })),
             ...(menuData.desserts || []).map(item => ({
               ...item,
               baseQuantity: item.quantity,
               category: 'Desserts',
-              quantity: defaultQuantity,
+              quantity: getInitialQty({ ...item, baseQuantity: item.quantity }, parseInt(bookingDetails.vegGuests || 10)),
               price: item.unitPrice || item.price || 0
             })),
             ...(menuData.breadRice || []).map(item => ({
               ...item,
               baseQuantity: item.quantity,
               category: 'Bread & Rice',
-              quantity: defaultQuantity,
+              quantity: getInitialQty({ ...item, baseQuantity: item.quantity }, parseInt(bookingDetails.vegGuests || 10)),
               price: item.unitPrice || item.price || 0
             }))
           ];
@@ -190,19 +237,35 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   //   }
   // }, [selectedItem, bookingDetails.vegGuests]);
 
+
+
   // Handle Adding Item logic from Modal
   const handleAddItem = (item) => {
     console.log('Adding item:', item);
     const existing = items.find(i => i.name === item.name);
     if (!existing) {
+      // Calculate initial quantity based on rules
+      const rules = getQuantityRules(item);
       const initialGuests = parseInt(bookingDetails.vegGuests || 10);
+
+      // Default logic: Guests * 2, but must be multiple of step and >= min
+      let calculatedQty = initialGuests * 2;
+
+      if (rules.step > 1) {
+        // Round up to nearest step
+        calculatedQty = Math.ceil(calculatedQty / rules.step) * rules.step;
+      }
+
+      // Ensure strictly >= minimum
+      const initialQty = Math.max(rules.min, calculatedQty);
+
       const newItem = {
         _id: item._id || item.id,
         name: item.name,
         image: item.image || '/block-1.png',
         type: item.type || 'veg',
         baseQuantity: item.baseQuantity || item.quantity || 1,
-        quantity: initialGuests * 2, // Default quantity for guests
+        quantity: initialQty,
         price: item.unitPrice || item.price || 0,
         measurement: item.measurement || item.unit || 'pcs',
         category: getCategoryKeyFromDb(item.category)
@@ -212,7 +275,6 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     } else {
       console.log('Item already exists:', item.name);
     }
-    // Close modal or keep open? User said "can find items in popup". Usually implies staying open.
   };
 
   const handleRemoveItem = (itemName) => {
@@ -306,10 +368,24 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     { name: "Live Chaat Party", image: "/chaat-live.png" },
   ];
 
-  const updateQuantity = (itemName, delta) => {
+  const updateQuantity = (itemName, direction) => {
     setItems(items.map(item => {
       if (item.name === itemName) {
-        const newQty = Math.max(1, (item.quantity || 0) + delta);
+        const rules = getQuantityRules(item);
+        const currentQty = item.quantity || 0;
+        let newQty;
+
+        if (direction === 'increase') {
+          newQty = currentQty + rules.step;
+        } else {
+          // If already at min, don't decrease further
+          if (currentQty <= rules.min) return item;
+          newQty = currentQty - rules.step;
+        }
+
+        // Final safety check (Rule 4: Never below min)
+        newQty = Math.max(rules.min, newQty);
+
         return { ...item, quantity: newQty };
       }
       return item;
@@ -322,6 +398,8 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     const itemsTotal = items.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 0)), 0);
     return itemsTotal + 1500; // + Service Charge
   };
+
+
 
   // Create order with backend-generated ID
   const createOrder = async () => {
@@ -715,14 +793,15 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
                                         {/* Quantity Controls */}
                                         <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-2 py-1 shadow-sm">
                                           <button
-                                            onClick={() => updateQuantity(item.name, -10)}
-                                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 transition-all font-bold text-lg"
+                                            onClick={() => updateQuantity(item.name, 'decrease')}
+                                            className={`w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 transition-all font-bold text-lg ${item.quantity <= (getQuantityRules(item).min) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            disabled={item.quantity <= (getQuantityRules(item).min)}
                                           >
                                             -
                                           </button>
                                           <span className="text-xl font-bold text-gray-800 min-w-[50px] text-center">{item.quantity}</span>
                                           <button
-                                            onClick={() => updateQuantity(item.name, 10)}
+                                            onClick={() => updateQuantity(item.name, 'increase')}
                                             className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-green-100 hover:text-green-600 transition-all font-bold text-lg"
                                           >
                                             +
