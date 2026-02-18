@@ -338,15 +338,60 @@ export default function AboutPage() {
         {/* Professional Timeline */}
         <ProfessionalTimeline timelineStory={timelineStory} />
 
-        <div className="relative w-full h-[600px] mt-10 ml-6">
-          <Image
-            src="/india_map.jpeg"
-            alt="India Presence"
-            fill
-            className="object-contain"
-            priority
-          />
-        </div>
+        {/* Demographic Reach Section */}
+        <section className="py-16 md:py-24 px-6 md:px-8 bg-zinc-50 overflow-hidden">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              {/* Left Column: Content (No Box) */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="relative"
+              >
+                <div className="mb-6 md:mb-8">
+                  <h2 className="text-4xl md:text-5xl lg:text-7xl font-black text-zinc-950 leading-tight"
+                      style={{lineHeight: "0.7"}}
+                  >
+                    DEMOGRAPHIC <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600">REACH</span>
+                  </h2>
+                </div>
+
+                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-zinc-600 leading-relaxed mb-8 font-medium"
+                   style={{lineHeight: "0.8"}}
+                >
+                  Our food truck brand has successfully established a presence in several key cities across the country, becoming a favorite destination for food lovers seeking authentic Mughlai, Chinese, and Indian cuisines. Each outlet is strategically located to reach a diverse and growing customer base, ensuring our flavors are accessible to everyone.
+                </p>
+                <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl text-zinc-600 leading-relaxed mb-8 font-medium"
+                   style={{lineHeight: "0.8"}}
+                >
+                   As we continue to expand, we maintain our commitment to delivering the same high-quality, delicious food that has made us a popular choice. Our goal is to bring our unique culinary experience to every corner of the country, making gourmet street food a staple nationwide.
+                </p>
+              </motion.div>
+
+              {/* Right Column: Map Image */}
+              <motion.div
+                initial={{ opacity: 0, x: 50, scale: 0.95 }}
+                whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative w-full h-[400px] md:h-[600px] lg:h-[700px] flex items-center justify-center"
+              >
+                  {/* Subtle glow behind the map */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-orange-500/5 rounded-full blur-3xl scale-90" />
+                  
+                  <Image
+                    src="/map.jpeg"
+                    alt="India Presence Map"
+                    fill
+                    className="object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-700"
+                    priority
+                  />
+              </motion.div>
+            </div>
+          </div>
+        </section>
 
         {/* Newsletter CTA */}
         <section className="py-24 px-6 md:px-8 bg-zinc-50">

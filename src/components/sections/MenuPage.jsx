@@ -112,9 +112,7 @@ export default function MenuPage() {
     fetchMenus();
   }, []);
 
-  if (loading) {
-    return <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center text-white text-2xl">Loading menu...</div>;
-  }
+
 
   return (
     <div className="w-full min-h-screen bg-[#0f0f0f]">
