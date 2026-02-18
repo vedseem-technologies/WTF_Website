@@ -47,7 +47,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   const [currentStep, setCurrentStep] = useState(1);
   const [showPriceBreakup, setShowPriceBreakup] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("razorpay");
+  const [paymentMethod, setPaymentMethod] = useState("zoho"); // Default to Zoho
   const [showDetails, setShowDetails] = useState(false);
   const [user, setUser] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState("");
@@ -102,19 +102,15 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
       // Guard: Prevent duplicate fetches for same entity
       const fetchKey = `${entityType}-${entityId}`;
       if (itemsInitializedRef.current) {
-        console.log(`⚡ Skipping fetch - already loaded: ${fetchKey}`);
         return;
       }
 
       try {
         setLoadingMenu(true);
-        console.log(`🔄 Fetching menu for ${entityType}:`, entityId);
 
         // Fetch entity-specific menu
         const menuResponse = await fetch(`${BACKEND_URL}/api/menu-selection/${entityType}/${entityId}`);
         const menuData = await menuResponse.json();
-
-        console.log('✅ Menu data received:', menuData);
 
         // Initialize items from menu selection
         if (menuData) {
@@ -162,8 +158,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
             }))
           ];
 
-          console.log('📦 Initialized items:', allItems.length, 'items');
-          setItems(allItems);
+          setItems(allItems); // <--- FIXED: Update state with fetched items
 
           // **NEW: Extract and merge unselected items into availableMenuItems**
           const unselectedItems = [
@@ -174,7 +169,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
           ];
 
           if (unselectedItems.length > 0) {
-            console.log("➕ Merging unselected items to available list:", unselectedItems.length);
+
             setAvailableMenuItems(prev => {
               const existingIds = new Set(prev.map(p => p._id || p.id));
               const newItems = unselectedItems.filter(u => !existingIds.has(u._id || u.id));
@@ -184,79 +179,53 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
           itemsInitializedRef.current = true; // Mark as loaded
         } else {
-          console.log('⚠️ No menu items found for this entity');
           itemsInitializedRef.current = true; // Still mark as attempted
         }
 
         setLoadingMenu(false);
       } catch (error) {
-        console.error("❌ Error fetching menu data:", error);
+        console.error(error);
         setLoadingMenu(false);
       }
     };
 
     fetchMenuSelection();
 
-    // CRITICAL: Depend only on stable primitive values, NOT objects
   }, [entityId, entityType, BACKEND_URL]);
 
-  // Separate effect for fetching all menu items (runs once)
   React.useEffect(() => {
     const fetchAllMenuItems = async () => {
       try {
-        // Fetch with higher limit to get more items
         const menuItemsResponse = await fetch(`${BACKEND_URL}/api/menu-items?limit=1000`);
         const menuItemsData = await menuItemsResponse.json();
         setAvailableMenuItems(prev => {
-          // Merge with existing to avoid losing unselected items if they were added first
           const incoming = menuItemsData.data || [];
           const existingIds = new Set(prev.map(p => p._id || p.id));
           const newItems = incoming.filter(i => !existingIds.has(i._id || i.id));
           return [...prev, ...newItems];
         });
-        console.log('📋 Available menu items loaded:', menuItemsData.data?.length || 0);
       } catch (error) {
-        console.error("❌ Error fetching all menu items:", error);
+        console.error(error);
       }
     };
 
     fetchAllMenuItems();
-  }, [BACKEND_URL]); // Run once on mount
-
-  // Initialize Items with Quantity and Price if missing (OLD - now handled by package menu fetch)
-  // React.useEffect(() => {
-  //   if (selectedItem?.items) {
-  //     const initialGuests = parseInt(bookingDetails.vegGuests || 10);
-  //     const defaultQuantity = initialGuests * 2;
-  //     const initializedItems = selectedItem.items.map(item => ({
-  //       ...item,
-  //       quantity: item.quantity || defaultQuantity,
-  //       price: item.price || 150
-  //     }));
-  //     setItems(initializedItems);
-  //   }
-  // }, [selectedItem, bookingDetails.vegGuests]);
+  }, [BACKEND_URL]);
 
 
-
-  // Handle Adding Item logic from Modal
   const handleAddItem = (item) => {
-    console.log('Adding item:', item);
     const existing = items.find(i => i.name === item.name);
     if (!existing) {
-      // Calculate initial quantity based on rules
       const rules = getQuantityRules(item);
       const initialGuests = parseInt(bookingDetails.vegGuests || 10);
 
-      // Default logic: Guests * 2, but must be multiple of step and >= min
+
       let calculatedQty = initialGuests * 2;
 
       if (rules.step > 1) {
-        // Round up to nearest step
         calculatedQty = Math.ceil(calculatedQty / rules.step) * rules.step;
       }
 
-      // Ensure strictly >= minimum
       const initialQty = Math.max(rules.min, calculatedQty);
 
       const newItem = {
@@ -270,10 +239,8 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
         measurement: item.measurement || item.unit || 'pcs',
         category: getCategoryKeyFromDb(item.category)
       };
-      console.log('New item being added:', newItem);
       setItems([...items, newItem]);
     } else {
-      console.log('Item already exists:', item.name);
     }
   };
 
@@ -281,7 +248,6 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     setItems(items.filter(i => i.name !== itemName));
   };
 
-  // Helper to map database category names to frontend keys
   const getCategoryKeyFromDb = (dbCategory) => {
     const mapping = {
       'Starter': 'Starters',
@@ -293,11 +259,9 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     return mapping[dbCategory] || dbCategory;
   };
 
-  // Get full menu for the selected category (now from backend)
   const categoryFullMenu = React.useMemo(() => {
     if (!availableMenuItems.length) return [];
 
-    // Filter by category if activeCategoryForAdd is set
     if (activeCategoryForAdd) {
       return availableMenuItems.filter(item => {
         const itemCategoryKey = getCategoryKeyFromDb(item.category);
@@ -320,10 +284,8 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   }, []);
 
   React.useEffect(() => {
-    // Hide bottom bar when this view is active
     window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: true }));
     return () => {
-      // Show bottom bar when this view is inactive
       window.dispatchEvent(new CustomEvent("hideBottomNavbar", { detail: false }));
     };
   }, []);
@@ -403,49 +365,63 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
   // Create order with backend-generated ID
   const createOrder = async () => {
-    if (orderId) return orderId; // Already created
+    if (orderId) return orderId;
+
+    // Force refresh user from storage if missing
+    let currentUser = user;
+    if (!currentUser) {
+      const stored = localStorage.getItem('wtf_user');
+      if (stored) {
+        currentUser = JSON.parse(stored);
+        setUser(currentUser);
+      }
+    }
 
     setOrderLoading(true);
     try {
-      const orderData = {
-        userId: user?._id || null,
+      // Robust payload construction
+      const orderPayload = {
+        userId: currentUser?._id || currentUser?.id || null, // Check both _id and id
         entityType: entityType,
-        entityId: entityId,
+        entityId: String(entityId),
         items: items.map(item => ({
-          itemId: item._id,
+          itemId: String(item._id || item.id),
           name: item.name,
           category: item.category,
-          quantity: item.quantity,
-          price: item.price,
-          baseQuantity: item.baseQuantity,
-          measurement: item.measurement,
-          type: item.type,
-          image: item.image
+          quantity: Number(item.quantity) || 0,
+          price: Number(item.price) || 0,
+          baseQuantity: Number(item.baseQuantity) || 1,
+          measurement: item.measurement || 'pcs',
+          type: item.type || 'Veg',
+          image: item.image || ''
         })),
         bookingDetails: bookingDetails,
         totalAmount: calculateTotal(),
         address: selectedAddress,
-        notes: ''
+        notes: '',
+        paymentMethod: paymentMethod || 'zoho'
       };
 
-      console.log('🔄 Creating order...', orderData);
+      console.log("Sending Order Payload:", orderPayload);
+
       const response = await fetch(`${BACKEND_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
+        body: JSON.stringify(orderPayload)
       });
 
       const data = await response.json();
       if (data.success) {
-        console.log('✅ Order created:', data.data.orderId);
         setOrderId(data.data.orderId);
         return data.data.orderId;
       } else {
-        console.error('❌ Order creation failed:', data.message);
+        console.error("Order Creation Failed:", data.message, data.errors);
+        alert(`Failed to create order: ${data.message}`);
         return null;
       }
     } catch (error) {
-      console.error('❌ Error creating order:', error);
+      console.error("Order Creation Error:", error);
+      alert("An error occurred. Check console for details.");
       return null;
     } finally {
       setOrderLoading(false);
@@ -455,9 +431,8 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   /* 
     RESTORED: Generate Order ID immediately for reference
   */
-  const handlePriceCheck = async () => {
-    // Create order first to get backend-generated ID
-    await createOrder();
+  const handlePriceCheck = () => {
+    // Defer order creation to "Confirm Details" step
     setShowPriceBreakup(true);
     setCurrentStep(2);
   };
@@ -473,8 +448,18 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
       alert("Please select or add an address");
       return;
     }
-    setShowPayment(true);
-    setCurrentStep(4);
+
+    // Direct Payment Trigger
+    if (orderId) {
+      proceedWithPayment(orderId);
+    } else {
+      createOrder().then(id => {
+        if (id) proceedWithPayment(id);
+      });
+    }
+    // Skip the "Pay Now" screen
+    // setShowPayment(true);
+    // setCurrentStep(4);
   };
 
   const handleAuthSubmit = async (e) => {
@@ -528,6 +513,42 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     setNewAddressInput('');
     setShowAddAddress(false);
   };
+
+  const proceedWithPayment = async (id) => {
+    const idToUse = id || orderId;
+    if (!idToUse) return;
+
+    if (paymentMethod === 'cod') {
+      // Handle COD directly
+      alert(`Order Placed Successfully! Order ID: ${idToUse}`);
+      window.location.href = '/';
+      return;
+    }
+
+    // Handle Zoho (Online Payment)
+    try {
+      setLoading(true);
+      const response = await fetch(`${BACKEND_URL}/api/orders/payment/initiate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: idToUse })
+      });
+
+      const data = await response.json();
+      if (data.success && data.data.paymentLink) {
+        // Redirect to Zoho Payment Link
+        window.location.href = data.data.paymentLink;
+      } else {
+        alert('Failed to initiate payment. Please try again.');
+      }
+    } catch (error) {
+      console.error('Payment Error:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-white pb-24 pt-12 overflow-hidden relative font-dongle">
@@ -1185,10 +1206,10 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
               </div>
 
               <div className="space-y-4">
-                {/* Razorpay Option */}
+                {/* Zoho/Online Option */}
                 <button
-                  onClick={() => setPaymentMethod("razorpay")}
-                  className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all duration-300 ${paymentMethod === "razorpay"
+                  onClick={() => setPaymentMethod("zoho")}
+                  className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all duration-300 ${paymentMethod === "zoho"
                     ? "border-red-500 bg-red-50/20"
                     : "border-gray-100 bg-white hover:border-gray-200"
                     }`}
@@ -1200,13 +1221,13 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
                       </svg>
                     </div>
                     <div style={{ lineHeight: "0.5" }}>
-                      <p className="font-bold text-3xl text-gray-900">Razorpay</p>
+                      <p className="font-bold text-3xl text-gray-900">Online Payments</p>
                       <p className="text-md text-gray-500">Cards, Netbanking, UPI, Wallets</p>
                     </div>
                   </div>
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === "razorpay" ? "border-red-500 bg-red-500" : "border-gray-200"
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === "zoho" ? "border-red-500 bg-red-500" : "border-gray-200"
                     }`}>
-                    {paymentMethod === "razorpay" && (
+                    {paymentMethod === "zoho" && (
                       <div className="w-2.5 h-2.5 rounded-full bg-white shadow-sm" />
                     )}
                   </div>
@@ -1309,14 +1330,6 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
           ) : (
             <button
               onClick={() => {
-                const proceedWithPayment = (id) => {
-                  const idToUse = id || orderId;
-                  if (idToUse) {
-                    console.log("Proceeding with Order ID:", idToUse);
-                    alert(`Proceeding to payment for Order ID: ${idToUse}`);
-                  }
-                };
-
                 if (orderId) {
                   proceedWithPayment(orderId);
                 } else {
@@ -1330,6 +1343,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
               {paymentMethod === "cod" ? "Place Order" : "Pay Now"}
             </button>
           )}
+
         </div>
       </div>
     </div>

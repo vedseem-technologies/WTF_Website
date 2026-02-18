@@ -70,7 +70,6 @@ export default function CategoryDetails() {
         const rangeName = Object.keys(rangeConfig).find(key => rangeConfig[key].slug === slug);
 
         if (rangeName) {
-          // Filter items for this range
           const items = data.filter(item => item.range === rangeName);
           if (items.length > 0) {
             setSection({
@@ -79,7 +78,7 @@ export default function CategoryDetails() {
             });
           }
         } else {
-          console.log("No matching configuration for slug:", slug);
+          console.log(" ");
         }
 
       } catch (error) {
