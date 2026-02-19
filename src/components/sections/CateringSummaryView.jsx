@@ -521,7 +521,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     if (paymentMethod === 'cod') {
       // Handle COD directly
       alert(`Order Placed Successfully! Order ID: ${idToUse}`);
-      window.location.href = '/';
+      window.location.href = '/'; // Or redirect to success page
       return;
     }
 
@@ -540,11 +540,11 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
         window.location.href = data.data.paymentLink;
       } else {
         alert('Failed to initiate payment. Please try again.');
+        setLoading(false);
       }
     } catch (error) {
       console.error('Payment Error:', error);
       alert('An error occurred. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
