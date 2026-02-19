@@ -366,10 +366,19 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
       }
     }
 
+    // Get Token
+    const token = localStorage.getItem('wtf_token');
+    if (!token) {
+      alert("Please login to place an order.");
+      // setCurrentStep(3); // Go to details/login
+      // setShowDetails(true);
+      return null;
+    }
+
     setOrderLoading(true);
     try {
       const orderPayload = {
-        userId: currentUser?._id || currentUser?.id || null, // Check both _id and id
+        // userId: currentUser?._id || currentUser?.id || null, // REMOVED: Managed by Backend via Token
         entityType: entityType,
         entityId: String(entityId),
         items: items.map(item => ({
@@ -394,7 +403,10 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
       const response = await fetch(`${BACKEND_URL}/api/orders`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(orderPayload)
       });
 
@@ -431,7 +443,9 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     setCurrentStep(3);
   };
 
-  const handleDetailsComplete = () => {
+  const handleDetailsComplete = (e) => {
+    if (e) e.preventDefault();
+
     if (!selectedAddress) {
       alert("Please select or add an address");
       return;
