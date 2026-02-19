@@ -4,15 +4,13 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "./Header";
 
-// Helper: Parse quantity rules from item data
 const getQuantityRules = (item) => {
-  // Determine if it's kg or pcs based on measurement or price string (for default label)
+
   const isKg = item.measurement?.toLowerCase() === 'kg' ||
     (typeof item.price === 'string' && item.price.toLowerCase().includes('/kg'));
 
   const defaultLabel = isKg ? 'kg' : 'pcs';
 
-  // 1. Check for explicit quantity in price string (e.g. "120/20pcs", "500/2kg")
   if (typeof item.price === 'string') {
     const match = item.price.match(/\/(\d+)\s*(pcs|pc|kg)/i);
     if (match && match[1]) {
@@ -26,9 +24,6 @@ const getQuantityRules = (item) => {
     }
   }
 
-  // 2. Check for explicit baseQuantity (from DB)
-  // Only apply if baseQuantity is >= 1 (e.g. 2kg pack, 10pc pack)
-  // If baseQuantity < 1 (e.g. 0.5kg portion), default to step 1
   if (item.baseQuantity && item.baseQuantity >= 1) {
     return {
       min: item.baseQuantity,
@@ -37,7 +32,6 @@ const getQuantityRules = (item) => {
     };
   }
 
-  // 3. Default/Fallback (1kg or 1pcs)
   return { min: 1, step: 1, label: defaultLabel };
 };
 
@@ -47,7 +41,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   const [currentStep, setCurrentStep] = useState(1);
   const [showPriceBreakup, setShowPriceBreakup] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("zoho"); // Default to Zoho
+  const [paymentMethod, setPaymentMethod] = useState("zoho");
   const [showDetails, setShowDetails] = useState(false);
   const [user, setUser] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState("");
@@ -58,20 +52,15 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
   const [showAddAddress, setShowAddAddress] = useState(false);
   const [newAddressInput, setNewAddressInput] = useState('');
 
-  // New State for Add Item Modal
   const [showAddItemModal, setShowAddItemModal] = useState(false);
   const [activeCategoryForAdd, setActiveCategoryForAdd] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-
-  // **NEW: State for menu selection from backend**
   const [menuData, setMenuData] = useState(null);
   const [loadingMenu, setLoadingMenu] = useState(true);
   const [availableMenuItems, setAvailableMenuItems] = useState([]);
 
-  // Track if items have been initially loaded to prevent overwrites
   const itemsInitializedRef = useRef(false);
 
-  // Order state
   const [orderId, setOrderId] = useState(null);
   const [orderLoading, setOrderLoading] = useState(false);
 
@@ -364,8 +353,8 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
 
   // Create order with backend-generated ID
-  const createOrder = async () => {
-    if (orderId) return orderId;
+  const createOrder = async (forceNew = false) => {
+    if (orderId && !forceNew) return orderId;
 
     // Force refresh user from storage if missing
     let currentUser = user;
@@ -379,7 +368,6 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
     setOrderLoading(true);
     try {
-      // Robust payload construction
       const orderPayload = {
         userId: currentUser?._id || currentUser?.id || null, // Check both _id and id
         entityType: entityType,
@@ -451,9 +439,12 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
     // Direct Payment Trigger
     if (orderId) {
-      proceedWithPayment(orderId);
+      // Re-create order to capture any address changes
+      createOrder(true).then(id => {
+        if (id) proceedWithPayment(id);
+      });
     } else {
-      createOrder().then(id => {
+      createOrder(true).then(id => {
         if (id) proceedWithPayment(id);
       });
     }
@@ -1173,7 +1164,7 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
                         </button>
                       </div>
                     ) : (
-                      user.addresses?.length < 3 && (
+                      (user.addresses?.length || 0) < 3 && (
                         <button
                           onClick={() => setShowAddAddress(true)}
                           className="flex items-center gap-2 text-red-600 font-bold text-2xl mt-2"
@@ -1330,13 +1321,10 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
           ) : (
             <button
               onClick={() => {
-                if (orderId) {
-                  proceedWithPayment(orderId);
-                } else {
-                  createOrder().then(id => {
-                    if (id) proceedWithPayment(id);
-                  });
-                }
+                // Ensure we capture latest details even if orderId exists
+                createOrder(true).then(id => {
+                  if (id) proceedWithPayment(id);
+                });
               }}
               className="flex-1 bg-red-600 text-white rounded-2xl py-3 px-6 text-2xl font-semibold shadow-lg shadow-red-200 active:scale-[0.98] transition-all hover:bg-red-700 uppercase tracking-tight"
             >
