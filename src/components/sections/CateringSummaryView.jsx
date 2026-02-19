@@ -392,13 +392,24 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
           type: item.type || 'Veg',
           image: item.image || ''
         })),
-        bookingDetails: bookingDetails,
+        bookingDetails: {
+          ...bookingDetails,
+          vegGuests: Number(bookingDetails.vegGuests) || 0,
+          nonVegGuests: Number(bookingDetails.nonVegGuests) || 0
+        },
         totalAmount: calculateTotal(),
         address: selectedAddress,
         notes: '',
         paymentMethod: paymentMethod || 'zoho'
       };
 
+      console.log("DEBUG: Order Payload Construction:");
+      console.log("Entity:", { type: typeof orderPayload.entityType, val: orderPayload.entityType });
+      console.log("EntityId:", { type: typeof orderPayload.entityId, val: orderPayload.entityId });
+      console.log("TotalAmount:", { type: typeof orderPayload.totalAmount, val: orderPayload.totalAmount });
+      console.log("BookingDetails:", orderPayload.bookingDetails);
+      console.log("VegGuests Type:", typeof orderPayload.bookingDetails.vegGuests);
+      console.log("Items[0]:", orderPayload.items[0]);
       console.log("Sending Order Payload:", orderPayload);
 
       const response = await fetch(`${BACKEND_URL}/api/orders`, {
