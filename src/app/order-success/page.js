@@ -11,37 +11,38 @@ export default function OrderSuccessPage() {
   const [order, setOrder] = useState(null);
   const [error, setError] = useState('');
 
-  // Handle Mock Payment or Direct Success Redirects
+  // Handle payment redirect — from Zoho success or mock
   useEffect(() => {
     const checkPaymentRedirect = async () => {
       const isMock = searchParams.get('mock_payment') === 'true';
       const statusParam = searchParams.get('status');
+      const paymentIdParam = searchParams.get('payment_id') || searchParams.get('paymentId');
 
-      // If valid success indicator is present
-      if ((isMock || statusParam === 'success' || statusParam === 'paid') && orderId) {
-        console.log("💳 Payment Redirect Detected:", { isMock, statusParam, orderId });
+      // Only verify if there's a clear success signal from redirect
+      const hasSuccessSignal = isMock || statusParam === 'success' || statusParam === 'paid' || paymentIdParam;
+
+      if (hasSuccessSignal && orderId) {
+        console.log("💳 Payment Redirect:", { isMock, statusParam, paymentIdParam, orderId });
 
         try {
-          // Call backend to Confirm Payment
           const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/payment/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              orderId: orderId,
-              paymentId: isMock ? `MOCK-${Date.now()}` : searchParams.get('payment_id'),
-              status: 'success'
+              orderId,
+              paymentId: isMock ? `MOCK-${Date.now()}` : paymentIdParam,
+              status: statusParam || 'success'
             })
           });
 
           const result = await response.json();
-          console.log("✅ Verification Response:", result);
+          console.log("✅ Verification:", result);
 
-          if (result.success) {
-            // Refresh order status immediately
-            fetchOrder();
-          }
+          // Refresh order regardless of result
+          fetchOrder();
         } catch (error) {
-          console.error("❌ Verification Request Failed:", error);
+          console.error("❌ Verification failed:", error);
+          fetchOrder(); // Still try to fetch order
         }
       }
     };
@@ -94,21 +95,25 @@ export default function OrderSuccessPage() {
   }, [orderId]); // Dependency on orderId only triggers initial fetch, interval handles updates
 
   const retryPayment = async () => {
-    // Redirect to backend initiate endpoint again or similar logic
     try {
+      const token = localStorage.getItem('wtf_token');
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/payment/initiate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId: orderId })
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ orderId })
       });
       const data = await response.json();
       if (data.success && data.data.paymentLink) {
         window.location.href = data.data.paymentLink;
       } else {
-        alert("Failed to retry payment");
+        alert(data.message || "Failed to retry payment");
       }
     } catch (e) {
-      alert("Error retrying payment");
+      console.error('Retry error:', e);
+      alert("Error retrying payment. Please try again.");
     }
   }
 
