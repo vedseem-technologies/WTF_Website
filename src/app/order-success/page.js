@@ -82,7 +82,6 @@ export default function OrderSuccessPage() {
   const retryPayment = async () => {
     try {
       const token = localStorage.getItem('wtf_token');
-      const token = localStorage.getItem('wtf_token');
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/payment/initiate`, {
         method: 'POST',
         headers: {
