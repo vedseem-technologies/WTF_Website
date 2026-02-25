@@ -11,37 +11,30 @@ export default function OrderSuccessPage() {
   const [order, setOrder] = useState(null);
   const [error, setError] = useState('');
 
-  // Handle Mock Payment or Direct Success Redirects
+  // Handle Zoho Payment Redirect
   useEffect(() => {
     const checkPaymentRedirect = async () => {
-      const isMock = searchParams.get('mock_payment') === 'true';
       const statusParam = searchParams.get('status');
+      const paymentId = searchParams.get('payment_id');
 
-      // If valid success indicator is present
-      if ((isMock || statusParam === 'success' || statusParam === 'paid') && orderId) {
-        console.log("💳 Payment Redirect Detected:", { isMock, statusParam, orderId });
-
+      if ((statusParam === 'success' || statusParam === 'paid') && orderId) {
         try {
-          // Call backend to Confirm Payment
           const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/payment/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               orderId: orderId,
-              paymentId: isMock ? `MOCK-${Date.now()}` : searchParams.get('payment_id'),
+              paymentId: paymentId || null,
               status: 'success'
             })
           });
 
           const result = await response.json();
-          console.log("✅ Verification Response:", result);
-
           if (result.success) {
-            // Refresh order status immediately
             fetchOrder();
           }
-        } catch (error) {
-          console.error("❌ Verification Request Failed:", error);
+        } catch (err) {
+          console.error('Payment verification failed:', err);
         }
       }
     };
@@ -53,7 +46,6 @@ export default function OrderSuccessPage() {
 
   const fetchOrder = async () => {
     if (!orderId) {
-      console.log("⚠️ No Order ID found in URL");
       setError('No Order ID found');
       setLoading(false);
       return;
@@ -61,20 +53,15 @@ export default function OrderSuccessPage() {
 
     try {
       // setLoading(true); // Don't reset loading on poll to avoid flicker
-      console.log(`🔄 Fetching Order Status: ${orderId}...`);
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/${orderId}`);
       const data = await response.json();
-
-      console.log("📦 Order Data Received:", data);
 
       if (data.success) {
         setOrder(data.data);
       } else {
-        console.error("❌ Failed to fetch order:", data.message);
         setError(data.message || 'Failed to fetch order');
       }
     } catch (err) {
-      console.error("❌ Network Error fetching order:", err);
       setError('Network error while checking order status');
     } finally {
       setLoading(false);
@@ -86,7 +73,6 @@ export default function OrderSuccessPage() {
     // Poll every 5 seconds if status is pending
     const interval = setInterval(() => {
       if (order && (order.paymentStatus === 'pending' || order.status === 'pending')) {
-        console.log("⏳ Order still pending, polling again...");
         fetchOrder();
       }
     }, 5000);
@@ -96,9 +82,13 @@ export default function OrderSuccessPage() {
   const retryPayment = async () => {
     // Redirect to backend initiate endpoint again or similar logic
     try {
+      const token = localStorage.getItem('wtf_token');
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/payment/initiate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        },
         body: JSON.stringify({ orderId: orderId })
       });
       const data = await response.json();

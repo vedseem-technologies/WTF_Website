@@ -544,9 +544,13 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
     // Handle Zoho (Online Payment)
     try {
       setLoading(true);
+      const token = localStorage.getItem('wtf_token');
       const response = await fetch(`${BACKEND_URL}/api/orders/payment/initiate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` })
+        },
         body: JSON.stringify({ orderId: idToUse })
       });
 
@@ -1138,55 +1142,78 @@ const CateringSummaryView = ({ selectedItem, selectionType, packageItem, booking
 
                   <div className="space-y-4">
                     <h2 className="text-2xl font-bold text-gray-800">Select Delivery Address</h2>
-                    <div className="space-y-3">
-                      {user.addresses?.map((addr, idx) => (
-                        <div
-                          key={idx}
-                          className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center justify-between ${selectedAddress === addr ? 'border-red-500 bg-red-50/20' : 'border-gray-100 hover:border-gray-200'}`}
-                          onClick={() => setSelectedAddress(addr)}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr ? 'border-red-500 bg-red-500' : 'border-gray-300'}`}>
-                              {selectedAddress === addr && <div className="w-2 h-2 rounded-full bg-white" />}
-                            </div>
-                            <span className="text-2xl text-gray-700">{addr}</span>
-                          </div>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const updatedAddresses = user.addresses.filter((_, i) => i !== idx);
-                              setUser({ ...user, addresses: updatedAddresses });
-                              if (selectedAddress === addr) setSelectedAddress(null);
-                            }}
-                            className="text-gray-400 hover:text-red-500 p-1"
-                            title="Remove Address"
+
+                    {/* Address List */}
+                    {user.addresses && user.addresses.length > 0 ? (
+                      <div className="space-y-3">
+                        {user.addresses.map((addr, idx) => (
+                          <div
+                            key={idx}
+                            className={`p-4 rounded-xl border-2 cursor-pointer transition-all flex items-center justify-between ${selectedAddress === addr ? 'border-red-500 bg-red-50/20' : 'border-gray-100 hover:border-gray-200'}`}
+                            onClick={() => setSelectedAddress(addr)}
                           >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                          </button>
+                            <div className="flex items-center gap-3">
+                              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedAddress === addr ? 'border-red-500 bg-red-500' : 'border-gray-300'}`}>
+                                {selectedAddress === addr && <div className="w-2 h-2 rounded-full bg-white" />}
+                              </div>
+                              <span className="text-2xl text-gray-700">{addr}</span>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const updatedAddresses = user.addresses.filter((_, i) => i !== idx);
+                                const updatedUser = { ...user, addresses: updatedAddresses };
+                                setUser(updatedUser);
+                                localStorage.setItem('wtf_user', JSON.stringify(updatedUser));
+                                if (selectedAddress === addr) setSelectedAddress(updatedAddresses[0] || '');
+                              }}
+                              className="text-gray-400 hover:text-red-500 p-1"
+                              title="Remove Address"
+                            >
+                              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      /* Empty State - No addresses */
+                      <div className="bg-gray-50 rounded-2xl p-6 border border-dashed border-gray-300 text-center">
+                        <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-3">
+                          <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         </div>
-                      ))}
-                    </div>
-                    {showAddAddress ? (
-                      <div className="mt-4 flex gap-2">
+                        <p className="text-2xl text-gray-500 font-semibold">No delivery address added</p>
+                        <p className="text-xl text-gray-400">Please add your delivery address below</p>
+                      </div>
+                    )}
+
+                    {/* Add New Address - Always show input when no addresses */}
+                    {(showAddAddress || !user.addresses?.length) ? (
+                      <div className="mt-4 space-y-3">
                         <input
                           type="text"
                           value={newAddressInput}
                           onChange={(e) => setNewAddressInput(e.target.value)}
-                          placeholder="Enter new address"
-                          className="flex-1 bg-white border border-gray-200 rounded-xl py-2 px-4 text-2xl text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-red-100"
+                          placeholder="Enter your full delivery address"
+                          className="w-full bg-white border-2 border-gray-200 rounded-xl py-3 px-4 text-2xl text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-red-100 focus:border-red-500 transition-all"
+                          autoFocus={!user.addresses?.length}
                         />
-                        <button
-                          onClick={handleAddNewAddress}
-                          className="bg-red-600 text-white px-4 py-2 rounded-xl text-xl font-bold"
-                        >
-                          Add
-                        </button>
-                        <button
-                          onClick={() => setShowAddAddress(false)}
-                          className="text-gray-400 px-2"
-                        >
-                          Cancel
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={handleAddNewAddress}
+                            disabled={!newAddressInput.trim()}
+                            className="flex-1 bg-red-600 text-white px-6 py-3 rounded-xl text-xl font-bold hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Save Address
+                          </button>
+                          {user.addresses?.length > 0 && (
+                            <button
+                              onClick={() => setShowAddAddress(false)}
+                              className="text-gray-400 px-4 py-3 rounded-xl text-xl hover:bg-gray-100 transition-all"
+                            >
+                              Cancel
+                            </button>
+                          )}
+                        </div>
                       </div>
                     ) : (
                       (user.addresses?.length || 0) < 3 && (
