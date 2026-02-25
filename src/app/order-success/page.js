@@ -80,8 +80,8 @@ export default function OrderSuccessPage() {
   }, [orderId]); // Dependency on orderId only triggers initial fetch, interval handles updates
 
   const retryPayment = async () => {
-    // Redirect to backend initiate endpoint again or similar logic
     try {
+      const token = localStorage.getItem('wtf_token');
       const token = localStorage.getItem('wtf_token');
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/orders/payment/initiate`, {
         method: 'POST',
@@ -95,10 +95,11 @@ export default function OrderSuccessPage() {
       if (data.success && data.data.paymentLink) {
         window.location.href = data.data.paymentLink;
       } else {
-        alert("Failed to retry payment");
+        alert(data.message || "Failed to retry payment");
       }
     } catch (e) {
-      alert("Error retrying payment");
+      console.error('Retry error:', e);
+      alert("Error retrying payment. Please try again.");
     }
   }
 
