@@ -296,7 +296,7 @@ function Blueprint() {
               </ul>
             </div>
 
-            <div className="flex flex-col gap-6 p-8 rounded-[2rem] bg-zinc-50 border border-zinc-100 relative overflow-hidden group">
+            {/* <div className="flex flex-col gap-6 p-8 rounded-[2rem] bg-zinc-50 border border-zinc-100 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-100 transition-opacity">
                  <Image src="/logo_orig.png" alt="WTF" width={50} height={50} />
               </div>
@@ -330,7 +330,7 @@ function Blueprint() {
               >
                 Secure Your Territory
               </motion.a>
-            </div>
+            </div> */}
           </div>
 
           <motion.div
