@@ -456,26 +456,7 @@ const CateringSummaryView = ({
         paymentMethod: paymentMethod || "zoho",
       };
 
-      console.log("DEBUG: Order Payload Construction:");
-      console.log("Entity:", {
-        type: typeof orderPayload.entityType,
-        val: orderPayload.entityType,
-      });
-      console.log("EntityId:", {
-        type: typeof orderPayload.entityId,
-        val: orderPayload.entityId,
-      });
-      console.log("TotalAmount:", {
-        type: typeof orderPayload.totalAmount,
-        val: orderPayload.totalAmount,
-      });
-      console.log("BookingDetails:", orderPayload.bookingDetails);
-      console.log(
-        "VegGuests Type:",
-        typeof orderPayload.bookingDetails.vegGuests,
-      );
-      console.log("Items[0]:", orderPayload.items[0]);
-      console.log("Sending Order Payload:", orderPayload);
+
 
       const response = await fetch(`${BACKEND_URL}/api/orders`, {
         method: "POST",
@@ -708,11 +689,10 @@ const CateringSummaryView = ({
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <div
-                              className={`w-2 h-2 rounded-full ${
-                                item.type?.toLowerCase() === "veg"
+                              className={`w-2 h-2 rounded-full ${item.type?.toLowerCase() === "veg"
                                   ? "bg-green-500"
                                   : "bg-red-500"
-                              }`}
+                                }`}
                             />
                             <h4 className="font-bold text-2xl text-gray-800 leading-none">
                               {item.name}
@@ -748,9 +728,8 @@ const CateringSummaryView = ({
             className="absolute left-5 top-[20px] h-[2px] bg-red-500 origin-left"
             initial={false}
             animate={{
-              width: `calc(${(currentStep / 4) * 100}% - ${
-                currentStep === 4 ? "40px" : "20px"
-              })`,
+              width: `calc(${(currentStep / 4) * 100}% - ${currentStep === 4 ? "40px" : "20px"
+                })`,
             }}
             transition={{ duration: 0.5 }}
           />
@@ -777,11 +756,10 @@ const CateringSummaryView = ({
                     color: isCompleted || isActive ? "#ffffff" : "#fecaca",
                     scale: isActive ? 1.1 : 1,
                   }}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-sm border-2 ${
-                    isCompleted || isActive
+                  className={`w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-sm border-2 ${isCompleted || isActive
                       ? "border-transparent"
                       : "border-red-100"
-                  }`}
+                    }`}
                 >
                   {isCompleted && idx !== currentStep ? (
                     <svg
@@ -802,9 +780,8 @@ const CateringSummaryView = ({
                   )}
                 </motion.div>
                 <span
-                  className={`text-lg font-semibold uppercase tracking-widest transition-colors duration-300 ${
-                    isCompleted || isActive ? "text-red-600" : "text-red-200"
-                  }`}
+                  className={`text-lg font-semibold uppercase tracking-widest transition-colors duration-300 ${isCompleted || isActive ? "text-red-600" : "text-red-200"
+                    }`}
                 >
                   {step.label}
                 </span>
@@ -989,11 +966,10 @@ const CateringSummaryView = ({
                                       <div className="flex-1">
                                         <div className="flex items-center gap-1.5 font-bold text-2xl text-gray-800 leading-none">
                                           <div
-                                            className={`w-2 h-2 rounded-full shrink-0 ${
-                                              item.type?.toLowerCase() === "veg"
+                                            className={`w-2 h-2 rounded-full shrink-0 ${item.type?.toLowerCase() === "veg"
                                                 ? "bg-green-500"
                                                 : "bg-red-500"
-                                            }`}
+                                              }`}
                                           />
                                           <span className="truncate">
                                             {item.name}
@@ -1005,7 +981,7 @@ const CateringSummaryView = ({
                                           <span className="text-sm font-normal text-gray-400">
                                             (@ ₹{item.price}/
                                             {item.baseQuantity &&
-                                            item.baseQuantity > 1
+                                              item.baseQuantity > 1
                                               ? item.baseQuantity
                                               : ""}
                                             {item.measurement === "pcs"
@@ -1025,12 +1001,11 @@ const CateringSummaryView = ({
                                                 "decrease",
                                               )
                                             }
-                                            className={`w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 transition-all font-bold text-lg ${
-                                              item.quantity <=
-                                              getQuantityRules(item).min
+                                            className={`w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 transition-all font-bold text-lg ${item.quantity <=
+                                                getQuantityRules(item).min
                                                 ? "opacity-50 cursor-not-allowed"
                                                 : ""
-                                            }`}
+                                              }`}
                                             disabled={
                                               item.quantity <=
                                               getQuantityRules(item).min
@@ -1438,8 +1413,8 @@ const CateringSummaryView = ({
                       {loading
                         ? "Processing..."
                         : isLoginMode
-                        ? "Login"
-                        : "Sign Up"}
+                          ? "Login"
+                          : "Sign Up"}
                     </button>
                   </form>
                   <p className="text-center text-xl text-gray-500 mt-4">
@@ -1613,11 +1588,10 @@ const CateringSummaryView = ({
                 {/* Zoho/Online Option */}
                 <button
                   onClick={() => setPaymentMethod("zoho")}
-                  className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all duration-300 ${
-                    paymentMethod === "zoho"
+                  className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all duration-300 ${paymentMethod === "zoho"
                       ? "border-red-500 bg-red-50/20"
                       : "border-gray-100 bg-white hover:border-gray-200"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-4 text-left">
                     <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
@@ -1639,11 +1613,10 @@ const CateringSummaryView = ({
                     </div>
                   </div>
                   <div
-                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                      paymentMethod === "zoho"
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === "zoho"
                         ? "border-red-500 bg-red-500"
                         : "border-gray-200"
-                    }`}
+                      }`}
                   >
                     {paymentMethod === "zoho" && (
                       <div className="w-2.5 h-2.5 rounded-full bg-white shadow-sm" />
