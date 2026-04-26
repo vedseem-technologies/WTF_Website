@@ -82,17 +82,6 @@ function FranchiseHero() {
               Disrupt the QSR industry with India's most aggressive food
               movement. This isn't just a franchise; it's a culinary powerhouse.
             </p>
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                backgroundColor: "#fff",
-                color: "#D62828",
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-[#D62828] text-white px-5 py-3 md:px-6 md:py-2 lg:px-8 lg:py-3 xl:px-10 xl:py-4 rounded-full text-md md:text-xl lg:text-xl xl:text-xl uppercase tracking-widest shadow-2xl transition-all duration-300"
-            >
-              Request Access
-            </motion.button>
           </div>
         </motion.div>
 
@@ -222,14 +211,6 @@ function BrandEthos() {
                 Growth Retention
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="lg:text-6xl md:text-5xl text-4xl font-black text-zinc-950 leading-none md:mb-2">
-                Zero
-              </span>
-              <span className="lg:text-lg md:text-md text-sm mt-2 lg:font-bold md:font-medium font-medium uppercase text-zinc-400 tracking-widest">
-                Royalty Drama
-              </span>
-            </div>
           </div>
         </motion.div>
       </div>
@@ -330,7 +311,7 @@ function TheEdge() {
               The <span className="text-[#D62828]">Disruptor's</span> Edge
             </h2>
           </div>
-          <Link href="/contact" passHref>
+          <Link href="https://partnerships.wtffoods.in/forms/wtf" passHref>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -387,7 +368,6 @@ function Blueprint() {
               </p>
               <ul className="flex flex-col gap-4">
                 {[
-                  "Absolute 0% Royalty on all sales—always.",
                   "Exclusive Access to handcrafted WTF secret recipes.",
                   "Data-Driven inventory algorithms for zero waste.",
                   "Automated Digital Ad machine focused on your radius.",
